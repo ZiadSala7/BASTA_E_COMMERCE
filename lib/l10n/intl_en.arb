@@ -1,0 +1,14 @@
+{
+  "@@locale": "en",
+  "appTitle": "Flutter Demo",
+  "currentLanguage": "Current language: {language}",
+  "currentTheme": "Current theme: {theme}",
+  "toggleLanguage": "Toggle Language",
+  "toggleTheme": "Toggle Theme",
+  "pushedCounter": "You have pushed the button this many times:",
+  "increment": "Increment",
+  "english": "English",
+  "arabic": "Arabic",
+  "light": "Light",
+  "dark": "Dark"
+}
