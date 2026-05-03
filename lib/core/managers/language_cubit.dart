@@ -5,7 +5,7 @@ import '../cache/cache_helper.dart';
 import 'language_state.dart';
 
 class LanguageCubit extends Cubit<LanguageState> {
-  LanguageCubit([AppLanguage initialLanguage = AppLanguage.english])
+  LanguageCubit([AppLanguage initialLanguage = AppLanguage.arabic])
     : super(
         LanguageState(
           locale: Locale(initialLanguage == AppLanguage.english ? 'en' : 'ar'),

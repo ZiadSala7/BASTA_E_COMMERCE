@@ -7,6 +7,8 @@ import 'cache_keys.dart';
 class CacheHelper {
   static SharedPreferences? _preferences;
 
+  static SharedPreferences get instance => _preferences!;
+
   static Future<void> init() async {
     _preferences = await SharedPreferences.getInstance();
   }
@@ -72,6 +74,9 @@ class CacheHelper {
     if (stored == AppLanguage.arabic.name) {
       return AppLanguage.arabic;
     }
-    return AppLanguage.english;
+    if (stored == AppLanguage.english.name) {
+      return AppLanguage.english;
+    }
+    return AppLanguage.arabic;
   }
 }

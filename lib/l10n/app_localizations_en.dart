@@ -9,7 +9,10 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'Flutter Demo';
+  String get appTitle => 'Basta';
+
+  @override
+  String get brandName => 'Basta';
 
   @override
   String currentLanguage(Object language) {
@@ -44,4 +47,156 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get dark => 'Dark';
+
+  @override
+  String get skip => 'Skip';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get next => 'Next';
+
+  @override
+  String get startNow => 'Start now';
+
+  @override
+  String get imagePlaceholder => 'Image placeholder';
+
+  @override
+  String get replaceImagePathHint =>
+      'Replace the imagePath in\nOnboardingLocalDataSource';
+
+  @override
+  String get onboardingTitle1 =>
+      'Discover the latest offers and products near you';
+
+  @override
+  String get onboardingSubtitle1 =>
+      'Shop easily and choose from the best products at the best prices. A fast and enjoyable experience is waiting for you.';
+
+  @override
+  String get onboardingTitle2 => 'Shop smoothly without any complications';
+
+  @override
+  String get onboardingSubtitle2 =>
+      'Choose your products and complete your order in simple, quick steps';
+
+  @override
+  String get loginTitle => 'Log in';
+
+  @override
+  String get loginSubtitle =>
+      'Sign in to continue and enjoy an easier shopping experience.';
+
+  @override
+  String get registerTitle => 'Create a new account';
+
+  @override
+  String get registerSubtitle =>
+      'Create your account and start shopping in a few quick steps.';
+
+  @override
+  String get forgotPasswordTitle => 'Reset password';
+
+  @override
+  String get forgotPasswordSubtitle =>
+      'Please enter the email linked to your account so we can send reset instructions.';
+
+  @override
+  String get verificationTitle => 'Verification';
+
+  @override
+  String verificationSubtitle(Object destination) {
+    return 'We sent a verification code to $destination';
+  }
+
+  @override
+  String get fullNameHint => 'Full name';
+
+  @override
+  String get phoneHint => 'Phone number';
+
+  @override
+  String get emailHint => 'Email address';
+
+  @override
+  String get passwordHint => 'Password';
+
+  @override
+  String get confirmPasswordHint => 'Confirm password';
+
+  @override
+  String get rememberMe => 'Remember me';
+
+  @override
+  String get forgotPasswordQuestion => 'Forgot your password?';
+
+  @override
+  String get loginButton => 'Log in';
+
+  @override
+  String get createAccountButton => 'Create account';
+
+  @override
+  String get sendAction => 'Send';
+
+  @override
+  String get continueAction => 'Continue';
+
+  @override
+  String get orLabel => 'Or';
+
+  @override
+  String get loginWithGoogle => 'Login with Google';
+
+  @override
+  String get loginWithFacebook => 'Login with Facebook';
+
+  @override
+  String get dontHaveAccountPrompt => 'Don\'t have an account?';
+
+  @override
+  String get alreadyHaveAccountPrompt => 'Already have an account?';
+
+  @override
+  String get createAccountAction => 'Create new account';
+
+  @override
+  String get loginAction => 'Log in';
+
+  @override
+  String resendCodeIn(Object time) {
+    return 'Resend code in $time';
+  }
+
+  @override
+  String get nameRequired => 'Please enter your full name';
+
+  @override
+  String get phoneRequired => 'Please enter your phone number';
+
+  @override
+  String get emailRequired => 'Please enter your email';
+
+  @override
+  String get invalidEmail => 'Please enter a valid email address';
+
+  @override
+  String get invalidPhone => 'Please enter a valid phone number';
+
+  @override
+  String get passwordRequired => 'Please enter your password';
+
+  @override
+  String get passwordTooShort => 'Password must be at least 6 characters';
+
+  @override
+  String get confirmPasswordRequired => 'Please confirm your password';
+
+  @override
+  String get passwordsDoNotMatch => 'Passwords do not match';
+
+  @override
+  String get verificationCodeRequired => 'Please enter the 4-digit code';
 }

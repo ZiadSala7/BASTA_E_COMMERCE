@@ -1,25 +1,37 @@
 import 'package:dio/dio.dart';
 
+import '../auth/session_token_store.dart';
+import '../di/service_locator.dart';
+
 class ApiInterceptors extends Interceptor {
   @override
-  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    // Add authorization header if token exists
-    // options.headers['Authorization'] = 'Bearer ${getToken()}';
-    super.onRequest(options, handler);
+  void onRequest(
+    RequestOptions options,
+    RequestInterceptorHandler handler,
+  ) async {
+    if (sl.isRegistered<SessionTokenStore>()) {
+      final token = await sl<SessionTokenStore>().getToken();
+      if (token != null && token.isNotEmpty) {
+        options.headers['Authorization'] = 'Bearer $token';
+      }
+    }
+
+    handler.next(options);
   }
 
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
-    // Handle successful responses
-    super.onResponse(response, handler);
+    handler.next(response);
   }
 
   @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    // Handle errors globally
+  void onError(DioException err, ErrorInterceptorHandler handler) async {
     if (err.response?.statusCode == 401) {
-      // Handle unauthorized
+      if (sl.isRegistered<SessionTokenStore>()) {
+        await sl<SessionTokenStore>().clearToken();
+      }
     }
-    super.onError(err, handler);
+
+    handler.next(err);
   }
 }

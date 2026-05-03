@@ -21,6 +21,8 @@ class DioHelper {
   }
 
   static void init() {
+    dio.options.baseUrl = ApiKeys.baseUrl;
+
     // Add interceptors
     dio.interceptors.add(ApiInterceptors());
     dio.interceptors.add(
