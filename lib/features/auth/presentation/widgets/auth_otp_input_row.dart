@@ -48,6 +48,9 @@ class _AuthOtpInputRowState extends State<AuthOtpInputRow> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final inputTheme = theme.inputDecorationTheme;
+
     return Row(
       children: List.generate(_controllers.length, (index) {
         return Expanded(
@@ -61,27 +64,18 @@ class _AuthOtpInputRowState extends State<AuthOtpInputRow> {
               maxLength: 1,
               keyboardType: TextInputType.number,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 28,
                 fontWeight: FontWeight.w600,
-                color: Color(0xFF26263A),
+                color: theme.colorScheme.onSurface,
               ),
               decoration: InputDecoration(
                 counterText: '',
                 filled: true,
-                fillColor: Colors.white,
+                fillColor: inputTheme.fillColor,
                 contentPadding: const EdgeInsets.symmetric(vertical: 16),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: const BorderSide(color: Color(0xFFE7E7F0)),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: const BorderSide(
-                    color: Color(0xFF5B6BFF),
-                    width: 1.3,
-                  ),
-                ),
+                enabledBorder: inputTheme.enabledBorder,
+                focusedBorder: inputTheme.focusedBorder,
               ),
               onChanged: (value) => _handleChanged(value, index),
             ),

@@ -92,7 +92,7 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       await _logoutUseCase();
-      emit(AuthUnauthenticated());
+      emit(const AuthUnauthenticated());
     } catch (e) {
       emit(AuthError(_mapErrorMessage(e)));
     }

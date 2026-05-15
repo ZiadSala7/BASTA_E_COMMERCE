@@ -2,6 +2,8 @@
   "@@locale": "en",
   "appTitle": "Basta",
   "brandName": "Basta",
+  "welcome": "Welcome to",
+  "searchHint": "Are you looking for a specific product?",
   "currentLanguage": "Current language: {language}",
   "currentTheme": "Current theme: {theme}",
   "toggleLanguage": "Toggle Language",
@@ -58,5 +60,14 @@
   "passwordTooShort": "Password must be at least 6 characters",
   "confirmPasswordRequired": "Please confirm your password",
   "passwordsDoNotMatch": "Passwords do not match",
-  "verificationCodeRequired": "Please enter the 4-digit code"
+  "verificationCodeRequired": "Please enter the 4-digit code",
+  "enterAppButton": "Enter the app",
+  "menu": "Menu",
+  "notifications": "Notifications",
+  "cart": "Cart",
+  "coupon": "Coupon",
+  "applyCoupon": "Apply",
+  "deliveryNote": "Delivery fees and taxes are calculated at checkout.",
+  "proceedToCheckout": "Proceed to checkout",
+  "primeVideo": "Prime Video"
 }

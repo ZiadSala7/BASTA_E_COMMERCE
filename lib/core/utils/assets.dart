@@ -14,6 +14,14 @@ class Assets {
   /// assets/images/bastaAuth.png
   static const String imagesBastaAuth = "assets/images/bastaAuth.png";
 
+  /// Assets for imagesCart
+  /// assets/images/cart.png
+  static const String imagesCart = "assets/images/cart.png";
+
+  /// Assets for imagesEmptyCart
+  /// assets/images/EmptyCart.png
+  static const String imagesEmptyCart = "assets/images/EmptyCart.png";
+
   /// Assets for imagesOnboarding1
   /// assets/images/onboarding1.png
   static const String imagesOnboarding1 = "assets/images/onboarding1.png";

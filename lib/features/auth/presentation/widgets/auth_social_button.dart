@@ -18,27 +18,37 @@ class AuthSocialButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(18),
         child: Ink(
-          height: 54,
+          height: 56,
           decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: const Color(0xFFF0F0F5)),
+            color: colorScheme.surface,
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: colorScheme.outlineVariant),
+            boxShadow: [
+              BoxShadow(
+                // ignore: deprecated_member_use
+                color: Colors.black.withOpacity(
+                  theme.brightness == Brightness.dark ? 0.16 : 0.04,
+                ),
+                blurRadius: 14,
+                offset: const Offset(0, 7),
+              ),
+            ],
           ),
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _BrandBadge(
-                  text: badgeText,
-                  color: badgeColor,
-                ),
+                _BrandBadge(text: badgeText, color: badgeColor),
                 const SizedBox(width: 14),
                 Flexible(
                   child: Text(
@@ -62,16 +72,13 @@ class _BrandBadge extends StatelessWidget {
   final String text;
   final Color color;
 
-  const _BrandBadge({
-    required this.text,
-    required this.color,
-  });
+  const _BrandBadge({required this.text, required this.color});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 26,
-      height: 26,
+      width: 30,
+      height: 30,
       decoration: BoxDecoration(
         // ignore: deprecated_member_use
         color: color.withOpacity(0.12),

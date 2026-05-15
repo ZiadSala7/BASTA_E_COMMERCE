@@ -45,7 +45,7 @@ class AppTextStyles {
 
   static TextStyle authHeadingTitle(BuildContext context) {
     return Theme.of(context).textTheme.headlineLarge!.copyWith(
-      color: const Color(0xFF21213A),
+      color: Theme.of(context).colorScheme.onSurface,
       fontSize: 25,
       fontWeight: AppFontWeights.bold,
     );
@@ -53,7 +53,7 @@ class AppTextStyles {
 
   static TextStyle authHeadingSubtitle(BuildContext context) {
     return Theme.of(context).textTheme.bodyMedium!.copyWith(
-      color: const Color(0xFF8E90A6),
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
       fontSize: 14,
       height: 1.7,
     );
@@ -69,7 +69,7 @@ class AppTextStyles {
 
   static TextStyle authSocialButton(BuildContext context) {
     return Theme.of(context).textTheme.bodyMedium!.copyWith(
-      color: const Color(0xFF4C4E64),
+      color: Theme.of(context).colorScheme.onSurface,
       fontSize: 14,
       fontWeight: AppFontWeights.medium,
     );
@@ -77,7 +77,7 @@ class AppTextStyles {
 
   static TextStyle authHelperText(BuildContext context) {
     return Theme.of(context).textTheme.bodyMedium!.copyWith(
-      color: const Color(0xFF7C7F96),
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
       fontSize: 14,
     );
   }
@@ -92,7 +92,7 @@ class AppTextStyles {
 
   static TextStyle authSecondaryText(BuildContext context) {
     return Theme.of(context).textTheme.bodyMedium!.copyWith(
-      color: const Color(0xFF505266),
+      color: Theme.of(context).colorScheme.onSurfaceVariant,
       fontSize: 14,
     );
   }

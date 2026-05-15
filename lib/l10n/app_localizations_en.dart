@@ -15,6 +15,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get brandName => 'Basta';
 
   @override
+  String get welcome => 'Welcome to';
+
+  @override
+  String get searchHint => 'Are you looking for a specific product?';
+
+  @override
   String currentLanguage(Object language) {
     return 'Current language: $language';
   }
@@ -199,4 +205,32 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verificationCodeRequired => 'Please enter the 4-digit code';
+
+  @override
+  String get enterAppButton => 'Enter the app';
+
+  @override
+  String get menu => 'Menu';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get cart => 'Cart';
+
+  @override
+  String get coupon => 'Coupon';
+
+  @override
+  String get applyCoupon => 'Apply';
+
+  @override
+  String get deliveryNote =>
+      'Delivery fees and taxes are calculated at checkout.';
+
+  @override
+  String get proceedToCheckout => 'Proceed to checkout';
+
+  @override
+  String get primeVideo => 'Prime Video';
 }

@@ -61,7 +61,7 @@ class _LoginPageState extends State<LoginPage> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          context.go(AppRoutes.home);
+          context.go(AppRoutes.mainNavigation);
         }
 
         if (state is AuthError) {
@@ -171,6 +171,26 @@ class _LoginPageState extends State<LoginPage> {
                   label: localizations.loginButton,
                   isLoading: state is AuthLoading,
                   onPressed: _submit,
+                ),
+                const SizedBox(height: 12),
+                // Direct navigation button to main navigation
+                OutlinedButton(
+                  onPressed: () {
+                    context.go(AppRoutes.mainNavigation);
+                  },
+                  style: OutlinedButton.styleFrom(
+                    side: const BorderSide(color: Color(0xFF5468F6)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    minimumSize: const Size(double.infinity, 56),
+                  ),
+                  child: Text(
+                    localizations.enterAppButton,
+                    style: AppTextStyles.authPrimaryButton(context).copyWith(
+                      color: const Color(0xFF5468F6),
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 26),
                 const AuthSocialActions(),

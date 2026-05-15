@@ -2,6 +2,8 @@
   "@@locale": "ar",
   "appTitle": "بسطة",
   "brandName": "بسطة",
+  "welcome": "حياك الله في",
+  "searchHint": "هل تبحث عن منتج معين؟",
   "currentLanguage": "اللغة الحالية: {language}",
   "currentTheme": "الوضع الحالي: {theme}",
   "toggleLanguage": "تبديل اللغة",
@@ -58,5 +60,14 @@
   "passwordTooShort": "يجب أن تكون كلمة المرور 6 أحرف على الأقل",
   "confirmPasswordRequired": "يرجى تأكيد كلمة المرور",
   "passwordsDoNotMatch": "كلمتا المرور غير متطابقتين",
-  "verificationCodeRequired": "يرجى إدخال رمز التحقق المكون من 4 أرقام"
+  "verificationCodeRequired": "يرجى إدخال رمز التحقق المكون من 4 أرقام",
+  "enterAppButton": "ادخل التطبيق",
+  "menu": "القائمة",
+  "notifications": "الإشعارات",
+  "cart": "السلة",
+  "coupon": "قسيمة الخصم",
+  "applyCoupon": "تطبيق",
+  "deliveryNote": "يتم احتساب رسوم التوصيل والضرائب عند الدفع.",
+  "proceedToCheckout": "المتابعة للدفع",
+  "primeVideo": "برايم فيديو"
 }

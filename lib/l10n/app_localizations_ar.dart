@@ -15,6 +15,12 @@ class AppLocalizationsAr extends AppLocalizations {
   String get brandName => 'بسطة';
 
   @override
+  String get welcome => 'حياك الله في';
+
+  @override
+  String get searchHint => 'هل تبحث عن منتج معين؟';
+
+  @override
   String currentLanguage(Object language) {
     return 'اللغة الحالية: $language';
   }
@@ -198,4 +204,31 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get verificationCodeRequired =>
       'يرجى إدخال رمز التحقق المكون من 4 أرقام';
+
+  @override
+  String get enterAppButton => 'ادخل التطبيق';
+
+  @override
+  String get menu => 'القائمة';
+
+  @override
+  String get notifications => 'الإشعارات';
+
+  @override
+  String get cart => 'السلة';
+
+  @override
+  String get coupon => 'قسيمة الخصم';
+
+  @override
+  String get applyCoupon => 'تطبيق';
+
+  @override
+  String get deliveryNote => 'يتم احتساب رسوم التوصيل والضرائب عند الدفع.';
+
+  @override
+  String get proceedToCheckout => 'المتابعة للدفع';
+
+  @override
+  String get primeVideo => 'برايم فيديو';
 }

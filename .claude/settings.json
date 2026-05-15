@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dir lib\\\\features\\\\home\\\\presentation\\\\pages)",
+      "Bash(mkdir -p lib/core/widgets/products lib/core/widgets/common lib/core/widgets/inputs)"
+    ],
+    "additionalDirectories": [
+      "E:\\ionbit\\ionbit_e_commerce\\lib\\core\\widgets"
+    ]
+  }
+}

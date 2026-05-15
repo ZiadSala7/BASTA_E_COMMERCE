@@ -110,6 +110,18 @@ abstract class AppLocalizations {
   /// **'Basta'**
   String get brandName;
 
+  /// No description provided for @welcome.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to'**
+  String get welcome;
+
+  /// No description provided for @searchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you looking for a specific product?'**
+  String get searchHint;
+
   /// No description provided for @currentLanguage.
   ///
   /// In en, this message translates to:
@@ -451,6 +463,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please enter the 4-digit code'**
   String get verificationCodeRequired;
+
+  /// No description provided for @enterAppButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the app'**
+  String get enterAppButton;
+
+  /// No description provided for @menu.
+  ///
+  /// In en, this message translates to:
+  /// **'Menu'**
+  String get menu;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @cart.
+  ///
+  /// In en, this message translates to:
+  /// **'Cart'**
+  String get cart;
+
+  /// No description provided for @coupon.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon'**
+  String get coupon;
+
+  /// No description provided for @applyCoupon.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyCoupon;
+
+  /// No description provided for @deliveryNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery fees and taxes are calculated at checkout.'**
+  String get deliveryNote;
+
+  /// No description provided for @proceedToCheckout.
+  ///
+  /// In en, this message translates to:
+  /// **'Proceed to checkout'**
+  String get proceedToCheckout;
+
+  /// No description provided for @primeVideo.
+  ///
+  /// In en, this message translates to:
+  /// **'Prime Video'**
+  String get primeVideo;
 }
 
 class _AppLocalizationsDelegate

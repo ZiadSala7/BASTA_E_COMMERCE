@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../core/managers/language_cubit.dart';
-import '../../../../core/managers/language_state.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../bloc/onboarding_bloc.dart';
 import 'onboarding_bottom_sheet.dart';
@@ -105,42 +103,6 @@ class _OnboardingImagePager extends StatelessWidget {
           child: _GlowCircle(
             size: size.width * 0.65,
             colors: const [Color(0x66C8B0F0), Color(0x00F4F4FF)],
-          ),
-        ),
-        Positioned(
-          top: MediaQuery.paddingOf(context).top + 12,
-          right: 20,
-          child: BlocBuilder<LanguageCubit, LanguageState>(
-            builder: (context, langState) {
-              return Material(
-                color: Colors.white.withValues(alpha: 0.88),
-                borderRadius: BorderRadius.circular(18),
-                child: InkWell(
-                  onTap: () => context.read<LanguageCubit>().toggleLanguage(),
-                  borderRadius: BorderRadius.circular(18),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Icon(Icons.language_rounded, size: 18),
-                        const SizedBox(width: 6),
-                        Text(
-                          langState.locale.languageCode == 'ar' ? 'EN' : 'ع',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
           ),
         ),
         PageView.builder(

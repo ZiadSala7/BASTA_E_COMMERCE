@@ -24,22 +24,26 @@ class AuthPrimaryButton extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: isDisabled ? null : onPressed,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(18),
           child: Ink(
-            height: 56,
+            height: 58,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                begin: Alignment.centerLeft,
-                end: Alignment.centerRight,
-                colors: [Color(0xFF5468F6), Color(0xFF5F6FFF)],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: [
+                  Color(0xFF4747C2),
+                  Color(0xFF5B5BD6),
+                  Color(0xFF20B7A8),
+                ],
               ),
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
                   // ignore: deprecated_member_use
-                  color: const Color(0xFF5568F8).withOpacity(0.26),
-                  blurRadius: 22,
-                  offset: const Offset(0, 10),
+                  color: const Color(0xFF5568F8).withOpacity(0.30),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
                 ),
               ],
             ),
@@ -69,9 +73,9 @@ class AuthPrimaryButton extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Container(
-                    width: 30,
-                    height: 30,
-                    margin: const EdgeInsets.only(left: 10),
+                    width: 34,
+                    height: 34,
+                    margin: const EdgeInsets.only(left: 12),
                     decoration: BoxDecoration(
                       // ignore: deprecated_member_use
                       color: Colors.white.withOpacity(0.14),

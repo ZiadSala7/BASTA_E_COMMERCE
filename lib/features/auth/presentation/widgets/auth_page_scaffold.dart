@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/app_colors.dart';
+
 class AuthPageScaffold extends StatelessWidget {
   final Widget child;
   final bool showBackButton;
@@ -12,8 +14,10 @@ class AuthPageScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Stack(
         children: [
           const _AuthBackgroundGlow(),
@@ -21,10 +25,7 @@ class AuthPageScaffold extends StatelessWidget {
             child: LayoutBuilder(
               builder: (context, constraints) {
                 return SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 10,
-                  ),
+                  padding: const EdgeInsets.fromLTRB(16, 10, 16, 18),
                   child: ConstrainedBox(
                     constraints: BoxConstraints(
                       minHeight: constraints.maxHeight,
@@ -33,20 +34,65 @@ class AuthPageScaffold extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         SizedBox(
-                          height: 42,
+                          height: 46,
                           child: showBackButton
                               ? Align(
                                   alignment: AlignmentDirectional.centerStart,
-                                  child: IconButton(
-                                    onPressed: () =>
-                                        Navigator.of(context).maybePop(),
-                                    icon: const Icon(Icons.arrow_back_rounded),
-                                    splashRadius: 22,
+                                  child: Material(
+                                    color: colorScheme.surface.withValues(
+                                      alpha: 0.9,
+                                    ),
+                                    shape: const CircleBorder(),
+                                    child: InkWell(
+                                      onTap: () =>
+                                          Navigator.of(context).maybePop(),
+                                      customBorder: const CircleBorder(),
+                                      child: const SizedBox(
+                                        width: 42,
+                                        height: 42,
+                                        child: Icon(
+                                          Icons.arrow_back_rounded,
+                                          color: AppColors.primary,
+                                          size: 22,
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 )
                               : const SizedBox.shrink(),
                         ),
-                        child,
+                        Container(
+                          padding: const EdgeInsets.fromLTRB(18, 20, 18, 22),
+                          decoration: BoxDecoration(
+                            color: colorScheme.surface.withValues(
+                              alpha:
+                                  Theme.of(context).brightness ==
+                                      Brightness.dark
+                                  ? 0.94
+                                  : 0.98,
+                            ),
+                            borderRadius: BorderRadius.circular(26),
+                            border: Border.all(
+                              color: colorScheme.outlineVariant.withValues(
+                                alpha: 0.70,
+                              ),
+                            ),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withValues(
+                                  alpha:
+                                      Theme.of(context).brightness ==
+                                          Brightness.dark
+                                      ? 0.24
+                                      : 0.08,
+                                ),
+                                blurRadius: 30,
+                                offset: const Offset(0, 14),
+                              ),
+                            ],
+                          ),
+                          child: child,
+                        ),
                       ],
                     ),
                   ),
@@ -65,22 +111,41 @@ class _AuthBackgroundGlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Stack(
       children: [
         Positioned(
-          top: -140,
-          right: -120,
+          top: -120,
+          right: -110,
           child: _GlowCircle(
-            size: 280,
-            colors: const [Color(0x1AF4B8C8), Color(0x00FFFFFF)],
+            size: 290,
+            colors: [
+              isDark ? const Color(0x335B5BD6) : const Color(0x245B5BD6),
+              const Color(0x00FFFFFF),
+            ],
           ),
         ),
         Positioned(
-          bottom: -160,
+          bottom: -150,
           left: -120,
           child: _GlowCircle(
-            size: 300,
-            colors: const [Color(0x145B6BFF), Color(0x00FFFFFF)],
+            size: 320,
+            colors: [
+              isDark ? const Color(0x3320B7A8) : const Color(0x2220B7A8),
+              const Color(0x00FFFFFF),
+            ],
+          ),
+        ),
+        Positioned(
+          top: 140,
+          left: -80,
+          child: _GlowCircle(
+            size: 190,
+            colors: [
+              isDark ? const Color(0x22FF6B35) : const Color(0x18FF6B35),
+              const Color(0x00FFFFFF),
+            ],
           ),
         ),
       ],
