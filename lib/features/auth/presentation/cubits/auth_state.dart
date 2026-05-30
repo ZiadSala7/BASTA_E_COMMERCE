@@ -20,6 +20,29 @@ class AuthAuthenticated extends AuthState {
   List<Object?> get props => [user];
 }
 
+class AuthRegistrationPending extends AuthState {
+  final UserEntity user;
+  final String? message;
+
+  const AuthRegistrationPending(this.user, {this.message});
+
+  @override
+  List<Object?> get props => [user, message];
+}
+
+class AuthEmailConfirmationRequired extends AuthState {
+  final String email;
+  final String message;
+
+  const AuthEmailConfirmationRequired({
+    required this.email,
+    required this.message,
+  });
+
+  @override
+  List<Object?> get props => [email, message];
+}
+
 class AuthUnauthenticated extends AuthState {
   final String? message;
 
@@ -45,4 +68,49 @@ class AuthPasswordResetEmailSent extends AuthState {
 
   @override
   List<Object?> get props => [message];
+}
+
+class AuthEmailConfirmed extends AuthState {
+  final String message;
+
+  const AuthEmailConfirmed(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class AuthConfirmationCodeSent extends AuthState {
+  final String message;
+
+  const AuthConfirmationCodeSent(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class AuthPasswordReset extends AuthState {
+  final String message;
+
+  const AuthPasswordReset(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class AuthPasswordChanged extends AuthState {
+  final String message;
+
+  const AuthPasswordChanged(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
+
+class AuthProfileUpdated extends AuthState {
+  final UserEntity user;
+
+  const AuthProfileUpdated(this.user);
+
+  @override
+  List<Object?> get props => [user];
 }

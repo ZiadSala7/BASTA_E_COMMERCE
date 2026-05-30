@@ -110,6 +110,22 @@ class AppLocalizationsEn extends AppLocalizations {
       'Please enter the email linked to your account so we can send reset instructions.';
 
   @override
+  String get resetPasswordTitle => 'Reset password';
+
+  @override
+  String get resetPasswordSubtitle =>
+      'Paste the token from your email and choose a new password.';
+
+  @override
+  String get resetTokenHint => 'Reset token';
+
+  @override
+  String get resetTokenRequired => 'Reset token is required';
+
+  @override
+  String get resetPasswordButton => 'Reset password';
+
+  @override
   String get verificationTitle => 'Verification';
 
   @override
@@ -177,6 +193,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get resendCodeAction => 'Resend code';
+
+  @override
   String get nameRequired => 'Please enter your full name';
 
   @override
@@ -195,7 +214,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordRequired => 'Please enter your password';
 
   @override
-  String get passwordTooShort => 'Password must be at least 6 characters';
+  String get passwordTooShort => 'Password must be at least 8 characters';
+
+  @override
+  String get passwordComplexityRequired =>
+      'Password must include uppercase, lowercase, number, and special character.';
 
   @override
   String get confirmPasswordRequired => 'Please confirm your password';
@@ -204,7 +227,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get passwordsDoNotMatch => 'Passwords do not match';
 
   @override
-  String get verificationCodeRequired => 'Please enter the 4-digit code';
+  String get verificationCodeRequired => 'Please enter the 6-digit code';
 
   @override
   String get enterAppButton => 'Enter the app';
@@ -230,6 +253,21 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get proceedToCheckout => 'Proceed to checkout';
+
+  @override
+  String get featuredStoresPageTitle => 'Featured stores';
+
+  @override
+  String get couldNotLoadStores => 'Could not load stores';
+
+  @override
+  String get noStoresFound => 'No stores found';
+
+  @override
+  String get viewProducts => 'View products';
+
+  @override
+  String get tryAgain => 'Try Again';
 
   @override
   String get primeVideo => 'Prime Video';

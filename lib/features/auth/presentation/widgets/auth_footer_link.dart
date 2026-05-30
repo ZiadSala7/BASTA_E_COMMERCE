@@ -28,10 +28,7 @@ class AuthFooterLink extends StatelessWidget {
         const SizedBox(width: 4),
         GestureDetector(
           onTap: onTap,
-          child: Text(
-            action,
-            style: AppTextStyles.authLinkText(context),
-          ),
+          child: Text(action, style: AppTextStyles.authLinkText(context)),
         ),
       ],
     );

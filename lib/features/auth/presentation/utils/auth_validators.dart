@@ -27,7 +27,7 @@ class AuthValidators {
   static String? phone(String? value, AppLocalizations localizations) {
     final phone = value?.trim() ?? '';
     if (phone.isEmpty) {
-      return localizations.phoneRequired;
+      return null;
     }
 
     const pattern = r'^\+?[0-9]{8,15}$';
@@ -44,7 +44,7 @@ class AuthValidators {
       return localizations.passwordRequired;
     }
 
-    if (password.length < 6) {
+    if (password.length < 8) {
       return localizations.passwordTooShort;
     }
 
@@ -72,7 +72,7 @@ class AuthValidators {
     String value,
     AppLocalizations localizations,
   ) {
-    if (value.trim().length < 4) {
+    if (!RegExp(r'^\d{6}$').hasMatch(value.trim())) {
       return localizations.verificationCodeRequired;
     }
 

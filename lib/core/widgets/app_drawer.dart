@@ -4,7 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../features/auth/domain/entities/user_entity.dart';
+import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../l10n/app_localizations.dart';
+import '../di/service_locator.dart';
 import '../extensions/app_localizations_x.dart';
 import '../managers/language_cubit.dart';
 import '../managers/language_state.dart';
@@ -107,8 +110,65 @@ class AppDrawer extends StatelessWidget {
   }
 }
 
-class _DrawerProfileHeader extends StatelessWidget {
+class _DrawerProfileHeader extends StatefulWidget {
   const _DrawerProfileHeader();
+
+  @override
+  State<_DrawerProfileHeader> createState() => _DrawerProfileHeaderState();
+}
+
+class _DrawerProfileHeaderState extends State<_DrawerProfileHeader> {
+  late final Future<UserEntity?> _userFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    _userFuture = _loadUser();
+  }
+
+  Future<UserEntity?> _loadUser() async {
+    try {
+      return await sl<GetCurrentUserUseCase>()();
+    } catch (_) {
+      return null;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return FutureBuilder<UserEntity?>(
+      future: _userFuture,
+      builder: (context, snapshot) {
+        final user = snapshot.data;
+        final displayName = _displayName(l10n, user);
+        final email = user?.email.trim() ?? '';
+
+        return _DrawerProfileHeaderView(displayName: displayName, email: email);
+      },
+    );
+  }
+
+  String _displayName(AppLocalizations l10n, UserEntity? user) {
+    final name = user?.name.trim();
+    if (name != null && name.isNotEmpty) return name;
+
+    final email = user?.email.trim();
+    if (email != null && email.isNotEmpty) return email.split('@').first;
+
+    return l10n.profileDisplayName;
+  }
+}
+
+class _DrawerProfileHeaderView extends StatelessWidget {
+  final String displayName;
+  final String email;
+
+  const _DrawerProfileHeaderView({
+    required this.displayName,
+    required this.email,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -171,7 +231,7 @@ class _DrawerProfileHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      l10n.profileDisplayName,
+                      displayName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: GoogleFonts.cairo(
@@ -181,17 +241,19 @@ class _DrawerProfileHeader extends StatelessWidget {
                         height: 1.1,
                       ),
                     ),
-                    const SizedBox(height: 5),
-                    Text(
-                      'gamalmo234@gmail.com',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: GoogleFonts.cairo(
-                        color: Colors.white.withOpacity(0.78),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
+                    if (email.isNotEmpty) ...[
+                      const SizedBox(height: 5),
+                      Text(
+                        email,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: GoogleFonts.cairo(
+                          color: Colors.white.withOpacity(0.78),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    ),
+                    ],
                   ],
                 ),
               ),

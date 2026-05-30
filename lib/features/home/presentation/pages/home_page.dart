@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../core/widgets/app_drawer.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../cart/domain/usecases/add_cart_item_usecase.dart';
+import '../../../favorites/domain/services/favorites_controller.dart';
+import '../../domain/entities/home_category_entity.dart';
+import '../../domain/entities/home_product_entity.dart';
+import '../../domain/entities/home_store_entity.dart';
+import '../../domain/usecases/get_home_categories_usecase.dart';
+import '../../domain/usecases/get_home_products_usecase.dart';
+import '../../domain/usecases/get_home_stores_usecase.dart';
 import '../widgets/home_ad_carousel.dart';
 import '../widgets/home_featured_products_section.dart';
 import '../widgets/home_featured_stores_section.dart';
 import '../widgets/home_page_categories_strip.dart';
+import '../../../products/presentation/pages/product_detail_page.dart';
+import '../../../products/presentation/pages/products_listing_page.dart';
 
 class HomePage extends StatefulWidget {
   final VoidCallback? onMenuPressed;
@@ -22,6 +33,95 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late final GetHomeCategoriesUseCase _getCategories;
+  late final GetHomeProductsUseCase _getProducts;
+  late final GetHomeStoresUseCase _getStores;
+  late final AddCartItemUseCase _addCartItem;
+  late final FavoritesController _favoritesController;
+  late Future<List<HomeCategoryEntity>> _categoriesFuture;
+  late Future<List<HomeFeaturedProduct>> _productsFuture;
+  late Future<List<HomeFeaturedStore>> _storesFuture;
+  final Set<String> _addingProductIds = <String>{};
+  String? _selectedCategorySlug;
+  String? _selectedCategoryName;
+
+  @override
+  void initState() {
+    super.initState();
+    _getCategories = sl<GetHomeCategoriesUseCase>();
+    _getProducts = sl<GetHomeProductsUseCase>();
+    _getStores = sl<GetHomeStoresUseCase>();
+    _addCartItem = sl<AddCartItemUseCase>();
+    _favoritesController = sl<FavoritesController>();
+    _favoritesController.refresh();
+    _categoriesFuture = _getCategories();
+    _productsFuture = _fetchProducts();
+    _storesFuture = _fetchStores();
+  }
+
+  Future<List<HomeFeaturedProduct>> _fetchProducts() async {
+    final products = await _getProducts(
+      categorySlug: _selectedCategorySlug,
+      page: 1,
+      limit: 10,
+    );
+
+    return products.map(_toFeaturedProduct).toList();
+  }
+
+  Future<List<HomeFeaturedStore>> _fetchStores() async {
+    final storesPage = await _getStores(page: 1, limit: 10);
+    return storesPage.stores.map(_toFeaturedStore).toList();
+  }
+
+  HomeFeaturedProduct _toFeaturedProduct(HomeProductEntity product) {
+    return HomeFeaturedProduct(
+      id: product.id,
+      title: product.name,
+      price: _formatPrice(product.price),
+      oldPrice: product.compareAtPrice == null
+          ? null
+          : _formatPrice(product.compareAtPrice),
+      imageUrl: product.imageUrl,
+      discountLabel: _discountLabel(product),
+    );
+  }
+
+  HomeFeaturedStore _toFeaturedStore(HomeStoreEntity store) {
+    return HomeFeaturedStore(
+      id: store.id,
+      name: store.name,
+      slug: store.slug,
+      description: store.description,
+    );
+  }
+
+  String _formatPrice(double? value) {
+    if (value == null) return '';
+    final formatted = value % 1 == 0
+        ? value.toStringAsFixed(0)
+        : value.toStringAsFixed(2);
+    return 'JOD $formatted';
+  }
+
+  String? _discountLabel(HomeProductEntity product) {
+    if (!product.hasDiscount) return null;
+
+    final discount =
+        ((product.compareAtPrice! - product.price!) /
+                product.compareAtPrice! *
+                100)
+            .round();
+    return '$discount%';
+  }
+
+  void _selectCategory(HomeCategoryEntity? category) {
+    setState(() {
+      _selectedCategorySlug = category?.slug;
+      _selectedCategoryName = category?.name;
+      _productsFuture = _fetchProducts();
+    });
+  }
 
   List<HomeAdBanner> _demoAds(AppLocalizations l10n) => [
     HomeAdBanner(
@@ -47,90 +147,6 @@ class _HomePageState extends State<HomePage> {
     ),
   ];
 
-  List<HomeFeaturedProduct> _demoFeaturedProducts(AppLocalizations l10n) => [
-    HomeFeaturedProduct(
-      id: '1',
-      title: l10n.featuredProductThailand,
-      price: l10n.jdPrice('49'),
-      oldPrice: l10n.jdPrice('92'),
-      reviewCount: 10,
-      imageUrl:
-          'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=420&q=85',
-    ),
-    HomeFeaturedProduct(
-      id: '2',
-      title: l10n.featuredProductBakhoor,
-      price: l10n.jdPrice('49'),
-      oldPrice: l10n.jdPrice('92'),
-      discountLabel: '%14',
-      reviewCount: 10,
-      imageUrl:
-          'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=420&q=85',
-    ),
-    HomeFeaturedProduct(
-      id: '3',
-      title: l10n.featuredProductGifts,
-      price: l10n.jdPrice('39'),
-      reviewCount: 8,
-      imageUrl:
-          'https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=420&q=85',
-    ),
-  ];
-
-  List<HomeFeaturedProduct> _demoSchoolDesigns(AppLocalizations l10n) => [
-    HomeFeaturedProduct(
-      id: 'school-1',
-      title: l10n.schoolDesignAwarenessFile,
-      price: l10n.jdPrice('37'),
-      reviewCount: 10,
-      imageUrl:
-          'https://images.unsplash.com/photo-1586281380117-5a60ae2050cc?auto=format&fit=crop&w=420&q=85',
-    ),
-    HomeFeaturedProduct(
-      id: 'school-2',
-      title: l10n.schoolDesignCertificateLink,
-      price: l10n.jdPrice('20'),
-      reviewCount: 10,
-      imageUrl:
-          'https://images.unsplash.com/photo-1554224155-6726b3ff858f?auto=format&fit=crop&w=420&q=85',
-    ),
-    HomeFeaturedProduct(
-      id: 'school-3',
-      title: l10n.schoolDesignStudentFile,
-      price: l10n.jdPrice('20'),
-      reviewCount: 8,
-      imageUrl:
-          'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=420&q=85',
-    ),
-  ];
-
-  List<HomeFeaturedStore> _demoFeaturedStores(AppLocalizations l10n) => [
-    HomeFeaturedStore(
-      id: 'store-1',
-      name: l10n.storeSindibad,
-      imageUrl:
-          'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=220&q=85',
-    ),
-    HomeFeaturedStore(
-      id: 'store-2',
-      name: l10n.storeShamiBikes,
-      imageUrl:
-          'https://images.unsplash.com/photo-1485965120184-e220f721d03e?auto=format&fit=crop&w=220&q=85',
-    ),
-    HomeFeaturedStore(
-      id: 'store-3',
-      name: l10n.storeDukhanOud,
-      imageUrl:
-          'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=220&q=85',
-    ),
-    HomeFeaturedStore(
-      id: 'store-4',
-      name: l10n.storeSmartLibrary,
-      imageUrl:
-          'https://images.unsplash.com/photo-1586281380349-632531db7ed4?auto=format&fit=crop&w=220&q=85',
-    ),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
@@ -149,18 +165,293 @@ class _HomePageState extends State<HomePage> {
         children: [
           HomeAdCarousel(items: _demoAds(l10n)),
           const SizedBox(height: 20),
-          const HomePageCategoriesStrip(),
+          FutureBuilder<List<HomeCategoryEntity>>(
+            future: _categoriesFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const _CategoriesLoadingSection();
+              }
+
+              if (snapshot.hasError) {
+                return _ProductsErrorSection(
+                  message: 'Unable to load categories right now.',
+                  onRetry: () {
+                    setState(() {
+                      _categoriesFuture = _getCategories();
+                    });
+                  },
+                );
+              }
+
+              final categories = snapshot.data ?? const <HomeCategoryEntity>[];
+              if (categories.isEmpty) return const SizedBox.shrink();
+
+              return HomePageCategoriesStrip(
+                categories: categories,
+                selectedCategorySlug: _selectedCategorySlug,
+                onCategorySelected: _selectCategory,
+              );
+            },
+          ),
           const SizedBox(height: 18),
-          HomeFeaturedProductsSection(items: _demoFeaturedProducts(l10n)),
-          const SizedBox(height: 22),
-          HomeFeaturedProductsSection(
-            title: l10n.discoverSchoolDesigns,
-            items: _demoSchoolDesigns(l10n),
-            showRisingBadge: false,
+          FutureBuilder<List<HomeFeaturedProduct>>(
+            future: _productsFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const _ProductsLoadingSection();
+              }
+
+              if (snapshot.hasError) {
+                return _ProductsErrorSection(
+                  message: 'Unable to load products right now.',
+                  onRetry: () {
+                    setState(() {
+                      _productsFuture = _fetchProducts();
+                    });
+                  },
+                );
+              }
+
+              final products = snapshot.data ?? const <HomeFeaturedProduct>[];
+              if (products.isEmpty) return const SizedBox.shrink();
+
+              final saleProducts = products
+                  .where((product) => product.oldPrice != null)
+                  .toList();
+
+              return AnimatedBuilder(
+                animation: _favoritesController,
+                builder: (context, child) {
+                  return Column(
+                    children: [
+                      HomeFeaturedProductsSection(
+                        items: products,
+                        addingProductIds: _addingProductIds,
+                        favoriteProductIds:
+                            _favoritesController.favoriteProductIds,
+                        updatingFavoriteProductIds:
+                            _favoritesController.updatingProductIds,
+                        onFavoriteTap: _toggleFavorite,
+                        onShowAllTap: () => context.push(
+                          AppRoutes.products,
+                          extra: ProductsListingArgs(
+                            categorySlug: _selectedCategorySlug,
+                            title: _selectedCategoryName,
+                          ),
+                        ),
+                        onProductTap: (product) => context.push(
+                          AppRoutes.productDetail,
+                          extra: ProductDetailArgs(
+                            id: product.id,
+                            title: product.title,
+                            price: product.price,
+                            oldPrice: product.oldPrice,
+                            imageUrl: product.imageUrl,
+                            discountBadge: product.discountLabel,
+                            reviewCount: product.reviewCount,
+                          ),
+                        ),
+                        onAddToCart: _addProductToCart,
+                      ),
+                      if (saleProducts.isNotEmpty) ...[
+                        const SizedBox(height: 22),
+                        HomeFeaturedProductsSection(
+                          title: l10n.specialOfferTitle,
+                          items: saleProducts,
+                          addingProductIds: _addingProductIds,
+                          favoriteProductIds:
+                              _favoritesController.favoriteProductIds,
+                          updatingFavoriteProductIds:
+                              _favoritesController.updatingProductIds,
+                          onFavoriteTap: _toggleFavorite,
+                          showRisingBadge: false,
+                          onShowAllTap: () => context.push(
+                            AppRoutes.products,
+                            extra: ProductsListingArgs(
+                              categorySlug: _selectedCategorySlug,
+                              title: _selectedCategoryName,
+                            ),
+                          ),
+                          onProductTap: (product) => context.push(
+                            AppRoutes.productDetail,
+                            extra: ProductDetailArgs(
+                              id: product.id,
+                              title: product.title,
+                              price: product.price,
+                              oldPrice: product.oldPrice,
+                              imageUrl: product.imageUrl,
+                              discountBadge: product.discountLabel,
+                              reviewCount: product.reviewCount,
+                            ),
+                          ),
+                          onAddToCart: _addProductToCart,
+                        ),
+                      ],
+                    ],
+                  );
+                },
+              );
+            },
           ),
           const SizedBox(height: 22),
-          HomeFeaturedStoresSection(stores: _demoFeaturedStores(l10n)),
+          FutureBuilder<List<HomeFeaturedStore>>(
+            future: _storesFuture,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const _StoresLoadingSection();
+              }
+
+              if (snapshot.hasError) {
+                return _ProductsErrorSection(
+                  message: 'Unable to load stores right now.',
+                  onRetry: () {
+                    setState(() {
+                      _storesFuture = _fetchStores();
+                    });
+                  },
+                );
+              }
+
+              final stores = snapshot.data ?? const <HomeFeaturedStore>[];
+              if (stores.isEmpty) return const SizedBox.shrink();
+
+              return HomeFeaturedStoresSection(
+                stores: stores,
+                onShowAllTap: () => context.push(AppRoutes.stores),
+                onStoreTap: (store) => context.push(
+                  AppRoutes.products,
+                  extra: ProductsListingArgs(
+                    storeSlug: store.slug,
+                    title: store.name,
+                  ),
+                ),
+              );
+            },
+          ),
         ],
+      ),
+    );
+  }
+
+  Future<void> _addProductToCart(HomeFeaturedProduct product) async {
+    if (_addingProductIds.contains(product.id)) return;
+
+    setState(() => _addingProductIds.add(product.id));
+    try {
+      await _addCartItem(productId: product.id, quantity: 1);
+      if (!mounted) return;
+
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              l10n.pick(
+                ar: 'تمت إضافة ${product.title} إلى السلة',
+                en: '${product.title} added to cart',
+              ),
+            ),
+          ),
+        );
+    } catch (error) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(_cleanError(error))));
+    } finally {
+      if (mounted) {
+        setState(() => _addingProductIds.remove(product.id));
+      }
+    }
+  }
+
+  Future<void> _toggleFavorite(HomeFeaturedProduct product) async {
+    try {
+      await _favoritesController.toggle(product.id);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(_cleanError(error))));
+    }
+  }
+
+  String _cleanError(Object error) {
+    return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+  }
+}
+
+class _CategoriesLoadingSection extends StatelessWidget {
+  const _CategoriesLoadingSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      height: 132,
+      child: Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+class _ProductsLoadingSection extends StatelessWidget {
+  const _ProductsLoadingSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      height: 274,
+      child: Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+class _StoresLoadingSection extends StatelessWidget {
+  const _StoresLoadingSection();
+
+  @override
+  Widget build(BuildContext context) {
+    return const SizedBox(
+      height: 164,
+      child: Center(child: CircularProgressIndicator()),
+    );
+  }
+}
+
+class _ProductsErrorSection extends StatelessWidget {
+  final String message;
+  final VoidCallback onRetry;
+
+  const _ProductsErrorSection({required this.message, required this.onRetry});
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color: colorScheme.errorContainer,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            children: [
+              Icon(Icons.wifi_off_rounded, color: colorScheme.onErrorContainer),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  message,
+                  style: TextStyle(color: colorScheme.onErrorContainer),
+                ),
+              ),
+              TextButton(onPressed: onRetry, child: const Text('Retry')),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../cubits/auth_cubit.dart';
+import '../models/auth_verification_args.dart';
 import '../utils/auth_validators.dart';
 import '../widgets/auth_brand_header.dart';
 import '../widgets/auth_footer_link.dart';
@@ -59,7 +60,36 @@ class _RegisterPageState extends State<RegisterPage> {
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
         if (state is AuthAuthenticated) {
-          context.go(AppRoutes.home);
+          context.go(AppRoutes.mainNavigation);
+        }
+
+        if (state is AuthEmailConfirmationRequired) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+          context.push(
+            AppRoutes.verification,
+            extra: AuthVerificationArgs.emailConfirmation(email: state.email),
+          );
+        }
+
+        if (state is AuthRegistrationPending) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                state.message ?? 'Check your email for the verification code.',
+              ),
+            ),
+          );
+          context.push(
+            AppRoutes.verification,
+            extra: AuthVerificationArgs.registration(
+              name: _nameController.text.trim(),
+              email: _emailController.text.trim(),
+              password: _passwordController.text,
+              phone: _phoneController.text.trim(),
+            ),
+          );
         }
 
         if (state is AuthError) {

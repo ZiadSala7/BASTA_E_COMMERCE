@@ -5,7 +5,10 @@ import '../../../../l10n/app_localizations.dart';
 import 'auth_social_button.dart';
 
 class AuthSocialActions extends StatelessWidget {
-  const AuthSocialActions({super.key});
+  final VoidCallback? onGoogleTap;
+  final VoidCallback? onFacebookTap;
+
+  const AuthSocialActions({super.key, this.onGoogleTap, this.onFacebookTap});
 
   @override
   Widget build(BuildContext context) {
@@ -22,14 +25,14 @@ class AuthSocialActions extends StatelessWidget {
           label: localizations.loginWithGoogle,
           badgeText: 'G',
           badgeColor: const Color(0xFFEA4335),
-          onTap: () {},
+          onTap: onGoogleTap,
         ),
         const SizedBox(height: 12),
         AuthSocialButton(
           label: localizations.loginWithFacebook,
           badgeText: 'f',
           badgeColor: const Color(0xFF1877F2),
-          onTap: () {},
+          onTap: onFacebookTap,
         ),
       ],
     );

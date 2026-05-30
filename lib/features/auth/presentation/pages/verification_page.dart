@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -15,18 +17,40 @@ import '../widgets/auth_primary_button.dart';
 class VerificationPage extends StatefulWidget {
   final AuthVerificationArgs arguments;
 
-  const VerificationPage({
-    super.key,
-    required this.arguments,
-  });
+  const VerificationPage({super.key, required this.arguments});
 
   @override
   State<VerificationPage> createState() => _VerificationPageState();
 }
 
 class _VerificationPageState extends State<VerificationPage> {
+  static const int _resendCooldownSeconds = 20;
+
   String _code = '';
   String? _errorText;
+  Timer? _resendTimer;
+  int _remainingSeconds = _resendCooldownSeconds;
+
+  bool get _canResendCode {
+    return widget.arguments.flow != AuthVerificationFlow.passwordReset &&
+        (widget.arguments.email?.isNotEmpty ?? false);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (_canResendCode) {
+      _startResendTimer();
+    } else {
+      _remainingSeconds = 0;
+    }
+  }
+
+  @override
+  void dispose() {
+    _resendTimer?.cancel();
+    super.dispose();
+  }
 
   void _submit() {
     final localizations = AppLocalizations.of(context)!;
@@ -44,16 +68,67 @@ class _VerificationPageState extends State<VerificationPage> {
     });
 
     if (widget.arguments.flow == AuthVerificationFlow.passwordReset) {
-      context.go(AppRoutes.login);
+      context.push(
+        AppRoutes.resetPassword,
+        extra: AuthPasswordResetArgs(token: _code),
+      );
       return;
     }
 
-    context.read<AuthCubit>().register(
-      widget.arguments.email!,
-      widget.arguments.password!,
-      widget.arguments.name!,
-      widget.arguments.phone ?? '',
-    );
+    context.read<AuthCubit>().confirmEmail(_code);
+  }
+
+  void _resendCode() {
+    if (!_canResendCode || _remainingSeconds > 0) {
+      return;
+    }
+
+    final email = widget.arguments.email;
+    if (email == null || email.isEmpty) {
+      return;
+    }
+
+    context.read<AuthCubit>().resendConfirmation(email);
+  }
+
+  void _startResendTimer() {
+    _resendTimer?.cancel();
+    setState(() {
+      _remainingSeconds = _resendCooldownSeconds;
+    });
+
+    _resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+
+      if (_remainingSeconds <= 1) {
+        timer.cancel();
+        setState(() {
+          _remainingSeconds = 0;
+        });
+        return;
+      }
+
+      setState(() {
+        _remainingSeconds--;
+      });
+    });
+  }
+
+  String _formatRemainingTime() {
+    final minutes = _remainingSeconds ~/ 60;
+    final seconds = (_remainingSeconds % 60).toString().padLeft(2, '0');
+    return '$minutes:$seconds';
+  }
+
+  String _resendButtonLabel(AppLocalizations localizations) {
+    if (_remainingSeconds > 0) {
+      return localizations.resendCodeIn(_formatRemainingTime());
+    }
+
+    return localizations.resendCodeAction;
   }
 
   @override
@@ -62,14 +137,24 @@ class _VerificationPageState extends State<VerificationPage> {
 
     return BlocConsumer<AuthCubit, AuthState>(
       listener: (context, state) {
-        if (state is AuthAuthenticated) {
-          context.go(AppRoutes.home);
+        if (state is AuthEmailConfirmed) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+          context.go(AppRoutes.login);
+        }
+
+        if (state is AuthConfirmationCodeSent) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+          _startResendTimer();
         }
 
         if (state is AuthError) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(state.message)),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
         }
       },
       builder: (context, state) {
@@ -112,11 +197,19 @@ class _VerificationPageState extends State<VerificationPage> {
               ),
               const SizedBox(height: 22),
               Center(
-                child: Text(
-                  localizations.resendCodeIn('0:20'),
-                  style: const TextStyle(
-                    color: Color(0xFF8E90A6),
-                    fontSize: 14,
+                child: TextButton(
+                  onPressed:
+                      state is AuthLoading ||
+                          !_canResendCode ||
+                          _remainingSeconds > 0
+                      ? null
+                      : _resendCode,
+                  child: Text(
+                    _resendButtonLabel(localizations),
+                    style: const TextStyle(
+                      color: Color(0xFF8E90A6),
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ),

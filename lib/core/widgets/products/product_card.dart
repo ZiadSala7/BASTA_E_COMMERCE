@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../l10n/app_localizations.dart';
+import '../../extensions/app_localizations_x.dart';
+
 class ProductCard extends StatelessWidget {
   final String id;
   final String title;
@@ -11,6 +14,8 @@ class ProductCard extends StatelessWidget {
   final int? rating;
   final int? reviewCount;
   final bool isFavorite;
+  final bool isFavoriteUpdating;
+  final bool isAddingToCart;
   final VoidCallback? onTap;
   final VoidCallback? onFavoriteTap;
   final VoidCallback? onAddToCart;
@@ -26,6 +31,8 @@ class ProductCard extends StatelessWidget {
     this.rating,
     this.reviewCount,
     this.isFavorite = false,
+    this.isFavoriteUpdating = false,
+    this.isAddingToCart = false,
     this.onTap,
     this.onFavoriteTap,
     this.onAddToCart,
@@ -85,6 +92,7 @@ class ProductCard extends StatelessWidget {
                       end: 8,
                       child: _FavoriteButton(
                         isFavorite: isFavorite,
+                        isUpdating: isFavoriteUpdating,
                         onTap: onFavoriteTap,
                       ),
                     ),
@@ -181,7 +189,7 @@ class ProductCard extends StatelessWidget {
                           width: double.infinity,
                           height: 30,
                           child: ElevatedButton(
-                            onPressed: onAddToCart,
+                            onPressed: isAddingToCart ? null : onAddToCart,
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colorScheme.primary,
                               foregroundColor: Colors.white,
@@ -193,15 +201,27 @@ class ProductCard extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(7),
                               ),
                             ),
-                            child: Text(
-                              'Add to Cart',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.cairo(
-                                fontSize: 11.5,
-                                fontWeight: FontWeight.w800,
-                              ),
-                            ),
+                            child: isAddingToCart
+                                ? const SizedBox(
+                                    width: 15,
+                                    height: 15,
+                                    child: CircularProgressIndicator(
+                                      strokeWidth: 2,
+                                      color: Colors.white,
+                                    ),
+                                  )
+                                : Text(
+                                    AppLocalizations.of(context)!.pick(
+                                      ar: 'إضافة للسلة',
+                                      en: 'Add to Cart',
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: GoogleFonts.cairo(
+                                      fontSize: 11.5,
+                                      fontWeight: FontWeight.w800,
+                                    ),
+                                  ),
                           ),
                         ),
                       ],
@@ -282,9 +302,14 @@ class _ProductBadge extends StatelessWidget {
 }
 
 class _FavoriteButton extends StatelessWidget {
-  const _FavoriteButton({required this.isFavorite, this.onTap});
+  const _FavoriteButton({
+    required this.isFavorite,
+    required this.isUpdating,
+    this.onTap,
+  });
 
   final bool isFavorite;
+  final bool isUpdating;
   final VoidCallback? onTap;
 
   @override
@@ -293,18 +318,25 @@ class _FavoriteButton extends StatelessWidget {
       color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.94),
       shape: const CircleBorder(),
       child: InkWell(
-        onTap: onTap,
+        onTap: isUpdating ? null : onTap,
         customBorder: const CircleBorder(),
         child: SizedBox(
           width: 31,
           height: 31,
-          child: Icon(
-            isFavorite ? Icons.favorite_rounded : Icons.favorite_border_rounded,
-            color: isFavorite
-                ? const Color(0xFFE23B3B)
-                : const Color(0xFF6B7280),
-            size: 17,
-          ),
+          child: isUpdating
+              ? const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Icon(
+                  isFavorite
+                      ? Icons.favorite_rounded
+                      : Icons.favorite_border_rounded,
+                  color: isFavorite
+                      ? const Color(0xFFE23B3B)
+                      : const Color(0xFF6B7280),
+                  size: 17,
+                ),
         ),
       ),
     );

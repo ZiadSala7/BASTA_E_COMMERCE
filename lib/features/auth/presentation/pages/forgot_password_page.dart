@@ -46,7 +46,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
-          context.go(AppRoutes.login);
+          context.push(AppRoutes.resetPassword);
         }
 
         if (state is AuthError) {

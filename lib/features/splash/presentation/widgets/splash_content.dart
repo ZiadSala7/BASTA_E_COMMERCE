@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import '../../../../core/utils/app_colors.dart';
-import 'blob_widget.dart';
+import 'bottom_left_blob.dart';
 import 'logo_widget.dart';
+import 'top_right_blob.dart';
 
 /// Orchestrates the three-step reveal animation:
 ///  1. Top-right blob  (delay 300ms)
@@ -122,53 +123,19 @@ class _SplashContentState extends State<SplashContent>
       body: Stack(
         children: [
           // ── Top-right blob ───────────────────────────────────────────────
-          Positioned(
-            top: -size.height * 0.12,
-            right: -size.width * 0.18,
-            child: SlideTransition(
-              position: _topBlobSlide,
-              child: FadeTransition(
-                opacity: _topBlobOpacity,
-                child: ScaleTransition(
-                  scale: _topBlobScale,
-                  child: BlobWidget(
-                    size: size.width * 0.85,
-                    colors: const [
-                      AppColors.blobTopStart,
-                      AppColors.blobTopMid,
-                      AppColors.blobTopEnd,
-                    ],
-                    stops: const [0.0, 0.35, 0.75],
-                    center: const Alignment(-0.2, -0.2),
-                  ),
-                ),
-              ),
-            ),
+          TopRightBlob(
+            size: size,
+            topBlobSlide: _topBlobSlide,
+            topBlobOpacity: _topBlobOpacity,
+            topBlobScale: _topBlobScale,
           ),
 
           // ── Bottom-left blob ─────────────────────────────────────────────
-          Positioned(
-            bottom: -size.height * 0.1,
-            left: -size.width * 0.18,
-            child: SlideTransition(
-              position: _bottomBlobSlide,
-              child: FadeTransition(
-                opacity: _bottomBlobOpacity,
-                child: ScaleTransition(
-                  scale: _bottomBlobScale,
-                  child: BlobWidget(
-                    size: size.width * 0.82,
-                    colors: const [
-                      AppColors.blobBottomStart,
-                      AppColors.blobBottomMid,
-                      AppColors.blobBottomEnd,
-                    ],
-                    stops: const [0.0, 0.35, 0.75],
-                    center: const Alignment(0.2, 0.2),
-                  ),
-                ),
-              ),
-            ),
+          BottomLeftBlob(
+            size: size,
+            bottomBlobSlide: _bottomBlobSlide,
+            bottomBlobOpacity: _bottomBlobOpacity,
+            bottomBlobScale: _bottomBlobScale,
           ),
 
           // ── Logo ─────────────────────────────────────────────────────────
@@ -186,3 +153,5 @@ class _SplashContentState extends State<SplashContent>
     );
   }
 }
+
+

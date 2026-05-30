@@ -1,102 +1,166 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../../core/di/service_locator.dart';
+import '../../../../core/extensions/app_localizations_x.dart';
+import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/common/custom_app_bar.dart';
 import '../../../../core/widgets/common/section_header.dart';
 import '../../../../core/widgets/common/selectable_tile.dart';
-import '../../../../core/widgets/status/empty_state.dart';
 import '../../../../core/widgets/products/product_card.dart';
-import '../../../../core/utils/app_colors.dart';
+import '../../../../core/widgets/status/empty_state.dart';
+import '../../../../l10n/app_localizations.dart';
+import '../../../cart/domain/usecases/add_cart_item_usecase.dart';
+import '../../../favorites/domain/services/favorites_controller.dart';
+import '../../../home/domain/entities/home_product_entity.dart';
+import '../../../home/domain/usecases/get_home_products_usecase.dart';
 import 'product_detail_page.dart';
 
+class ProductsListingArgs {
+  final String? categorySlug;
+  final String? storeSlug;
+  final String? title;
+
+  const ProductsListingArgs({this.categorySlug, this.storeSlug, this.title});
+}
+
 class ProductsListingPage extends StatefulWidget {
+  final ProductsListingArgs? args;
   final String? category;
   final String? storeId;
 
-  const ProductsListingPage({super.key, this.category, this.storeId});
+  const ProductsListingPage({
+    super.key,
+    this.args,
+    this.category,
+    this.storeId,
+  });
 
   @override
   State<ProductsListingPage> createState() => _ProductsListingPageState();
 }
 
 class _ProductsListingPageState extends State<ProductsListingPage> {
+  static const int _pageLimit = 10;
+
   final TextEditingController _searchController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
 
-  String _searchQuery = '';
-  String _sortBy = 'popular';
-  double _minPrice = 0;
-  double _maxPrice = 1000;
-  bool _showOnlySales = false;
+  late final GetHomeProductsUseCase _getProducts;
+  late final AddCartItemUseCase _addCartItem;
+  late final FavoritesController _favoritesController;
 
-  // Demo data
-  final List<Map<String, dynamic>> _products = [
-    {
-      'id': '1',
-      'title': 'Elegant Summer Dress with Floral Pattern',
-      'price': 'JD 89.99',
-      'oldPrice': 'JD 129.99',
-      'rating': 4.8,
-      'reviews': 234,
-      'discount': '-31%',
-      'image':
-          'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=400&q=85',
-    },
-    {
-      'id': '2',
-      'title': 'Premium Cotton Shirt',
-      'price': 'JD 45.99',
-      'rating': 4.5,
-      'reviews': 156,
-      'image':
-          'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=400&q=85',
-    },
-    {
-      'id': '3',
-      'title': 'Designer Handbag Collection',
-      'price': 'JD 159.99',
-      'oldPrice': 'JD 199.99',
-      'rating': 4.9,
-      'reviews': 89,
-      'discount': '-20%',
-      'image':
-          'https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=400&q=85',
-    },
-    {
-      'id': '4',
-      'title': 'Classic Denim Jeans',
-      'price': 'JD 65.99',
-      'rating': 4.3,
-      'reviews': 312,
-      'image':
-          'https://images.unsplash.com/photo-1542272604-787c3835535d?auto=format&fit=crop&w=400&q=85',
-    },
-    {
-      'id': '5',
-      'title': 'Luxury Watch Collection',
-      'price': 'JD 299.99',
-      'oldPrice': 'JD 399.99',
-      'rating': 4.7,
-      'reviews': 67,
-      'discount': '-25%',
-      'image':
-          'https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&w=400&q=85',
-    },
-    {
-      'id': '6',
-      'title': 'Comfortable Sneakers',
-      'price': 'JD 89.99',
-      'rating': 4.6,
-      'reviews': 445,
-      'image':
-          'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=400&q=85',
-    },
-  ];
+  final List<HomeProductEntity> _products = [];
+  final Set<String> _addingProductIds = <String>{};
+  String _searchQuery = '';
+  String _sortBy = 'newest';
+  double _minPrice = 0;
+  double _maxPrice = 10000;
+  bool _showOnlySales = false;
+  bool _isLoadingInitial = true;
+  bool _isLoadingMore = false;
+  bool _hasMore = true;
+  String? _errorMessage;
+  int _page = 1;
+
+  String? get _categorySlug => widget.args?.categorySlug;
+  String? get _storeSlug => widget.args?.storeSlug ?? widget.storeId;
+  String get _screenTitle =>
+      widget.args?.title ?? widget.category ?? 'All Products';
+
+  @override
+  void initState() {
+    super.initState();
+    _getProducts = sl<GetHomeProductsUseCase>();
+    _addCartItem = sl<AddCartItemUseCase>();
+    _favoritesController = sl<FavoritesController>();
+    _favoritesController.refresh();
+    _scrollController.addListener(_onScroll);
+    _loadFirstPage();
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
-    _scrollController.dispose();
+    _scrollController
+      ..removeListener(_onScroll)
+      ..dispose();
     super.dispose();
+  }
+
+  Future<void> _loadFirstPage() async {
+    setState(() {
+      _page = 1;
+      _products.clear();
+      _hasMore = true;
+      _errorMessage = null;
+      _isLoadingInitial = true;
+    });
+
+    try {
+      final products = await _fetchPage(_page);
+      if (!mounted) return;
+
+      setState(() {
+        _products.addAll(products);
+        _hasMore = products.length == _pageLimit;
+        _isLoadingInitial = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorMessage = _cleanError(error);
+        _isLoadingInitial = false;
+      });
+    }
+  }
+
+  Future<void> _loadNextPage() async {
+    if (_isLoadingInitial || _isLoadingMore || !_hasMore) return;
+
+    setState(() {
+      _isLoadingMore = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final nextPage = _page + 1;
+      final products = await _fetchPage(nextPage);
+      if (!mounted) return;
+
+      setState(() {
+        _page = nextPage;
+        _products.addAll(products);
+        _hasMore = products.length == _pageLimit;
+        _isLoadingMore = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorMessage = _cleanError(error);
+        _isLoadingMore = false;
+      });
+    }
+  }
+
+  Future<List<HomeProductEntity>> _fetchPage(int page) {
+    return _getProducts(
+      categorySlug: _categorySlug,
+      storeSlug: _storeSlug,
+      page: page,
+      limit: _pageLimit,
+    );
+  }
+
+  void _onScroll() {
+    if (!_scrollController.hasClients) return;
+
+    final position = _scrollController.position;
+    if (position.extentAfter < 320) {
+      _loadNextPage();
+    }
   }
 
   @override
@@ -104,9 +168,8 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
     return Scaffold(
       body: Column(
         children: [
-          // Custom App Bar with Search
           CustomAppBar(
-            title: widget.category ?? 'All Products',
+            title: _screenTitle,
             showSearch: true,
             searchController: _searchController,
             searchHint: 'Search products...',
@@ -118,13 +181,11 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
               ),
             ],
           ),
-          // Active Filters Bar
           _ActiveFiltersBar(
             sortBy: _sortBy,
             onSortChanged: (value) => setState(() => _sortBy = value),
             onClearFilters: _clearFilters,
           ),
-          // Products Grid
           Expanded(child: _buildProductsGrid()),
         ],
       ),
@@ -138,22 +199,21 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
   }
 
   Widget _buildProductsGrid() {
-    final filteredProducts = _products.where((product) {
-      // Apply search filter
-      if (_searchQuery.isNotEmpty) {
-        final searchLower = _searchQuery.toLowerCase();
-        final title = product['title'].toString().toLowerCase();
-        if (!title.contains(searchLower)) return false;
-      }
+    if (_isLoadingInitial) {
+      return const Center(child: CircularProgressIndicator());
+    }
 
-      // Apply sales filter
-      if (_showOnlySales && product['oldPrice'] == null) return false;
+    if (_products.isEmpty && _errorMessage != null) {
+      return EmptyState(
+        icon: Icons.wifi_off_rounded,
+        title: 'Could not load products',
+        message: _errorMessage,
+        actionLabel: 'Try Again',
+        onActionTap: _loadFirstPage,
+      );
+    }
 
-      final price = _priceValue(product['price'].toString());
-      if (price < _minPrice || price > _maxPrice) return false;
-
-      return true;
-    }).toList()..sort(_sortProducts);
+    final filteredProducts = _filteredProducts();
 
     if (filteredProducts.isEmpty) {
       return EmptyState(
@@ -165,75 +225,178 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
       );
     }
 
-    return GridView.builder(
-      controller: _scrollController,
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 0.58,
-        crossAxisSpacing: 12,
-        mainAxisSpacing: 12,
-      ),
-      itemCount: filteredProducts.length,
-      itemBuilder: (context, index) {
-        final product = filteredProducts[index];
-        return ProductCard(
-          id: product['id'],
-          title: product['title'],
-          price: product['price'],
-          oldPrice: product['oldPrice'],
-          imageUrl: product['image'],
-          discountBadge: product['discount'],
-          rating: product['rating']?.toInt(),
-          reviewCount: product['reviews'],
-          onTap: () {
-            // Navigate to product detail
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (_) => ProductDetailPage(productId: product['id']),
-              ),
-            );
-          },
-          onFavoriteTap: () {
-            // Toggle favorite
-          },
-          onAddToCart: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('${product['title']} added to cart!')),
-            );
-          },
-        );
+    return RefreshIndicator(
+      onRefresh: () async {
+        await Future.wait([_loadFirstPage(), _favoritesController.refresh()]);
       },
+      child: AnimatedBuilder(
+        animation: _favoritesController,
+        builder: (context, child) {
+          return GridView.builder(
+            controller: _scrollController,
+            physics: const AlwaysScrollableScrollPhysics(),
+            padding: const EdgeInsets.all(16),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: 0.58,
+              crossAxisSpacing: 12,
+              mainAxisSpacing: 12,
+            ),
+            itemCount: filteredProducts.length + (_isLoadingMore ? 2 : 0),
+            itemBuilder: (context, index) {
+              if (index >= filteredProducts.length) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              final product = filteredProducts[index];
+              return ProductCard(
+                id: product.id,
+                title: product.name,
+                price: _formatPrice(product.price),
+                oldPrice: product.compareAtPrice == null
+                    ? null
+                    : _formatPrice(product.compareAtPrice),
+                imageUrl: product.imageUrl,
+                discountBadge: _discountLabel(product),
+                isFavorite: _favoritesController.isFavorite(product.id),
+                isFavoriteUpdating: _favoritesController.isUpdating(product.id),
+                isAddingToCart: _addingProductIds.contains(product.id),
+                onTap: () {
+                  final detail = _detailArgs(product);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ProductDetailPage(
+                        productId: detail.id,
+                        product: detail,
+                      ),
+                    ),
+                  );
+                },
+                onFavoriteTap: () => _toggleFavorite(product),
+                onAddToCart: () => _addProductToCart(product),
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
-  int _sortProducts(Map<String, dynamic> a, Map<String, dynamic> b) {
+  List<HomeProductEntity> _filteredProducts() {
+    final products = _products.where((product) {
+      if (_searchQuery.isNotEmpty) {
+        final searchLower = _searchQuery.toLowerCase();
+        if (!product.name.toLowerCase().contains(searchLower)) return false;
+      }
+
+      if (_showOnlySales && !product.hasDiscount) return false;
+
+      final price = product.price ?? 0;
+      if (price < _minPrice || price > _maxPrice) return false;
+
+      return true;
+    }).toList();
+
+    products.sort(_sortProducts);
+    return products;
+  }
+
+  int _sortProducts(HomeProductEntity a, HomeProductEntity b) {
     switch (_sortBy) {
-      case 'newest':
-        return b['id'].toString().compareTo(a['id'].toString());
       case 'price_low':
-        return _priceValue(
-          a['price'].toString(),
-        ).compareTo(_priceValue(b['price'].toString()));
+        return (a.price ?? 0).compareTo(b.price ?? 0);
       case 'price_high':
-        return _priceValue(
-          b['price'].toString(),
-        ).compareTo(_priceValue(a['price'].toString()));
-      case 'rating':
-        return ((b['rating'] as num?) ?? 0).compareTo(
-          (a['rating'] as num?) ?? 0,
-        );
-      case 'popular':
+        return (b.price ?? 0).compareTo(a.price ?? 0);
+      case 'sale':
+        final aDiscount = (a.compareAtPrice ?? a.price ?? 0) - (a.price ?? 0);
+        final bDiscount = (b.compareAtPrice ?? b.price ?? 0) - (b.price ?? 0);
+        return bDiscount.compareTo(aDiscount);
+      case 'newest':
       default:
-        return ((b['reviews'] as num?) ?? 0).compareTo(
-          (a['reviews'] as num?) ?? 0,
-        );
+        return b.id.compareTo(a.id);
     }
   }
 
-  double _priceValue(String price) {
-    return double.tryParse(price.replaceAll(RegExp(r'[^0-9.]'), '')) ?? 0;
+  ProductDetailArgs _detailArgs(HomeProductEntity product) {
+    return ProductDetailArgs(
+      id: product.id,
+      title: product.name,
+      price: _formatPrice(product.price),
+      oldPrice: product.compareAtPrice == null
+          ? null
+          : _formatPrice(product.compareAtPrice),
+      imageUrl: product.imageUrl,
+      discountBadge: _discountLabel(product),
+    );
+  }
+
+  String _formatPrice(double? value) {
+    if (value == null) return '';
+    final formatted = value % 1 == 0
+        ? value.toStringAsFixed(0)
+        : value.toStringAsFixed(2);
+    return 'JOD $formatted';
+  }
+
+  String? _discountLabel(HomeProductEntity product) {
+    if (!product.hasDiscount) return null;
+
+    final discount =
+        ((product.compareAtPrice! - product.price!) /
+                product.compareAtPrice! *
+                100)
+            .round();
+    return '$discount%';
+  }
+
+  String _cleanError(Object error) {
+    return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
+  }
+
+  Future<void> _addProductToCart(HomeProductEntity product) async {
+    if (_addingProductIds.contains(product.id)) return;
+
+    setState(() => _addingProductIds.add(product.id));
+    try {
+      await _addCartItem(productId: product.id, quantity: 1);
+      if (!mounted) return;
+
+      final l10n = AppLocalizations.of(context)!;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          SnackBar(
+            content: Text(
+              l10n.pick(
+                ar: 'تمت إضافة ${product.name} إلى السلة',
+                en: '${product.name} added to cart',
+              ),
+            ),
+          ),
+        );
+    } catch (error) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(_cleanError(error))));
+    } finally {
+      if (mounted) {
+        setState(() => _addingProductIds.remove(product.id));
+      }
+    }
+  }
+
+  Future<void> _toggleFavorite(HomeProductEntity product) async {
+    try {
+      await _favoritesController.toggle(product.id);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(_cleanError(error))));
+    }
   }
 
   void _showFilterBottomSheet() {
@@ -262,9 +425,9 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
     setState(() {
       _searchQuery = '';
       _searchController.clear();
-      _sortBy = 'popular';
+      _sortBy = 'newest';
       _minPrice = 0;
-      _maxPrice = 1000;
+      _maxPrice = 10000;
       _showOnlySales = false;
     });
   }
@@ -303,7 +466,6 @@ class _ActiveFiltersBar extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 8),
-          // Sort Dropdown
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
@@ -316,27 +478,21 @@ class _ActiveFiltersBar extends StatelessWidget {
                 onChanged: (value) {
                   if (value != null) onSortChanged(value);
                 },
-                items:
-                    [
-                      'popular',
-                      'newest',
-                      'price_low',
-                      'price_high',
-                      'rating',
-                    ].map((value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          _getSortLabel(value),
-                          style: GoogleFonts.cairo(fontSize: 13),
-                        ),
-                      );
-                    }).toList(),
+                items: ['newest', 'price_low', 'price_high', 'sale'].map((
+                  value,
+                ) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(
+                      _getSortLabel(value),
+                      style: GoogleFonts.cairo(fontSize: 13),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
           ),
           const Spacer(),
-          // Clear Filters
           TextButton(
             onPressed: onClearFilters,
             child: Text(
@@ -351,16 +507,14 @@ class _ActiveFiltersBar extends StatelessWidget {
 
   String _getSortLabel(String sortValue) {
     switch (sortValue) {
-      case 'popular':
-        return 'Most Popular';
       case 'newest':
         return 'Newest';
       case 'price_low':
         return 'Price: Low to High';
       case 'price_high':
         return 'Price: High to Low';
-      case 'rating':
-        return 'Top Rated';
+      case 'sale':
+        return 'Best Sale';
       default:
         return 'Sort By';
     }
@@ -441,7 +595,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                   RangeSlider(
                     values: RangeValues(_minPrice, _maxPrice),
                     min: 0,
-                    max: 1000,
+                    max: 10000,
                     divisions: 20,
                     labels: RangeLabels(
                       'JD ${_minPrice.toInt()}',
@@ -485,7 +639,6 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
             ),
           ),
           const SizedBox(height: 16),
-          // Apply Button
           SizedBox(
             width: double.infinity,
             height: 48,
@@ -519,7 +672,6 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
 
   Widget _buildSortOptions() {
     final options = [
-      {'value': 'popular', 'label': 'Most Popular', 'icon': Icons.trending_up},
       {'value': 'newest', 'label': 'Newest First', 'icon': Icons.fiber_new},
       {
         'value': 'price_low',
@@ -531,7 +683,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
         'label': 'Price: High to Low',
         'icon': Icons.arrow_downward,
       },
-      {'value': 'rating', 'label': 'Top Rated', 'icon': Icons.star},
+      {'value': 'sale', 'label': 'Best Sale', 'icon': Icons.local_offer},
     ];
 
     return Column(

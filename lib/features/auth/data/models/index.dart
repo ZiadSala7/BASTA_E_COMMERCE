@@ -1,5 +1,10 @@
+export 'auth_message_response.dart';
+export 'change_password_request.dart';
 export 'forgot_password_request.dart';
 export 'login_request.dart';
 export 'login_response.dart';
 export 'register_request.dart';
+export 'register_response.dart';
+export 'reset_password_request.dart';
+export 'update_profile_request.dart';
 export 'user_model.dart';

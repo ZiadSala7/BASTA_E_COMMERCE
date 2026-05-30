@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import '../../../../core/responsive/responsive_utils.dart';
 
 import 'onboarding_image_placeholder.dart';
 
@@ -17,21 +18,31 @@ class OnboardingImageCard extends StatelessWidget {
     final screenH = MediaQuery.sizeOf(context).height;
 
     return Container(
-      constraints: BoxConstraints(maxHeight: screenH * 0.55),
+      constraints: BoxConstraints(
+        maxHeight: ResponsiveUtils.getResponsiveSize(context, screenH * 0.55),
+      ),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(28),
+        borderRadius: BorderRadius.circular(
+          ResponsiveUtils.getResponsiveSize(context, 28),
+        ),
         boxShadow: [
           BoxShadow(
             color: const Color(0xFF5B5BFF).withOpacity(0.15),
-            blurRadius: 40,
-            spreadRadius: 2,
-            offset: const Offset(0, 16),
+            blurRadius: ResponsiveUtils.getResponsiveSize(context, 40),
+            spreadRadius: ResponsiveUtils.getResponsiveSize(context, 2),
+            offset: Offset(
+              0,
+              ResponsiveUtils.getResponsiveSize(context, 16),
+            ),
           ),
           BoxShadow(
             color: Colors.black.withOpacity(0.07),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            blurRadius: ResponsiveUtils.getResponsiveSize(context, 20),
+            offset: Offset(
+              0,
+              ResponsiveUtils.getResponsiveSize(context, 8),
+            ),
           ),
         ],
       ),

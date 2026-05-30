@@ -7,65 +7,52 @@ import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/common/section_header.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/entities/home_category_entity.dart';
 
-class HomePageCategoriesStrip extends StatefulWidget {
-  const HomePageCategoriesStrip({super.key});
+class HomePageCategoriesStrip extends StatelessWidget {
+  final List<HomeCategoryEntity> categories;
+  final String? selectedCategorySlug;
+  final ValueChanged<HomeCategoryEntity?> onCategorySelected;
 
-  @override
-  State<HomePageCategoriesStrip> createState() =>
-      _HomePageCategoriesStripState();
-}
+  const HomePageCategoriesStrip({
+    super.key,
+    required this.categories,
+    required this.selectedCategorySlug,
+    required this.onCategorySelected,
+  });
 
-class _HomePageCategoriesStripState extends State<HomePageCategoriesStrip> {
-  int _selectedIndex = 0;
-
-  static const List<_CategoryData> _categories = [
-    _CategoryData(
-      label: '',
-      icon: Icons.grid_view_rounded,
-      accent: AppColors.primary,
-      count: 128,
-    ),
-    _CategoryData(
-      label: '',
-      imageUrl:
-          'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=240&q=85',
-      accent: Color(0xFFB7791F),
-      count: 34,
-    ),
-    _CategoryData(
-      label: '',
-      imageUrl:
-          'https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=240&q=85',
-      accent: Color(0xFF7C4A2D),
-      count: 21,
-    ),
-    _CategoryData(
-      label: '',
-      imageUrl:
-          'https://images.unsplash.com/photo-1608571423902-eed4a5ad8108?auto=format&fit=crop&w=240&q=85',
-      accent: Color(0xFF0F8D7D),
-      count: 18,
-    ),
-    _CategoryData(
-      label: '',
-      imageUrl:
-          'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=240&q=85',
-      accent: Color(0xFFE05D7B),
-      count: 42,
-    ),
-    _CategoryData(
-      label: '',
-      imageUrl:
-          'https://images.unsplash.com/photo-1596755094514-f87e34085b2c?auto=format&fit=crop&w=240&q=85',
-      accent: Color(0xFF4F6FDE),
-      count: 55,
-    ),
+  static const _accents = [
+    AppColors.primary,
+    Color(0xFFB7791F),
+    Color(0xFF0F8D7D),
+    Color(0xFFE05D7B),
+    Color(0xFF4F6FDE),
+    Color(0xFF7C4A2D),
+    Color(0xFF7C3AED),
+    Color(0xFF2563EB),
   ];
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final tiles = <_CategoryData>[
+      _CategoryData(
+        label: l10n.showAll,
+        description: l10n.pick(ar: 'كل المنتجات', en: 'All products'),
+        icon: Icons.grid_view_rounded,
+        accent: AppColors.primary,
+      ),
+      ...categories.indexed.map((entry) {
+        final (index, category) = entry;
+        return _CategoryData(
+          label: category.name,
+          description: category.description,
+          icon: _iconForSlug(category.slug),
+          accent: _accents[(index + 1) % _accents.length],
+          category: category,
+        );
+      }),
+    ];
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -87,14 +74,16 @@ class _HomePageCategoriesStripState extends State<HomePageCategoriesStrip> {
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            itemCount: _categories.length,
+            itemCount: tiles.length,
             separatorBuilder: (_, _) => const SizedBox(width: 12),
             itemBuilder: (context, index) {
+              final data = tiles[index];
+              final slug = data.category?.slug;
+
               return _CategoryTile(
-                data: _categories[index],
-                index: index,
-                isSelected: index == _selectedIndex,
-                onTap: () => setState(() => _selectedIndex = index),
+                data: data,
+                isSelected: slug == selectedCategorySlug,
+                onTap: () => onCategorySelected(data.category),
               );
             },
           ),
@@ -102,53 +91,68 @@ class _HomePageCategoriesStripState extends State<HomePageCategoriesStrip> {
       ],
     );
   }
+
+  IconData _iconForSlug(String slug) {
+    if (slug.contains('electronics') || slug.contains('gaming')) {
+      return Icons.devices_rounded;
+    }
+    if (slug.contains('clothing') || slug.contains('clothes')) {
+      return Icons.checkroom_rounded;
+    }
+    if (slug.contains('food') || slug.contains('sweets')) {
+      return Icons.local_dining_rounded;
+    }
+    if (slug.contains('coffee') || slug.contains('spices')) {
+      return Icons.coffee_rounded;
+    }
+    if (slug.contains('jewelry')) return Icons.diamond_rounded;
+    if (slug.contains('shoes')) return Icons.hiking_rounded;
+    if (slug.contains('equipment')) return Icons.sports_soccer_rounded;
+    return Icons.category_rounded;
+  }
 }
 
 class _CategoryData {
   final String label;
-  final String? imageUrl;
-  final IconData? icon;
+  final String description;
+  final IconData icon;
   final Color accent;
-  final int count;
+  final HomeCategoryEntity? category;
 
   const _CategoryData({
     required this.label,
+    required this.description,
+    required this.icon,
     required this.accent,
-    required this.count,
-    this.imageUrl,
-    this.icon,
+    this.category,
   });
 }
 
 class _CategoryTile extends StatelessWidget {
   final _CategoryData data;
-  final int index;
   final bool isSelected;
   final VoidCallback onTap;
 
   const _CategoryTile({
     required this.data,
-    required this.index,
     required this.isSelected,
     required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    final label = _localizedLabel(l10n);
 
     return Semantics(
       button: true,
       selected: isSelected,
-      label: label,
+      label: data.label,
       child: GestureDetector(
         onTap: onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 220),
           curve: Curves.easeOutCubic,
-          width: 118,
+          width: 132,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
             color: colorScheme.surface,
@@ -202,22 +206,19 @@ class _CategoryTile extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                label,
+                data.label,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.cairo(
                   color: colorScheme.onSurface,
-                  fontSize: 14,
+                  fontSize: 13.5,
                   fontWeight: FontWeight.w900,
                   height: 1.05,
                 ),
               ),
               const SizedBox(height: 5),
               Text(
-                l10n.pick(
-                  ar: '${data.count} منتج',
-                  en: '${data.count} products',
-                ),
+                data.description,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.cairo(
@@ -234,18 +235,6 @@ class _CategoryTile extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _localizedLabel(AppLocalizations l10n) {
-    return switch (index) {
-      0 => l10n.showAll,
-      1 => l10n.jewelry,
-      2 => l10n.coffee,
-      3 => l10n.oud,
-      4 => l10n.perfumes,
-      5 => l10n.fashion,
-      _ => data.label,
-    };
   }
 }
 
@@ -264,35 +253,7 @@ class _CategoryVisual extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: data.accent.withOpacity(0.18)),
       ),
-      clipBehavior: Clip.antiAlias,
-      child: data.imageUrl == null
-          ? Icon(data.icon, color: data.accent, size: 25)
-          : Stack(
-              fit: StackFit.expand,
-              children: [
-                Image.network(
-                  data.imageUrl!,
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, _, _) => Icon(
-                    Icons.category_rounded,
-                    color: data.accent,
-                    size: 24,
-                  ),
-                ),
-                DecoratedBox(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        Colors.transparent,
-                        data.accent.withOpacity(0.22),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+      child: Icon(data.icon, color: data.accent, size: 25),
     );
   }
 }

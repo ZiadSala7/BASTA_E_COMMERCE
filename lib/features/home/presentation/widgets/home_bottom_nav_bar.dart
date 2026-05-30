@@ -9,11 +9,13 @@ import '../../../../l10n/app_localizations.dart';
 
 class HomeBottomNavBar extends StatelessWidget {
   final int currentIndex;
+  final int cartItemCount;
   final ValueChanged<int> onTap;
 
   const HomeBottomNavBar({
     super.key,
     required this.currentIndex,
+    this.cartItemCount = 0,
     required this.onTap,
   });
 
@@ -82,7 +84,7 @@ class HomeBottomNavBar extends StatelessWidget {
                           label: l10n.cart,
                           isSelected: currentIndex == 3,
                           onTap: () => onTap(3),
-                          badgeCount: 2,
+                          badgeCount: cartItemCount,
                         ),
                       ),
                       Expanded(
@@ -267,16 +269,20 @@ class _NavItem extends StatelessWidget {
                         ? AppColors.primary
                         : colorScheme.onSurfaceVariant,
                   ),
-                  if (badgeCount != null)
+                  if (badgeCount != null && badgeCount! > 0)
                     PositionedDirectional(
                       top: -5,
                       end: -7,
                       child: Container(
-                        width: 17,
+                        constraints: const BoxConstraints(
+                          minWidth: 17,
+                          minHeight: 17,
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
                         height: 17,
                         decoration: BoxDecoration(
                           color: AppColors.badgeRed,
-                          shape: BoxShape.circle,
+                          borderRadius: BorderRadius.circular(99),
                           border: Border.all(
                             color: colorScheme.surface,
                             width: 1.4,
@@ -284,7 +290,7 @@ class _NavItem extends StatelessWidget {
                         ),
                         child: Center(
                           child: Text(
-                            '$badgeCount',
+                            badgeCount! > 99 ? '99+' : '$badgeCount',
                             style: const TextStyle(
                               color: Colors.white,
                               fontSize: 9,

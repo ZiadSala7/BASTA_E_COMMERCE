@@ -1,4 +1,4 @@
-enum AuthVerificationFlow { registration, passwordReset }
+enum AuthVerificationFlow { registration, emailConfirmation, passwordReset }
 
 class AuthVerificationArgs {
   final AuthVerificationFlow flow;
@@ -16,10 +16,23 @@ class AuthVerificationArgs {
   }) : flow = AuthVerificationFlow.registration,
        destination = email;
 
+  const AuthVerificationArgs.emailConfirmation({required String this.email})
+    : flow = AuthVerificationFlow.emailConfirmation,
+      destination = email,
+      name = null,
+      password = null,
+      phone = null;
+
   const AuthVerificationArgs.passwordReset({required this.destination})
     : flow = AuthVerificationFlow.passwordReset,
       name = null,
       email = null,
       password = null,
       phone = null;
+}
+
+class AuthPasswordResetArgs {
+  final String token;
+
+  const AuthPasswordResetArgs({required this.token});
 }

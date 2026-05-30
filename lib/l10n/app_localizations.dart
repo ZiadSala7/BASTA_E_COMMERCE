@@ -278,6 +278,36 @@ abstract class AppLocalizations {
   /// **'Please enter the email linked to your account so we can send reset instructions.'**
   String get forgotPasswordSubtitle;
 
+  /// No description provided for @resetPasswordTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get resetPasswordTitle;
+
+  /// No description provided for @resetPasswordSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Paste the token from your email and choose a new password.'**
+  String get resetPasswordSubtitle;
+
+  /// No description provided for @resetTokenHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset token'**
+  String get resetTokenHint;
+
+  /// No description provided for @resetTokenRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset token is required'**
+  String get resetTokenRequired;
+
+  /// No description provided for @resetPasswordButton.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get resetPasswordButton;
+
   /// No description provided for @verificationTitle.
   ///
   /// In en, this message translates to:
@@ -404,6 +434,12 @@ abstract class AppLocalizations {
   /// **'Resend code in {time}'**
   String resendCodeIn(Object time);
 
+  /// No description provided for @resendCodeAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend code'**
+  String get resendCodeAction;
+
   /// No description provided for @nameRequired.
   ///
   /// In en, this message translates to:
@@ -443,8 +479,14 @@ abstract class AppLocalizations {
   /// No description provided for @passwordTooShort.
   ///
   /// In en, this message translates to:
-  /// **'Password must be at least 6 characters'**
+  /// **'Password must be at least 8 characters'**
   String get passwordTooShort;
+
+  /// No description provided for @passwordComplexityRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must include uppercase, lowercase, number, and special character.'**
+  String get passwordComplexityRequired;
 
   /// No description provided for @confirmPasswordRequired.
   ///
@@ -461,7 +503,7 @@ abstract class AppLocalizations {
   /// No description provided for @verificationCodeRequired.
   ///
   /// In en, this message translates to:
-  /// **'Please enter the 4-digit code'**
+  /// **'Please enter the 6-digit code'**
   String get verificationCodeRequired;
 
   /// No description provided for @enterAppButton.
@@ -511,6 +553,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Proceed to checkout'**
   String get proceedToCheckout;
+
+  /// No description provided for @featuredStoresPageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Featured stores'**
+  String get featuredStoresPageTitle;
+
+  /// No description provided for @couldNotLoadStores.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load stores'**
+  String get couldNotLoadStores;
+
+  /// No description provided for @noStoresFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No stores found'**
+  String get noStoresFound;
+
+  /// No description provided for @viewProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'View products'**
+  String get viewProducts;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try Again'**
+  String get tryAgain;
 
   /// No description provided for @primeVideo.
   ///

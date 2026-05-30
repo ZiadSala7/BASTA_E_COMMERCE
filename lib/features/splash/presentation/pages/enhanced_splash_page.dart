@@ -1,11 +1,12 @@
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_router.dart';
-import '../../../../core/managers/language_cubit.dart';
-import '../../../../core/managers/theme_cubit.dart';
+import '../../../../core/widgets/responsive/responsive_text.dart';
+import '../../../../core/widgets/responsive/responsive_sized_box.dart';
+import '../../../../core/widgets/responsive/responsive_logo.dart';
+import '../../../../core/responsive/responsive_utils.dart';
 
 class EnhancedSplashPage extends StatefulWidget {
   const EnhancedSplashPage({super.key});
@@ -61,9 +62,6 @@ class _EnhancedSplashPageState extends State<EnhancedSplashPage>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final languageState = context.watch<LanguageCubit>().state;
-
     return Scaffold(
       backgroundColor: AppColors.primary,
       body: Stack(
@@ -73,16 +71,16 @@ class _EnhancedSplashPageState extends State<EnhancedSplashPage>
             animation: _controller,
             builder: (context, child) {
               return Container(
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     colors: [
                       AppColors.primary,
-                      const Color(0xFF7C86FF),
-                      const Color(0xFF9D8EFF),
+                      Color(0xFF7C86FF),
+                      Color(0xFF9D8EFF),
                     ],
-                    stops: const [0.0, 0.5, 1.0],
+                    stops: [0.0, 0.5, 1.0],
                   ),
                 ),
               );
@@ -98,50 +96,33 @@ class _EnhancedSplashPageState extends State<EnhancedSplashPage>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Logo with animation
-                    Container(
-                      width: 120,
-                      height: 120,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            blurRadius: 30,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Icon(
-                        Icons.shopping_bag,
-                        size: 50,
-                        color: AppColors.primary,
-                      ),
+                    // Logo with animation - using responsive logo
+                    const ResponsiveLogo(
+                      icon: Icons.shopping_bag,
+                      baseSize: 120.0,
+                      color: AppColors.primary,
+                      backgroundColor: Colors.white,
+                      minWidth: 80.0,
+                      maxWidth: 150.0,
                     ),
-                    const SizedBox(height: 24),
+                    const ResponsiveSizedBox(height: 24),
 
-                    // App Name
-                    Text(
+                    // App Name - using responsive text
+                    const ResponsiveText(
                       'Busta',
-                      style: GoogleFonts.cairo(
-                        fontSize: 48,
-                        fontWeight: FontWeight.w800,
-                        color: Colors.white,
-                        letterSpacing: 2,
-                      ),
+                      fontSize: 48,
+                      fontWeight: FontWeight.w800,
+                      color: Colors.white,
+                      lineHeight: 1.2,
                     ),
-                    const SizedBox(height: 8),
+                    const ResponsiveSizedBox(height: 8),
 
-                    // Tagline
-                    Text(
+                    // Tagline - using responsive text
+                    ResponsiveText(
                       'Your Shopping Destination',
-                      style: GoogleFonts.cairo(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.white.withOpacity(0.8),
-                        letterSpacing: 1,
-                      ),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.white.withOpacity(0.8),
                     ),
                   ],
                 ),
@@ -157,22 +138,20 @@ class _EnhancedSplashPageState extends State<EnhancedSplashPage>
             child: Column(
               children: [
                 SizedBox(
-                  width: 30,
-                  height: 30,
+                  width: ResponsiveUtils.getResponsiveSize(context, 30),
+                  height: ResponsiveUtils.getResponsiveSize(context, 30),
                   child: CircularProgressIndicator(
                     valueColor: AlwaysStoppedAnimation<Color>(
                       Colors.white.withOpacity(0.8),
                     ),
-                    strokeWidth: 2,
+                    strokeWidth: ResponsiveUtils.getResponsiveSize(context, 2),
                   ),
                 ),
-                const SizedBox(height: 16),
-                Text(
+                const ResponsiveSizedBox(height: 16),
+                ResponsiveText(
                   'Loading...',
-                  style: GoogleFonts.cairo(
-                    fontSize: 12,
-                    color: Colors.white.withOpacity(0.6),
-                  ),
+                  fontSize: 12,
+                  color: Colors.white.withOpacity(0.6),
                 ),
               ],
             ),
@@ -180,16 +159,14 @@ class _EnhancedSplashPageState extends State<EnhancedSplashPage>
 
           // Version Info
           Positioned(
-            bottom: 20,
+            bottom: ResponsiveUtils.getResponsiveSize(context, 20),
             left: 0,
             right: 0,
-            child: Text(
+            child: ResponsiveText(
               'Version 1.0.0',
+              fontSize: 11,
+              color: Colors.white.withOpacity(0.4),
               textAlign: TextAlign.center,
-              style: GoogleFonts.cairo(
-                fontSize: 11,
-                color: Colors.white.withOpacity(0.4),
-              ),
             ),
           ),
         ],

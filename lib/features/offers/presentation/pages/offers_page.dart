@@ -634,12 +634,12 @@ class _OfferCouponCard extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(8),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 _OfferHeroBand(offer: offer),
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
                 Row(
                   children: [
                     _StoreAvatar(offer: offer),
@@ -654,19 +654,19 @@ class _OfferCouponCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.cairo(
                               color: colorScheme.onSurface,
-                              fontSize: 12.5,
+                              fontSize: 12,
                               fontWeight: FontWeight.w900,
                               height: 1.05,
                             ),
                           ),
-                          const SizedBox(height: 3),
+                          const SizedBox(height: 1),
                           Text(
                             offer.category,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.cairo(
                               color: colorScheme.onSurfaceVariant,
-                              fontSize: 10.5,
+                              fontSize: 10,
                               fontWeight: FontWeight.w700,
                               height: 1,
                             ),
@@ -676,28 +676,28 @@ class _OfferCouponCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 8),
                 Text(
                   offer.amount,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.cairo(
                     color: AppColors.primary,
-                    fontSize: 16,
+                    fontSize: 15,
                     fontWeight: FontWeight.w900,
                     height: 1.1,
                   ),
                 ),
-                const SizedBox(height: 5),
+                const SizedBox(height: 2),
                 Text(
                   offer.description,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: GoogleFonts.cairo(
                     color: colorScheme.onSurfaceVariant,
-                    fontSize: 11.2,
+                    fontSize: 10,
                     fontWeight: FontWeight.w600,
-                    height: 1.28,
+                    height: 1.2,
                   ),
                 ),
                 const Spacer(),
@@ -706,9 +706,9 @@ class _OfferCouponCard extends StatelessWidget {
                     Icon(
                       Icons.schedule_rounded,
                       color: offer.buttonColor,
-                      size: 14,
+                      size: 12,
                     ),
-                    const SizedBox(width: 4),
+                    const SizedBox(width: 3),
                     Expanded(
                       child: Text(
                         offer.expiry,
@@ -716,7 +716,7 @@ class _OfferCouponCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.cairo(
                           color: offer.buttonColor,
-                          fontSize: 10.5,
+                          fontSize: 9,
                           fontWeight: FontWeight.w800,
                           height: 1,
                         ),
@@ -724,25 +724,25 @@ class _OfferCouponCard extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 9),
+                const SizedBox(height: 6),
                 InkWell(
                   onTap: onCodeTap,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(10),
                   child: Container(
-                    height: 36,
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    height: 30,
+                    padding: const EdgeInsets.symmetric(horizontal: 6),
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [offer.buttonColor, offer.accent],
                         begin: Alignment.centerLeft,
                         end: Alignment.centerRight,
                       ),
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(10),
                       boxShadow: [
                         BoxShadow(
                           color: offer.buttonColor.withOpacity(0.24),
-                          blurRadius: 14,
-                          offset: const Offset(0, 6),
+                          blurRadius: 10,
+                          offset: const Offset(0, 3),
                         ),
                       ],
                     ),
@@ -752,9 +752,9 @@ class _OfferCouponCard extends StatelessWidget {
                         const Icon(
                           Icons.copy_rounded,
                           color: Colors.white,
-                          size: 15,
+                          size: 12,
                         ),
-                        const SizedBox(width: 6),
+                        const SizedBox(width: 3),
                         Flexible(
                           child: Text(
                             offer.code,
@@ -762,7 +762,7 @@ class _OfferCouponCard extends StatelessWidget {
                             overflow: TextOverflow.ellipsis,
                             style: GoogleFonts.cairo(
                               color: Colors.white,
-                              fontSize: 12.5,
+                              fontSize: 11,
                               fontWeight: FontWeight.w900,
                               height: 1,
                             ),
@@ -788,10 +788,13 @@ class _StoreAvatar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double avatarSize = 28;
+    const double iconSize = 14;
+
     return Center(
       child: Container(
-        width: 36,
-        height: 36,
+        width: avatarSize,
+        height: avatarSize,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: LinearGradient(
@@ -808,7 +811,7 @@ class _StoreAvatar extends StatelessWidget {
             ),
           ],
         ),
-        child: Icon(offer.icon, color: offer.accent, size: 18),
+        child: Icon(offer.icon, color: offer.accent, size: iconSize),
       ),
     );
   }
@@ -821,11 +824,12 @@ class _OfferHeroBand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Container(
-      height: 76,
-      padding: const EdgeInsets.all(10),
+      height: 50,
+      padding: const EdgeInsets.all(6),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         gradient: LinearGradient(
           colors: offer.imageColors,
           begin: Alignment.topLeft,
@@ -836,19 +840,19 @@ class _OfferHeroBand extends StatelessWidget {
         clipBehavior: Clip.none,
         children: [
           Positioned(
-            top: -14,
-            left: -10,
+            top: -8,
+            left: -6,
             child: Icon(
               offer.icon,
               color: Colors.white.withOpacity(0.16),
-              size: 82,
+              size: 40,
             ),
           ),
           Positioned(
             right: 0,
             top: 0,
             child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.20),
                 borderRadius: BorderRadius.circular(999),
@@ -858,7 +862,7 @@ class _OfferHeroBand extends StatelessWidget {
                 'HOT',
                 style: GoogleFonts.cairo(
                   color: Colors.white,
-                  fontSize: 10,
+                  fontSize: 7,
                   fontWeight: FontWeight.w900,
                   height: 1,
                 ),
@@ -868,13 +872,13 @@ class _OfferHeroBand extends StatelessWidget {
           Align(
             alignment: Alignment.bottomLeft,
             child: Container(
-              width: 38,
-              height: 38,
+              width: 24,
+              height: 24,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.92),
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(offer.icon, color: offer.accent, size: 20),
+              child: Icon(offer.icon, color: offer.accent, size: 14),
             ),
           ),
         ],

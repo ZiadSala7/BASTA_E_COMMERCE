@@ -11,7 +11,8 @@ class RegisterUseCase {
     required String password,
     required String name,
     required String phone,
+    String role = 'CUSTOMER',
   }) {
-    return _repository.register(email, password, name, phone);
+    return _repository.register(email, password, name, phone, role);
   }
 }

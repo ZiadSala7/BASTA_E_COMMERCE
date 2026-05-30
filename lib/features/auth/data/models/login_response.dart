@@ -10,7 +10,13 @@ class LoginResponse {
     final payload = _normalizePayload(json);
     final userJson = _asMap(payload['user']);
     final token =
-        payload['token'] ?? payload['jwt'] ?? payload['accessToken'] ?? '';
+        json['token'] ??
+        json['jwt'] ??
+        json['accessToken'] ??
+        payload['token'] ??
+        payload['jwt'] ??
+        payload['accessToken'] ??
+        '';
 
     return LoginResponse(
       user: UserModel.fromJson(userJson.isEmpty ? payload : userJson),
@@ -38,9 +44,7 @@ class LoginResponse {
     }
 
     if (value is Map) {
-      return value.map(
-        (key, item) => MapEntry(key.toString(), item),
-      );
+      return value.map((key, item) => MapEntry(key.toString(), item));
     }
 
     return <String, dynamic>{};

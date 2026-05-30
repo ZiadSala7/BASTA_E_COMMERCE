@@ -27,7 +27,7 @@ class SplashLocalDataSourceImpl implements SplashLocalDataSource {
 
     return SplashModel(
       initialRoute: isOnboardingCompleted
-          ? (hasToken ? AppRoutes.home : AppRoutes.login)
+          ? (hasToken ? AppRoutes.mainNavigation : AppRoutes.login)
           : AppRoutes.onboarding,
       isFirstLaunch: !isOnboardingCompleted,
     );

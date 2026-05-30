@@ -1,0 +1,56 @@
+import '../../../../core/api/api_keys.dart';
+import '../../domain/entities/home_product_entity.dart';
+
+class HomeProductModel extends HomeProductEntity {
+  const HomeProductModel({
+    required super.id,
+    required super.name,
+    required super.price,
+    required super.compareAtPrice,
+    required super.imageUrl,
+  });
+
+  factory HomeProductModel.fromJson(Map<String, dynamic> json) {
+    return HomeProductModel(
+      id: (json['id'] ?? '').toString(),
+      name: (json['name'] ?? json['title'] ?? '').toString(),
+      price: _numberFromJson(json['price']),
+      compareAtPrice: _numberFromJson(json['compareAtPrice']),
+      imageUrl: _imageUrlFromJson(json),
+    );
+  }
+
+  static double? _numberFromJson(Object? value) {
+    if (value == null) return null;
+    if (value is num) return value.toDouble();
+    return double.tryParse(value.toString());
+  }
+
+  static String _imageUrlFromJson(Map<String, dynamic> json) {
+    final directUrl = (json['image_url'] ?? json['imageUrl'])?.toString();
+    if (directUrl != null && directUrl.isNotEmpty) {
+      return _absoluteUrl(directUrl);
+    }
+
+    final images = json['images'];
+    if (images is List && images.isNotEmpty) {
+      final firstImage = images.whereType<Map>().firstOrNull;
+      final imageUrl = firstImage?['imageUrl']?.toString();
+      if (imageUrl != null && imageUrl.isNotEmpty) {
+        return _absoluteUrl(imageUrl);
+      }
+    }
+
+    return '';
+  }
+
+  static String _absoluteUrl(String url) {
+    if (url.startsWith('http://') || url.startsWith('https://')) return url;
+
+    final baseUrl = ApiKeys.baseUrl.endsWith('/')
+        ? ApiKeys.baseUrl.substring(0, ApiKeys.baseUrl.length - 1)
+        : ApiKeys.baseUrl;
+    final path = url.startsWith('/') ? url : '/$url';
+    return '$baseUrl$path';
+  }
+}

@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/auth/session_token_store.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../cubits/auth_cubit.dart';
+import '../models/auth_verification_args.dart';
 import '../utils/auth_validators.dart';
 import '../widgets/auth_brand_header.dart';
 import '../widgets/auth_footer_link.dart';
@@ -54,6 +57,16 @@ class _LoginPageState extends State<LoginPage> {
     });
   }
 
+  Future<void> _continueWithGoogle() async {
+    await sl<SessionTokenStore>().saveToken(
+      'mock_google_session',
+      persist: _rememberMe,
+    );
+
+    if (!mounted) return;
+    context.go(AppRoutes.mainNavigation);
+  }
+
   @override
   Widget build(BuildContext context) {
     final localizations = AppLocalizations.of(context)!;
@@ -62,6 +75,16 @@ class _LoginPageState extends State<LoginPage> {
       listener: (context, state) {
         if (state is AuthAuthenticated) {
           context.go(AppRoutes.mainNavigation);
+        }
+
+        if (state is AuthEmailConfirmationRequired) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(state.message)));
+          context.push(
+            AppRoutes.verification,
+            extra: AuthVerificationArgs.emailConfirmation(email: state.email),
+          );
         }
 
         if (state is AuthError) {
@@ -172,28 +195,8 @@ class _LoginPageState extends State<LoginPage> {
                   isLoading: state is AuthLoading,
                   onPressed: _submit,
                 ),
-                const SizedBox(height: 12),
-                // Direct navigation button to main navigation
-                OutlinedButton(
-                  onPressed: () {
-                    context.go(AppRoutes.mainNavigation);
-                  },
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: Color(0xFF5468F6)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    minimumSize: const Size(double.infinity, 56),
-                  ),
-                  child: Text(
-                    localizations.enterAppButton,
-                    style: AppTextStyles.authPrimaryButton(context).copyWith(
-                      color: const Color(0xFF5468F6),
-                    ),
-                  ),
-                ),
                 const SizedBox(height: 26),
-                const AuthSocialActions(),
+                AuthSocialActions(onGoogleTap: _continueWithGoogle),
                 const SizedBox(height: 22),
                 AuthFooterLink(
                   prompt: localizations.dontHaveAccountPrompt,

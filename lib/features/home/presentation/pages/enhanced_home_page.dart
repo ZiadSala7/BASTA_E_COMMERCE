@@ -8,6 +8,7 @@ import '../../../../core/utils/app_router.dart';
 import '../../../../core/widgets/common/custom_app_bar.dart';
 import '../../../../core/widgets/common/section_header.dart';
 import '../../../../core/widgets/products/product_card.dart';
+import '../../../products/presentation/pages/product_detail_page.dart';
 
 class EnhancedHomePage extends StatefulWidget {
   final VoidCallback? onMenuPressed;
@@ -372,7 +373,10 @@ class _FlashSaleSection extends StatelessWidget {
                   rating: product['rating']?.toInt(),
                   reviewCount: product['reviews'],
                   onTap: () {
-                    context.push(AppRoutes.productDetail, extra: product['id']);
+                    context.push(
+                      AppRoutes.productDetail,
+                      extra: ProductDetailArgs.fromMap(product),
+                    );
                   },
                   onFavoriteTap: () {
                     // Toggle favorite
@@ -526,7 +530,10 @@ class _RecommendedSection extends StatelessWidget {
               rating: product['rating']?.toInt(),
               reviewCount: product['reviews'],
               onTap: () {
-                context.push(AppRoutes.productDetail, extra: product['id']);
+                context.push(
+                  AppRoutes.productDetail,
+                  extra: ProductDetailArgs.fromMap(product),
+                );
               },
               onFavoriteTap: () {
                 // Toggle favorite

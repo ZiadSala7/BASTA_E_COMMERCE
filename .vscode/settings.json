@@ -1,4 +1,5 @@
 {
   "editor.acceptSuggestionOnEnter": "on",
-  "editor.fontSize": 17
+  "editor.fontSize": 14,
+  "window.zoomLevel": 2
 }

@@ -5,6 +5,9 @@ class UserModel extends UserEntity {
     required super.id,
     required super.email,
     required super.name,
+    super.phone,
+    super.role,
+    super.status,
     super.token,
   });
 
@@ -13,7 +16,22 @@ class UserModel extends UserEntity {
       id: _asString(json['id'] ?? json['_id']),
       email: _asString(json['email']),
       name: _asString(json['name'] ?? json['fullName'] ?? json['username']),
+      phone: _nullableString(json['phone']),
+      role: _nullableString(json['role']),
+      status: _nullableString(json['status']),
       token: _nullableString(json['token']),
+    );
+  }
+
+  factory UserModel.fromEntity(UserEntity user) {
+    return UserModel(
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      phone: user.phone,
+      role: user.role,
+      status: user.status,
+      token: user.token,
     );
   }
 
@@ -22,6 +40,9 @@ class UserModel extends UserEntity {
       'id': id,
       'email': email,
       'name': name,
+      if (phone != null) 'phone': phone,
+      if (role != null) 'role': role,
+      if (status != null) 'status': status,
       if (token != null) 'token': token,
     };
   }

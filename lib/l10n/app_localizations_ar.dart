@@ -108,6 +108,22 @@ class AppLocalizationsAr extends AppLocalizations {
       'يرجى إدخال البريد الإلكتروني المرتبط بحسابك حتى نتمكن من إرسال تعليمات إعادة التعيين.';
 
   @override
+  String get resetPasswordTitle => 'إعادة تعيين كلمة المرور';
+
+  @override
+  String get resetPasswordSubtitle =>
+      'الصق الرمز المرسل إلى بريدك الإلكتروني واختر كلمة مرور جديدة.';
+
+  @override
+  String get resetTokenHint => 'رمز إعادة التعيين';
+
+  @override
+  String get resetTokenRequired => 'يرجى إدخال رمز إعادة التعيين';
+
+  @override
+  String get resetPasswordButton => 'إعادة تعيين كلمة المرور';
+
+  @override
   String get verificationTitle => 'التحقق';
 
   @override
@@ -175,6 +191,9 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
+  String get resendCodeAction => 'إعادة إرسال الرمز';
+
+  @override
   String get nameRequired => 'يرجى إدخال الاسم بالكامل';
 
   @override
@@ -193,7 +212,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get passwordRequired => 'يرجى إدخال كلمة المرور';
 
   @override
-  String get passwordTooShort => 'يجب أن تكون كلمة المرور 6 أحرف على الأقل';
+  String get passwordTooShort => 'يجب أن تكون كلمة المرور 8 أحرف على الأقل';
+
+  @override
+  String get passwordComplexityRequired =>
+      'يجب أن تحتوي كلمة المرور على حرف كبير وحرف صغير ورقم ورمز خاص.';
 
   @override
   String get confirmPasswordRequired => 'يرجى تأكيد كلمة المرور';
@@ -203,7 +226,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get verificationCodeRequired =>
-      'يرجى إدخال رمز التحقق المكون من 4 أرقام';
+      'يرجى إدخال رمز التحقق المكون من 6 أرقام';
 
   @override
   String get enterAppButton => 'ادخل التطبيق';
@@ -228,6 +251,21 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get proceedToCheckout => 'المتابعة للدفع';
+
+  @override
+  String get featuredStoresPageTitle => 'متاجر متميزة';
+
+  @override
+  String get couldNotLoadStores => 'تعذر تحميل المتاجر';
+
+  @override
+  String get noStoresFound => 'لا توجد متاجر';
+
+  @override
+  String get viewProducts => 'عرض المنتجات';
+
+  @override
+  String get tryAgain => 'حاول مرة أخرى';
 
   @override
   String get primeVideo => 'برايم فيديو';

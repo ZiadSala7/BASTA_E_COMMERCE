@@ -3,11 +3,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets.dart';
 import '../../../../core/widgets/status/empty_state.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../domain/entities/cart_item_entity.dart';
+import '../../domain/repositories/cart_repository.dart';
+import '../../domain/services/cart_badge_controller.dart';
+import '../../../favorites/domain/services/favorites_controller.dart';
 import 'cart_checkout_page.dart';
 
 class CartPage extends StatefulWidget {
@@ -21,37 +26,25 @@ class CartPage extends StatefulWidget {
 
 class _CartPageState extends State<CartPage> {
   final TextEditingController _couponController = TextEditingController();
+  late final CartRepository _cartRepository;
+  late final CartBadgeController _cartBadgeController;
+  late final FavoritesController _favoritesController;
 
-  final List<_CartProduct> _items = [
-    const _CartProduct(
-      id: 'thailand-ticket',
-      title: '',
-      storeName: 'Basta Travel',
-      price: '',
-      unitPrice: 39,
-      quantity: 1,
-      isFavorite: true,
-      badge: 'Digital',
-      accent: Color(0xFF0EA5E9),
-    ),
-    const _CartProduct(
-      id: 'prime-video',
-      title: '',
-      storeName: 'Media Market',
-      price: '',
-      unitPrice: 20,
-      quantity: 1,
-      isFavorite: true,
-      darkImage: true,
-      badge: 'Instant',
-      accent: Color(0xFF8B5CF6),
-    ),
-  ];
+  final List<_CartProduct> _items = <_CartProduct>[];
+  final Set<String> _updatingItemIds = <String>{};
+  bool _isLoading = true;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
+    _cartRepository = sl<CartRepository>();
+    _cartBadgeController = sl<CartBadgeController>();
+    _favoritesController = sl<FavoritesController>();
+    _favoritesController.addListener(_onFavoritesChanged);
+    _favoritesController.refresh();
     _couponController.addListener(_refreshTotals);
+    _loadCart();
   }
 
   @override
@@ -59,6 +52,7 @@ class _CartPageState extends State<CartPage> {
     _couponController
       ..removeListener(_refreshTotals)
       ..dispose();
+    _favoritesController.removeListener(_onFavoritesChanged);
     super.dispose();
   }
 
@@ -66,7 +60,11 @@ class _CartPageState extends State<CartPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final localizedItems = _items
-        .map((item) => _localizedItem(item, l10n))
+        .map(
+          (item) => item.copyWith(
+            isFavorite: _favoritesController.isFavorite(item.removeProductId),
+          ),
+        )
         .toList(growable: false);
     final itemCount = localizedItems.fold<int>(
       0,
@@ -83,7 +81,20 @@ class _CartPageState extends State<CartPage> {
             onBack: () => Navigator.of(context).maybePop(),
           ),
           Expanded(
-            child: localizedItems.isEmpty
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _errorMessage != null
+                ? EmptyState(
+                    icon: Icons.error_outline_rounded,
+                    title: l10n.pick(
+                      ar: 'تعذر تحميل السلة',
+                      en: 'Could not load cart',
+                    ),
+                    message: _errorMessage,
+                    actionLabel: l10n.pick(ar: 'إعادة المحاولة', en: 'Retry'),
+                    onActionTap: _loadCart,
+                  )
+                : localizedItems.isEmpty
                 ? EmptyState(
                     icon: Icons.shopping_cart_outlined,
                     title: l10n.cart,
@@ -117,6 +128,9 @@ class _CartPageState extends State<CartPage> {
                       ) ...[
                         _CartItemCard(
                           item: localizedItems[index],
+                          isUpdating: _updatingItemIds.contains(
+                            localizedItems[index].id,
+                          ),
                           onIncrement: () => _changeQuantity(index, 1),
                           onDecrement: () => _changeQuantity(index, -1),
                           onRemove: () => _removeItem(index),
@@ -144,7 +158,8 @@ class _CartPageState extends State<CartPage> {
           ),
         ],
       ),
-      bottomNavigationBar: localizedItems.isEmpty
+      bottomNavigationBar:
+          _isLoading || _errorMessage != null || localizedItems.isEmpty
           ? null
           : _CartCheckoutSummary(
               subtotal: _subtotal,
@@ -172,45 +187,100 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  void _changeQuantity(int index, int change) {
-    final quantity = (_items[index].quantity + change).clamp(1, 99).toInt();
+  Future<void> _loadCart() async {
     setState(() {
-      _items[index] = _items[index].copyWith(quantity: quantity);
+      _isLoading = true;
+      _errorMessage = null;
     });
+
+    try {
+      final items = await _cartRepository.getCartItems();
+      if (!mounted) return;
+      _cartBadgeController.setItems(items);
+      setState(() {
+        _items
+          ..clear()
+          ..addAll(items.map(_CartProduct.fromEntity));
+        _isLoading = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _errorMessage = _cleanError(error);
+        _isLoading = false;
+      });
+    }
   }
 
-  void _toggleFavorite(int index) {
+  Future<void> _changeQuantity(int index, int change) async {
+    final item = _items[index];
+    if (_updatingItemIds.contains(item.id)) return;
+
+    final previousQuantity = item.quantity;
+    final quantity = (previousQuantity + change).clamp(1, 99).toInt();
+    if (quantity == previousQuantity) return;
+
     setState(() {
-      _items[index] = _items[index].copyWith(
-        isFavorite: !_items[index].isFavorite,
-      );
+      _updatingItemIds.add(item.id);
+      _items[index] = item.copyWith(quantity: quantity);
     });
+
+    try {
+      await _cartRepository.updateQuantity(item.id, quantity);
+      await _cartBadgeController.refresh();
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _items[index] = item.copyWith(quantity: previousQuantity);
+      });
+      _showSnackBar(_cleanError(error));
+    } finally {
+      if (mounted) {
+        setState(() => _updatingItemIds.remove(item.id));
+      }
+    }
   }
 
-  void _removeItem(int index) {
+  Future<void> _toggleFavorite(int index) async {
+    try {
+      await _favoritesController.toggle(_items[index].removeProductId);
+    } catch (error) {
+      if (!mounted) return;
+      _showSnackBar(_cleanError(error));
+    }
+  }
+
+  void _onFavoritesChanged() {
+    if (mounted) setState(() {});
+  }
+
+  Future<bool> _removeItem(int index) async {
     final removedItem = _items[index];
+    if (_updatingItemIds.contains(removedItem.id)) return false;
+
     setState(() {
+      _updatingItemIds.add(removedItem.id);
       _items.removeAt(index);
     });
 
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(
-          content: Text(
-            '${removedItem.storeName} item removed',
-            style: GoogleFonts.cairo(),
-          ),
-          action: SnackBarAction(
-            label: 'Undo',
-            onPressed: () {
-              setState(() {
-                _items.insert(index.clamp(0, _items.length), removedItem);
-              });
-            },
-          ),
-        ),
-      );
+    try {
+      await _cartRepository.removeFromCart(removedItem.removeProductId);
+      await _cartBadgeController.refresh();
+      if (!mounted) return true;
+      _showSnackBar('${removedItem.title} removed');
+      return true;
+    } catch (error) {
+      if (!mounted) return false;
+      setState(() {
+        _items.insert(index.clamp(0, _items.length), removedItem);
+      });
+      _showSnackBar(_cleanError(error));
+      return false;
+    } finally {
+      if (mounted) {
+        setState(() => _updatingItemIds.remove(removedItem.id));
+      }
+    }
   }
 
   void _openCheckout() {
@@ -219,19 +289,26 @@ class _CartPageState extends State<CartPage> {
     ).push(MaterialPageRoute<void>(builder: (_) => const CartCheckoutPage()));
   }
 
-  _CartProduct _localizedItem(_CartProduct item, AppLocalizations l10n) {
-    final isTicket = item.id == 'thailand-ticket';
+  void _showSnackBar(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        SnackBar(content: Text(message, style: GoogleFonts.cairo())),
+      );
+  }
 
-    return item.copyWith(
-      title: isTicket ? l10n.cartProductTicket : l10n.cartProductPrime,
-      price: isTicket ? l10n.dinarPrice(39) : l10n.dinarPrice(20),
-    );
+  String _cleanError(Object error) {
+    final message = error.toString();
+    return message.startsWith('Exception: ')
+        ? message.substring('Exception: '.length)
+        : message;
   }
 }
 
 class _CartProduct {
   const _CartProduct({
     required this.id,
+    required this.productId,
     required this.title,
     required this.storeName,
     required this.price,
@@ -239,11 +316,13 @@ class _CartProduct {
     required this.quantity,
     required this.badge,
     required this.accent,
+    required this.imageUrl,
     this.isFavorite = false,
     this.darkImage = false,
   });
 
   final String id;
+  final String productId;
   final String title;
   final String storeName;
   final String price;
@@ -251,8 +330,26 @@ class _CartProduct {
   final int quantity;
   final String badge;
   final Color accent;
+  final String imageUrl;
   final bool isFavorite;
   final bool darkImage;
+
+  String get removeProductId => productId.isEmpty ? id : productId;
+
+  factory _CartProduct.fromEntity(CartItemEntity item) {
+    return _CartProduct(
+      id: item.id,
+      productId: item.productId,
+      title: item.name,
+      storeName: item.storeName.isEmpty ? 'IonBit' : item.storeName,
+      price: _money(item.price),
+      unitPrice: item.price,
+      quantity: item.quantity,
+      badge: 'NEW',
+      accent: AppColors.primary,
+      imageUrl: item.imageUrl,
+    );
+  }
 
   _CartProduct copyWith({
     String? title,
@@ -262,6 +359,7 @@ class _CartProduct {
   }) {
     return _CartProduct(
       id: id,
+      productId: productId,
       title: title ?? this.title,
       storeName: storeName,
       price: price ?? this.price,
@@ -269,6 +367,7 @@ class _CartProduct {
       quantity: quantity ?? this.quantity,
       badge: badge,
       accent: accent,
+      imageUrl: imageUrl,
       isFavorite: isFavorite ?? this.isFavorite,
       darkImage: darkImage,
     );
@@ -711,6 +810,7 @@ class _SectionTitle extends StatelessWidget {
 class _CartItemCard extends StatelessWidget {
   const _CartItemCard({
     required this.item,
+    required this.isUpdating,
     required this.onIncrement,
     required this.onDecrement,
     required this.onRemove,
@@ -718,9 +818,10 @@ class _CartItemCard extends StatelessWidget {
   });
 
   final _CartProduct item;
+  final bool isUpdating;
   final VoidCallback onIncrement;
   final VoidCallback onDecrement;
-  final VoidCallback onRemove;
+  final Future<bool> Function() onRemove;
   final VoidCallback onFavoriteTap;
 
   @override
@@ -734,7 +835,10 @@ class _CartItemCard extends StatelessWidget {
         direction: DismissDirection.endToStart,
         background: const SizedBox.shrink(),
         secondaryBackground: const _SwipeDeleteBackground(),
-        onDismissed: (_) => onRemove(),
+        confirmDismiss: (_) async {
+          await onRemove();
+          return false;
+        },
         child: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -776,14 +880,23 @@ class _CartItemCard extends StatelessWidget {
                     _RoundIconButton(
                       icon: Icons.delete_outline_rounded,
                       color: colorScheme.onSurfaceVariant,
-                      onTap: onRemove,
+                      onTap: isUpdating ? null : () async => onRemove(),
                     ),
                     const SizedBox(height: 8),
-                    _QuantityStepper(
-                      quantity: item.quantity,
-                      onIncrement: onIncrement,
-                      onDecrement: onDecrement,
-                    ),
+                    isUpdating
+                        ? const SizedBox(
+                            width: 34,
+                            height: 34,
+                            child: Padding(
+                              padding: EdgeInsets.all(8),
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                          )
+                        : _QuantityStepper(
+                            quantity: item.quantity,
+                            onIncrement: onIncrement,
+                            onDecrement: onDecrement,
+                          ),
                   ],
                 ),
               ),
@@ -845,10 +958,17 @@ class _ProductImage extends StatelessWidget {
                           colors: [item.accent.withOpacity(0.12), Colors.white],
                         ),
                       ),
-                      child: Image.asset(
-                        Assets.imagesCart,
-                        fit: BoxFit.contain,
-                      ),
+                      child: item.imageUrl.isEmpty
+                          ? Image.asset(Assets.imagesCart, fit: BoxFit.contain)
+                          : Image.network(
+                              item.imageUrl,
+                              fit: BoxFit.contain,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Image.asset(
+                                    Assets.imagesCart,
+                                    fit: BoxFit.contain,
+                                  ),
+                            ),
                     ),
             ),
           ),
@@ -981,7 +1101,7 @@ class _RoundIconButton extends StatelessWidget {
 
   final IconData icon;
   final Color color;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {

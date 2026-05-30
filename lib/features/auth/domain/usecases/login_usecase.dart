@@ -11,10 +11,6 @@ class LoginUseCase {
     required String password,
     bool rememberSession = true,
   }) {
-    return _repository.login(
-      email,
-      password,
-      rememberSession: rememberSession,
-    );
+    return _repository.login(email, password, rememberSession: rememberSession);
   }
 }

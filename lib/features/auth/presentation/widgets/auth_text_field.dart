@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/responsive/responsive_utils.dart';
 
 class AuthTextField extends StatelessWidget {
   final TextEditingController controller;
@@ -55,33 +56,45 @@ class AuthTextField extends StatelessWidget {
           hintStyle: inputTheme.hintStyle,
           filled: true,
           fillColor: colorScheme.surface,
-          contentPadding: const EdgeInsets.symmetric(
-            horizontal: 18,
-            vertical: 18,
+          contentPadding: EdgeInsets.symmetric(
+            horizontal: ResponsiveUtils.getResponsiveSize(context, 18),
+            vertical: ResponsiveUtils.getResponsiveSize(context, 18),
           ),
           prefixIcon: prefixIcon == null
               ? null
               : Padding(
-                  padding: const EdgeInsetsDirectional.only(start: 10, end: 8),
+                  padding: EdgeInsetsDirectional.only(
+                    start: ResponsiveUtils.getResponsiveSize(context, 10),
+                    end: ResponsiveUtils.getResponsiveSize(context, 8),
+                  ),
                   child: IconTheme(
-                    data: const IconThemeData(
+                    data: IconThemeData(
                       color: AppColors.primary,
-                      size: 21,
+                      size: ResponsiveUtils.getResponsiveSize(context, 21),
                     ),
                     child: prefixIcon!,
                   ),
                 ),
-          prefixIconConstraints: const BoxConstraints(minWidth: 48),
+          prefixIconConstraints: BoxConstraints(
+            minWidth: ResponsiveUtils.getResponsiveSize(context, 48),
+          ),
           suffixIcon: suffixIcon,
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(18),
+            borderRadius: BorderRadius.circular(
+              ResponsiveUtils.getResponsiveSize(context, 18),
+            ),
             borderSide: BorderSide(
               color: colorScheme.outlineVariant.withValues(alpha: 0.82),
             ),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(18),
-            borderSide: const BorderSide(color: AppColors.primary, width: 1.3),
+            borderRadius: BorderRadius.circular(
+              ResponsiveUtils.getResponsiveSize(context, 18),
+            ),
+            borderSide: BorderSide(
+              color: AppColors.primary,
+              width: ResponsiveUtils.getResponsiveSize(context, 1.3),
+            ),
           ),
           errorBorder: inputTheme.errorBorder,
           focusedErrorBorder: inputTheme.focusedErrorBorder,

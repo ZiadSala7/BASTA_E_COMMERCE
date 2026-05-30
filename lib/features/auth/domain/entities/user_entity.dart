@@ -4,12 +4,18 @@ class UserEntity extends Equatable {
   final String id;
   final String email;
   final String name;
+  final String? phone;
+  final String? role;
+  final String? status;
   final String? token;
 
   const UserEntity({
     required this.id,
     required this.email,
     required this.name,
+    this.phone,
+    this.role,
+    this.status,
     this.token,
   });
 
@@ -17,16 +23,22 @@ class UserEntity extends Equatable {
     String? id,
     String? email,
     String? name,
+    String? phone,
+    String? role,
+    String? status,
     String? token,
   }) {
     return UserEntity(
       id: id ?? this.id,
       email: email ?? this.email,
       name: name ?? this.name,
+      phone: phone ?? this.phone,
+      role: role ?? this.role,
+      status: status ?? this.status,
       token: token ?? this.token,
     );
   }
 
   @override
-  List<Object?> get props => [id, email, name, token];
+  List<Object?> get props => [id, email, name, phone, role, status, token];
 }
