@@ -1,5 +1,0 @@
-PORT=3000
-DATABASE_URL=postgresql://postgres:1911@localhost:5432/Pasta_ecommerce
-JWT_SECRET=super_secret_pasta_key_2026_!@#
-EMAIL_USER=bs6astore@gmail.com
-EMAIL_PASS=ahnr gjsk bpeg nilt
