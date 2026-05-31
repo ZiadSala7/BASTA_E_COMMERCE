@@ -10,6 +10,7 @@ abstract class HomeCatalogRemoteDataSource {
   Future<List<HomeProductModel>> getProducts({
     String? categorySlug,
     String? storeSlug,
+    String? search,
     int page = 1,
     int limit = 10,
   });
@@ -40,6 +41,7 @@ class HomeCatalogRemoteDataSourceImpl implements HomeCatalogRemoteDataSource {
   Future<List<HomeProductModel>> getProducts({
     String? categorySlug,
     String? storeSlug,
+    String? search,
     int page = 1,
     int limit = 10,
   }) async {
@@ -49,6 +51,7 @@ class HomeCatalogRemoteDataSourceImpl implements HomeCatalogRemoteDataSource {
       if (categorySlug != null && categorySlug.isNotEmpty)
         'category': categorySlug,
       if (storeSlug != null && storeSlug.isNotEmpty) 'store': storeSlug,
+      if (search != null && search.trim().isNotEmpty) 'search': search.trim(),
     };
 
     final response = await _dioConsumer.get(

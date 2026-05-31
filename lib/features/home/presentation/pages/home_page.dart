@@ -258,6 +258,7 @@ class _HomePageState extends State<HomePage> {
                         HomeFeaturedProductsSection(
                           title: l10n.specialOfferTitle,
                           items: saleProducts,
+                          variant: HomeProductsSectionVariant.specialOffer,
                           addingProductIds: _addingProductIds,
                           favoriteProductIds:
                               _favoritesController.favoriteProductIds,

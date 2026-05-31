@@ -20,12 +20,14 @@ class HomeCatalogRepositoryImpl implements HomeCatalogRepository {
   Future<List<HomeProductEntity>> getProducts({
     String? categorySlug,
     String? storeSlug,
+    String? search,
     int page = 1,
     int limit = 10,
   }) {
     return _remoteDataSource.getProducts(
       categorySlug: categorySlug,
       storeSlug: storeSlug,
+      search: search,
       page: page,
       limit: limit,
     );

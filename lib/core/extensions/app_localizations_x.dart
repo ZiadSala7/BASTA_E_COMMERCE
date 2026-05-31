@@ -15,7 +15,7 @@ extension AppLocalizationsX on AppLocalizations {
   String get myOrders => pick(ar: 'طلباتي', en: 'My orders');
   String get myAccount => pick(ar: 'حسابي', en: 'My account');
   String get editAccount => pick(ar: 'تعديل الحساب', en: 'Edit account');
-  String get profileDisplayName => pick(ar: 'جمال محمد', en: 'Gamal Mohamed');
+  String get profileDisplayName => myAccount;
   String get products => pick(ar: 'المنتجات', en: 'Products');
   String get favorites => pick(ar: 'المفضلة', en: 'Favorites');
   String get addresses => pick(ar: 'العناوين', en: 'Addresses');

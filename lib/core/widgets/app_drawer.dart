@@ -2,8 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../features/account/domain/entities/account_stats_entity.dart';
+import '../../features/account/domain/usecases/get_account_stats_usecase.dart';
 import '../../features/auth/domain/entities/user_entity.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../l10n/app_localizations.dart';
@@ -14,6 +17,7 @@ import '../managers/language_state.dart';
 import '../managers/theme_cubit.dart';
 import '../managers/theme_state.dart';
 import '../utils/app_colors.dart';
+import '../utils/app_router.dart';
 
 class AppDrawer extends StatelessWidget {
   const AppDrawer({super.key});
@@ -61,11 +65,14 @@ class AppDrawer extends StatelessWidget {
                             _DrawerItem(
                               label: l10n.favorites,
                               icon: Icons.favorite_border_rounded,
+                              onTap: () {
+                                Navigator.of(context).maybePop();
+                                context.push(AppRoutes.favorites);
+                              },
                             ),
                             _DrawerItem(
                               label: l10n.myOrders,
                               icon: Icons.inventory_2_outlined,
-                              badgeLabel: '3',
                             ),
                             _DrawerItem(
                               label: l10n.addresses,
@@ -118,12 +125,21 @@ class _DrawerProfileHeader extends StatefulWidget {
 }
 
 class _DrawerProfileHeaderState extends State<_DrawerProfileHeader> {
-  late final Future<UserEntity?> _userFuture;
+  late final Future<_DrawerProfileData> _profileFuture;
 
   @override
   void initState() {
     super.initState();
-    _userFuture = _loadUser();
+    _profileFuture = _loadProfileData();
+  }
+
+  Future<_DrawerProfileData> _loadProfileData() async {
+    final results = await Future.wait<Object?>([_loadUser(), _loadStats()]);
+
+    return _DrawerProfileData(
+      user: results[0] as UserEntity?,
+      stats: results[1] as AccountStatsEntity?,
+    );
   }
 
   Future<UserEntity?> _loadUser() async {
@@ -134,18 +150,31 @@ class _DrawerProfileHeaderState extends State<_DrawerProfileHeader> {
     }
   }
 
+  Future<AccountStatsEntity?> _loadStats() async {
+    try {
+      return await sl<GetAccountStatsUseCase>()();
+    } catch (_) {
+      return null;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return FutureBuilder<UserEntity?>(
-      future: _userFuture,
+    return FutureBuilder<_DrawerProfileData>(
+      future: _profileFuture,
       builder: (context, snapshot) {
-        final user = snapshot.data;
+        final user = snapshot.data?.user;
+        final stats = snapshot.data?.stats;
         final displayName = _displayName(l10n, user);
         final email = user?.email.trim() ?? '';
 
-        return _DrawerProfileHeaderView(displayName: displayName, email: email);
+        return _DrawerProfileHeaderView(
+          displayName: displayName,
+          email: email,
+          stats: stats,
+        );
       },
     );
   }
@@ -161,13 +190,22 @@ class _DrawerProfileHeaderState extends State<_DrawerProfileHeader> {
   }
 }
 
+class _DrawerProfileData {
+  final UserEntity? user;
+  final AccountStatsEntity? stats;
+
+  const _DrawerProfileData({required this.user, required this.stats});
+}
+
 class _DrawerProfileHeaderView extends StatelessWidget {
   final String displayName;
   final String email;
+  final AccountStatsEntity? stats;
 
   const _DrawerProfileHeaderView({
     required this.displayName,
     required this.email,
+    required this.stats,
   });
 
   @override
@@ -265,16 +303,16 @@ class _DrawerProfileHeaderView extends StatelessWidget {
               Expanded(
                 child: _DrawerMetric(
                   label: l10n.myOrders,
-                  value: '12',
+                  value: '${stats?.ordersCount ?? 0}',
                   icon: Icons.inventory_2_outlined,
                 ),
               ),
               const SizedBox(width: 8),
               Expanded(
                 child: _DrawerMetric(
-                  label: l10n.coupons,
-                  value: '4',
-                  icon: Icons.local_offer_outlined,
+                  label: l10n.favorites,
+                  value: '${stats?.favoritesCount ?? 0}',
+                  icon: Icons.favorite_border_rounded,
                 ),
               ),
             ],
@@ -440,16 +478,10 @@ class _DrawerSection extends StatelessWidget {
 }
 
 class _DrawerItem extends StatelessWidget {
-  const _DrawerItem({
-    required this.label,
-    required this.icon,
-    this.badgeLabel,
-    this.onTap,
-  });
+  const _DrawerItem({required this.label, required this.icon, this.onTap});
 
   final String label;
   final IconData icon;
-  final String? badgeLabel;
   final VoidCallback? onTap;
 
   @override
@@ -494,28 +526,6 @@ class _DrawerItem extends StatelessWidget {
                   ),
                 ),
               ),
-              if (badgeLabel != null) ...[
-                const SizedBox(width: 8),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 2,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    badgeLabel!,
-                    style: GoogleFonts.cairo(
-                      color: Colors.white,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w900,
-                      height: 1,
-                    ),
-                  ),
-                ),
-              ],
               const SizedBox(width: 8),
               Icon(
                 l10n.isArabic

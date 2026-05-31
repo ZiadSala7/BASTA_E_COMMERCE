@@ -1,9 +1,16 @@
+import 'package:dio/dio.dart';
+
 import '../../../../core/api/dio_consumer.dart';
 import '../../../../core/api/endpoints.dart';
 import '../models/product_review_model.dart';
 
 abstract class ProductReviewsRemoteDataSource {
   Future<List<ProductReviewModel>> getProductReviews(String productId);
+  Future<ProductReviewModel> addProductReview({
+    required String productId,
+    required int rating,
+    required String comment,
+  });
 }
 
 class ProductReviewsRemoteDataSourceImpl
@@ -15,18 +22,48 @@ class ProductReviewsRemoteDataSourceImpl
 
   @override
   Future<List<ProductReviewModel>> getProductReviews(String productId) async {
-    final response = await _dioConsumer.get(
-      Endpoints.productReviews(productId),
-    );
-    final items = _dataList(response.data);
+    try {
+      final response = await _dioConsumer.get(
+        Endpoints.productReviews(productId),
+      );
+      final items = _dataList(response.data);
 
-    return items
-        .whereType<Map>()
-        .map(
-          (item) =>
-              ProductReviewModel.fromJson(Map<String, dynamic>.from(item)),
-        )
-        .toList();
+      return items
+          .whereType<Map>()
+          .map(
+            (item) =>
+                ProductReviewModel.fromJson(Map<String, dynamic>.from(item)),
+          )
+          .toList();
+    } on DioException catch (error) {
+      throw Exception(_messageFromDio(error));
+    }
+  }
+
+  @override
+  Future<ProductReviewModel> addProductReview({
+    required String productId,
+    required int rating,
+    required String comment,
+  }) async {
+    try {
+      final response = await _dioConsumer.post(
+        Endpoints.productReviews(productId),
+        data: {'rating': rating, 'comment': comment},
+      );
+      final payload = _reviewPayload(response.data);
+
+      if (payload.isEmpty) {
+        return ProductReviewModel.fromJson({
+          'rating': rating,
+          'comment': comment,
+        });
+      }
+
+      return ProductReviewModel.fromJson(payload);
+    } on DioException catch (error) {
+      throw Exception(_messageFromDio(error));
+    }
   }
 
   List<dynamic> _dataList(dynamic data) {
@@ -48,5 +85,39 @@ class ProductReviewsRemoteDataSourceImpl
     }
 
     return const <dynamic>[];
+  }
+
+  Map<String, dynamic> _reviewPayload(dynamic data) {
+    if (data is Map<String, dynamic>) {
+      final direct = data['data'] ?? data['review'] ?? data['item'];
+      if (direct is Map<String, dynamic>) return direct;
+
+      if (direct is Map) return Map<String, dynamic>.from(direct);
+
+      return data;
+    }
+
+    if (data is Map) return Map<String, dynamic>.from(data);
+
+    return <String, dynamic>{};
+  }
+
+  String _messageFromDio(DioException error) {
+    final map = _asMap(error.response?.data);
+    final message = map['message']?.toString().trim();
+    if (message != null && message.isNotEmpty) return message;
+
+    final errorValue = map['error']?.toString().trim();
+    if (errorValue != null && errorValue.isNotEmpty) return errorValue;
+
+    return error.message ?? 'Review request failed.';
+  }
+
+  Map<String, dynamic> _asMap(dynamic value) {
+    if (value is Map<String, dynamic>) return value;
+    if (value is Map) {
+      return value.map((key, item) => MapEntry(key.toString(), item));
+    }
+    return <String, dynamic>{};
   }
 }

@@ -11,6 +11,7 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/auth/presentation/pages/verification_page.dart';
 import '../../features/cart/presentation/pages/enhanced_checkout_page.dart';
+import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/home/presentation/pages/stores_listing_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
@@ -34,6 +35,7 @@ abstract class AppRoutes {
   static const String stores = '/stores';
   static const String productDetail = '/product-detail';
   static const String checkout = '/checkout';
+  static const String favorites = '/favorites';
 }
 
 class AppRouter {
@@ -131,6 +133,10 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.checkout,
         builder: (context, state) => const EnhancedCheckoutPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.favorites,
+        builder: (context, state) => const FavoritesPage(),
       ),
     ],
   );

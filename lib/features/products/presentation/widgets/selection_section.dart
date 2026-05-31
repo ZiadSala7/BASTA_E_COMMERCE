@@ -21,6 +21,8 @@ class SelectionSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -55,7 +57,7 @@ class SelectionSection extends StatelessWidget {
                   border: Border.all(
                     color: isSelected
                         ? AppColors.primary
-                        : const Color(0xFFE5E7EB),
+                        : colorScheme.outlineVariant,
                     width: isSelected ? 2 : 1,
                   ),
                 ),
@@ -68,7 +70,7 @@ class SelectionSection extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                             color: isSelected
                                 ? AppColors.primary
-                                : Colors.black,
+                                : colorScheme.onSurface,
                           ),
                         ),
                       )

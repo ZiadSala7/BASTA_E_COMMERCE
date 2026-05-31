@@ -8,6 +8,7 @@ abstract class HomeCatalogRepository {
   Future<List<HomeProductEntity>> getProducts({
     String? categorySlug,
     String? storeSlug,
+    String? search,
     int page = 1,
     int limit = 10,
   });

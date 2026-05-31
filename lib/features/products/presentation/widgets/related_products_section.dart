@@ -1,30 +1,52 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/widgets/products/product_card.dart';
+import '../../../../core/widgets/status/empty_state.dart';
+import '../../../favorites/domain/services/favorites_controller.dart';
+import '../../../home/domain/entities/home_product_entity.dart';
+import '../../../home/domain/usecases/get_home_products_usecase.dart';
 import '../models/product_detail_args.dart';
 import '../pages/product_detail_page.dart' show ProductDetailPage;
 
-class RelatedProductsSection extends StatelessWidget {
-  const RelatedProductsSection({super.key});
+class RelatedProductsSection extends StatefulWidget {
+  final ProductDetailArgs currentProduct;
+
+  const RelatedProductsSection({super.key, required this.currentProduct});
+
+  @override
+  State<RelatedProductsSection> createState() => _RelatedProductsSectionState();
+}
+
+class _RelatedProductsSectionState extends State<RelatedProductsSection> {
+  late final FavoritesController _favoritesController;
+  late final GetHomeProductsUseCase _getProducts;
+
+  final List<HomeProductEntity> _products = <HomeProductEntity>[];
+  bool _isLoading = true;
+  String? _errorMessage;
+
+  @override
+  void initState() {
+    super.initState();
+    _favoritesController = sl<FavoritesController>();
+    _getProducts = sl<GetHomeProductsUseCase>();
+    _favoritesController.refresh();
+    _loadRelatedProducts();
+  }
+
+  @override
+  void didUpdateWidget(covariant RelatedProductsSection oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.currentProduct.id != widget.currentProduct.id) {
+      _loadRelatedProducts();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    // Show placeholder related products for demo
-    // In production, this would come from API data
-    final demoProducts = List.generate(4, (index) {
-      return ProductDetailArgs(
-        id: 'related_$index',
-        title: 'Elegant Summer Dress',
-        price: 'JD ${79 + index * 10}',
-        oldPrice: index.isEven ? 'JD ${99 + index * 10}' : null,
-        discountBadge: index.isEven ? '-20%' : null,
-        rating: 4 + (index % 2),
-        reviewCount: 120 + index * 20,
-      );
-    });
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -38,46 +60,146 @@ class RelatedProductsSection extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        SizedBox(
-          height: 244,
-          child: ListView.separated(
-            scrollDirection: Axis.horizontal,
-            itemCount: demoProducts.length,
-            separatorBuilder: (_, _) => const SizedBox(width: 12),
-            itemBuilder: (context, index) {
-              final product = demoProducts[index];
-
+        if (_isLoading)
+          const SizedBox(
+            height: 244,
+            child: Center(child: CircularProgressIndicator()),
+          )
+        else if (_errorMessage != null)
+          SizedBox(
+            height: 244,
+            child: EmptyState(
+              icon: Icons.wifi_off_rounded,
+              title: 'Could not load related products',
+              message: _errorMessage,
+              actionLabel: 'Try Again',
+              onActionTap: _loadRelatedProducts,
+            ),
+          )
+        else if (_products.isEmpty)
+          const SizedBox.shrink()
+        else
+          AnimatedBuilder(
+            animation: _favoritesController,
+            builder: (context, child) {
               return SizedBox(
-                width: 160,
-                child: ProductCard(
-                  id: product.id,
-                  title: product.title,
-                  price: product.price,
-                  oldPrice: product.oldPrice,
-                  rating: product.rating?.toInt(),
-                  reviewCount: product.reviewCount,
-                  discountBadge: product.discountBadge,
-                  imageUrl: product.imageUrl,
-                  onTap: () {
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (_) => ProductDetailPage(
-                          productId: product.id,
-                          product: product,
+                height: 244,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: _products.length,
+                  separatorBuilder: (_, _) => const SizedBox(width: 12),
+                  itemBuilder: (context, index) {
+                    final product = _products[index];
+                    final detail = _detailArgs(product);
+
+                    return SizedBox(
+                      width: 160,
+                      child: ProductCard(
+                        id: product.id,
+                        title: product.name,
+                        price: detail.price,
+                        oldPrice: detail.oldPrice,
+                        discountBadge: detail.discountBadge,
+                        imageUrl: product.imageUrl,
+                        isFavorite: _favoritesController.isFavorite(product.id),
+                        isFavoriteUpdating: _favoritesController.isUpdating(
+                          product.id,
                         ),
+                        onTap: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => ProductDetailPage(
+                                productId: product.id,
+                                product: detail,
+                              ),
+                            ),
+                          );
+                        },
+                        onFavoriteTap: () => _toggleFavorite(product.id),
                       ),
                     );
-                  },
-                  onFavoriteTap: () {
-                    // Toggle favorite
                   },
                 ),
               );
             },
           ),
-        ),
       ],
     );
+  }
+
+  Future<void> _loadRelatedProducts() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final products = await _getProducts(page: 1, limit: 12);
+      if (!mounted) return;
+
+      setState(() {
+        _products
+          ..clear()
+          ..addAll(
+            products.where((product) => product.id != widget.currentProduct.id),
+          );
+        _isLoading = false;
+      });
+    } catch (error) {
+      if (!mounted) return;
+
+      setState(() {
+        _errorMessage = _cleanError(error);
+        _isLoading = false;
+      });
+    }
+  }
+
+  ProductDetailArgs _detailArgs(HomeProductEntity product) {
+    return ProductDetailArgs(
+      id: product.id,
+      title: product.name,
+      price: _formatPrice(product.price),
+      oldPrice: product.compareAtPrice == null
+          ? null
+          : _formatPrice(product.compareAtPrice),
+      imageUrl: product.imageUrl,
+      discountBadge: _discountLabel(product),
+    );
+  }
+
+  String _formatPrice(double? value) {
+    if (value == null) return '';
+    final formatted = value % 1 == 0
+        ? value.toStringAsFixed(0)
+        : value.toStringAsFixed(2);
+    return 'JOD $formatted';
+  }
+
+  String? _discountLabel(HomeProductEntity product) {
+    if (!product.hasDiscount) return null;
+
+    final discount =
+        ((product.compareAtPrice! - product.price!) /
+                product.compareAtPrice! *
+                100)
+            .round();
+    return '$discount%';
+  }
+
+  Future<void> _toggleFavorite(String productId) async {
+    try {
+      await _favoritesController.toggle(productId);
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(_cleanError(error))));
+    }
+  }
+
+  String _cleanError(Object error) {
+    return error.toString().replaceFirst(RegExp(r'^Exception:\s*'), '');
   }
 }

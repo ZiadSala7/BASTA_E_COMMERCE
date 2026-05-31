@@ -580,7 +580,7 @@ class _PaymentTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: selected
               ? AppColors.primary.withOpacity(0.08)
-              : const Color(0xFFF9FAFB),
+              : colorScheme.surfaceContainerHighest.withOpacity(0.38),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: selected ? AppColors.primary : colorScheme.outlineVariant,

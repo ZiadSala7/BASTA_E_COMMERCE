@@ -32,12 +32,19 @@ class AuthRepositoryImpl implements AuthRepository {
       LoginRequest(email: email, password: password),
     );
 
-    final user = loginResponse.user.copyWith(token: loginResponse.token);
-
+    await _localDataSource.clearUser();
     await _localDataSource.saveToken(
       loginResponse.token,
       persist: rememberSession,
     );
+
+    final loginUser = loginResponse.user.copyWith(token: loginResponse.token);
+    await _localDataSource.saveUser(
+      UserModel.fromEntity(loginUser),
+      persist: rememberSession,
+    );
+
+    final user = await _userForActiveSession(loginUser, loginResponse.token);
     await _localDataSource.saveUser(
       UserModel.fromEntity(user),
       persist: rememberSession,
@@ -134,7 +141,12 @@ class AuthRepositoryImpl implements AuthRepository {
 
     try {
       final user = await _remoteDataSource.getCurrentUser();
-      final userWithToken = user.copyWith(token: token);
+      final cachedUser = await _localDataSource.getUser();
+      final userWithToken = _mergeUser(
+        primary: user,
+        fallback: cachedUser,
+        token: token,
+      );
       await _localDataSource.saveUser(UserModel.fromEntity(userWithToken));
       return userWithToken;
     } catch (error) {
@@ -184,5 +196,63 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (_) {
       return null;
     }
+  }
+
+  Future<UserEntity> _userForActiveSession(
+    UserEntity loginUser,
+    String token,
+  ) async {
+    try {
+      final currentUser = await _remoteDataSource.getCurrentUser();
+      return _mergeUser(
+        primary: currentUser,
+        fallback: loginUser,
+        token: token,
+      );
+    } catch (_) {
+      return loginUser.copyWith(token: token);
+    }
+  }
+
+  UserEntity _mergeUser({
+    required UserEntity primary,
+    UserEntity? fallback,
+    required String token,
+  }) {
+    return UserEntity(
+      id: _bestString(primary.id, fallback?.id),
+      email: _bestString(primary.email, fallback?.email),
+      name: _bestString(primary.name, fallback?.name),
+      phone: _bestNullableString(primary.phone, fallback?.phone),
+      role: _bestNullableString(primary.role, fallback?.role),
+      status: _bestNullableString(primary.status, fallback?.status),
+      token: token,
+    );
+  }
+
+  String _bestString(String primary, String? fallback) {
+    final normalizedPrimary = primary.trim();
+    if (normalizedPrimary.isNotEmpty) return primary;
+
+    final normalizedFallback = fallback?.trim();
+    if (normalizedFallback != null && normalizedFallback.isNotEmpty) {
+      return fallback!;
+    }
+
+    return '';
+  }
+
+  String? _bestNullableString(String? primary, String? fallback) {
+    final normalizedPrimary = primary?.trim();
+    if (normalizedPrimary != null && normalizedPrimary.isNotEmpty) {
+      return primary;
+    }
+
+    final normalizedFallback = fallback?.trim();
+    if (normalizedFallback != null && normalizedFallback.isNotEmpty) {
+      return fallback;
+    }
+
+    return null;
   }
 }

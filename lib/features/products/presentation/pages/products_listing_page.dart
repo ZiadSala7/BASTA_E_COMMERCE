@@ -65,8 +65,10 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
 
   String? get _categorySlug => widget.args?.categorySlug;
   String? get _storeSlug => widget.args?.storeSlug ?? widget.storeId;
-  String get _screenTitle =>
-      widget.args?.title ?? widget.category ?? 'All Products';
+  String _screenTitle(AppLocalizations l10n) =>
+      widget.args?.title ??
+      widget.category ??
+      l10n.pick(ar: 'كل المنتجات', en: 'All Products');
 
   @override
   void initState() {
@@ -165,14 +167,19 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Scaffold(
       body: Column(
         children: [
           CustomAppBar(
-            title: _screenTitle,
+            title: _screenTitle(l10n),
             showSearch: true,
             searchController: _searchController,
-            searchHint: 'Search products...',
+            searchHint: l10n.pick(
+              ar: 'ابحث عن المنتجات...',
+              en: 'Search products...',
+            ),
             onSearchChanged: (value) => setState(() => _searchQuery = value),
             actions: [
               IconButton(
@@ -199,6 +206,8 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
   }
 
   Widget _buildProductsGrid() {
+    final l10n = AppLocalizations.of(context)!;
+
     if (_isLoadingInitial) {
       return const Center(child: CircularProgressIndicator());
     }
@@ -206,9 +215,12 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
     if (_products.isEmpty && _errorMessage != null) {
       return EmptyState(
         icon: Icons.wifi_off_rounded,
-        title: 'Could not load products',
+        title: l10n.pick(
+          ar: 'تعذر تحميل المنتجات',
+          en: 'Could not load products',
+        ),
         message: _errorMessage,
-        actionLabel: 'Try Again',
+        actionLabel: l10n.pick(ar: 'حاول مرة أخرى', en: 'Try Again'),
         onActionTap: _loadFirstPage,
       );
     }
@@ -218,9 +230,12 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
     if (filteredProducts.isEmpty) {
       return EmptyState(
         icon: Icons.search_off_rounded,
-        title: 'No products found',
-        message: 'Try a different search, price range, or sale filter.',
-        actionLabel: 'Clear Filters',
+        title: l10n.pick(ar: 'لا توجد منتجات', en: 'No products found'),
+        message: l10n.pick(
+          ar: 'جرّب بحثًا مختلفًا أو نطاق سعر أو فلتر عروض آخر.',
+          en: 'Try a different search, price range, or sale filter.',
+        ),
+        actionLabel: l10n.pick(ar: 'مسح الفلاتر', en: 'Clear Filters'),
         onActionTap: _clearFilters,
       );
     }
@@ -252,10 +267,10 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
               return ProductCard(
                 id: product.id,
                 title: product.name,
-                price: _formatPrice(product.price),
+                price: _formatPrice(product.price, l10n),
                 oldPrice: product.compareAtPrice == null
                     ? null
-                    : _formatPrice(product.compareAtPrice),
+                    : _formatPrice(product.compareAtPrice, l10n),
                 imageUrl: product.imageUrl,
                 discountBadge: _discountLabel(product),
                 isFavorite: _favoritesController.isFavorite(product.id),
@@ -319,24 +334,26 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
   }
 
   ProductDetailArgs _detailArgs(HomeProductEntity product) {
+    final l10n = AppLocalizations.of(context)!;
+
     return ProductDetailArgs(
       id: product.id,
       title: product.name,
-      price: _formatPrice(product.price),
+      price: _formatPrice(product.price, l10n),
       oldPrice: product.compareAtPrice == null
           ? null
-          : _formatPrice(product.compareAtPrice),
+          : _formatPrice(product.compareAtPrice, l10n),
       imageUrl: product.imageUrl,
       discountBadge: _discountLabel(product),
     );
   }
 
-  String _formatPrice(double? value) {
+  String _formatPrice(double? value, AppLocalizations l10n) {
     if (value == null) return '';
     final formatted = value % 1 == 0
         ? value.toStringAsFixed(0)
         : value.toStringAsFixed(2);
-    return 'JOD $formatted';
+    return l10n.pick(ar: '$formatted د.أ', en: 'JOD $formatted');
   }
 
   String? _discountLabel(HomeProductEntity product) {
@@ -446,21 +463,24 @@ class _ActiveFiltersBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       height: 50,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
-        border: const Border(
-          bottom: BorderSide(color: Color(0xFFE5E7EB), width: 1),
+        border: Border(
+          bottom: BorderSide(color: colorScheme.outlineVariant, width: 1),
         ),
       ),
       child: Row(
         children: [
           Text(
-            'Sort',
+            l10n.pick(ar: 'الترتيب', en: 'Sort'),
             style: GoogleFonts.cairo(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
+              color: colorScheme.onSurfaceVariant,
               fontSize: 13,
               fontWeight: FontWeight.w600,
             ),
@@ -469,12 +489,19 @@ class _ActiveFiltersBar extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12),
             decoration: BoxDecoration(
-              color: const Color(0xFFF9FAFB),
+              color: colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.42,
+              ),
               borderRadius: BorderRadius.circular(8),
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
                 value: sortBy,
+                dropdownColor: colorScheme.surface,
+                style: GoogleFonts.cairo(
+                  fontSize: 13,
+                  color: colorScheme.onSurface,
+                ),
                 onChanged: (value) {
                   if (value != null) onSortChanged(value);
                 },
@@ -484,8 +511,11 @@ class _ActiveFiltersBar extends StatelessWidget {
                   return DropdownMenuItem<String>(
                     value: value,
                     child: Text(
-                      _getSortLabel(value),
-                      style: GoogleFonts.cairo(fontSize: 13),
+                      _getSortLabel(value, l10n),
+                      style: GoogleFonts.cairo(
+                        fontSize: 13,
+                        color: colorScheme.onSurface,
+                      ),
                     ),
                   );
                 }).toList(),
@@ -496,7 +526,7 @@ class _ActiveFiltersBar extends StatelessWidget {
           TextButton(
             onPressed: onClearFilters,
             child: Text(
-              'Clear Filters',
+              l10n.pick(ar: 'مسح الفلاتر', en: 'Clear Filters'),
               style: GoogleFonts.cairo(fontSize: 13, color: AppColors.primary),
             ),
           ),
@@ -505,18 +535,24 @@ class _ActiveFiltersBar extends StatelessWidget {
     );
   }
 
-  String _getSortLabel(String sortValue) {
+  String _getSortLabel(String sortValue, AppLocalizations l10n) {
     switch (sortValue) {
       case 'newest':
-        return 'Newest';
+        return l10n.pick(ar: 'الأحدث', en: 'Newest');
       case 'price_low':
-        return 'Price: Low to High';
+        return l10n.pick(
+          ar: 'السعر: من الأقل للأعلى',
+          en: 'Price: Low to High',
+        );
       case 'price_high':
-        return 'Price: High to Low';
+        return l10n.pick(
+          ar: 'السعر: من الأعلى للأقل',
+          en: 'Price: High to Low',
+        );
       case 'sale':
-        return 'Best Sale';
+        return l10n.pick(ar: 'أفضل العروض', en: 'Best Sale');
       default:
-        return 'Sort By';
+        return l10n.pick(ar: 'ترتيب حسب', en: 'Sort By');
     }
   }
 }
@@ -557,6 +593,8 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
     return Container(
       padding: const EdgeInsets.all(20),
       height: MediaQuery.of(context).size.height * 0.86,
@@ -567,7 +605,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Filter Products',
+                l10n.pick(ar: 'تصفية المنتجات', en: 'Filter Products'),
                 style: GoogleFonts.cairo(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
@@ -585,10 +623,12 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SectionHeader(
-                    title: 'Price Range',
-                    subtitle:
-                        'Choose the shopping budget that fits this browse.',
+                  SectionHeader(
+                    title: l10n.pick(ar: 'نطاق السعر', en: 'Price Range'),
+                    subtitle: l10n.pick(
+                      ar: 'اختر ميزانية التسوق المناسبة لهذا التصفح.',
+                      en: 'Choose the shopping budget that fits this browse.',
+                    ),
                     padding: EdgeInsets.zero,
                   ),
                   const SizedBox(height: 12),
@@ -598,8 +638,14 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                     max: 10000,
                     divisions: 20,
                     labels: RangeLabels(
-                      'JD ${_minPrice.toInt()}',
-                      'JD ${_maxPrice.toInt()}',
+                      l10n.pick(
+                        ar: '${_minPrice.toInt()} د.أ',
+                        en: 'JD ${_minPrice.toInt()}',
+                      ),
+                      l10n.pick(
+                        ar: '${_maxPrice.toInt()} د.أ',
+                        en: 'JD ${_maxPrice.toInt()}',
+                      ),
                     ),
                     onChanged: (values) {
                       setState(() {
@@ -609,17 +655,20 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                     },
                   ),
                   const SizedBox(height: 20),
-                  const SectionHeader(
-                    title: 'Sort By',
+                  SectionHeader(
+                    title: l10n.pick(ar: 'ترتيب حسب', en: 'Sort By'),
                     padding: EdgeInsets.zero,
                   ),
                   const SizedBox(height: 12),
-                  _buildSortOptions(),
+                  _buildSortOptions(l10n),
                   const SizedBox(height: 12),
                   Row(
                     children: [
                       Text(
-                        'Show Sale Items Only',
+                        l10n.pick(
+                          ar: 'عرض منتجات العروض فقط',
+                          en: 'Show Sale Items Only',
+                        ),
                         style: GoogleFonts.cairo(
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
@@ -657,7 +706,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                 ),
               ),
               child: Text(
-                'Apply Filters',
+                l10n.pick(ar: 'تطبيق الفلاتر', en: 'Apply Filters'),
                 style: GoogleFonts.cairo(
                   fontSize: 16,
                   fontWeight: FontWeight.w600,
@@ -670,20 +719,34 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
     );
   }
 
-  Widget _buildSortOptions() {
+  Widget _buildSortOptions(AppLocalizations l10n) {
     final options = [
-      {'value': 'newest', 'label': 'Newest First', 'icon': Icons.fiber_new},
+      {
+        'value': 'newest',
+        'label': l10n.pick(ar: 'الأحدث أولاً', en: 'Newest First'),
+        'icon': Icons.fiber_new,
+      },
       {
         'value': 'price_low',
-        'label': 'Price: Low to High',
+        'label': l10n.pick(
+          ar: 'السعر: من الأقل للأعلى',
+          en: 'Price: Low to High',
+        ),
         'icon': Icons.arrow_upward,
       },
       {
         'value': 'price_high',
-        'label': 'Price: High to Low',
+        'label': l10n.pick(
+          ar: 'السعر: من الأعلى للأقل',
+          en: 'Price: High to Low',
+        ),
         'icon': Icons.arrow_downward,
       },
-      {'value': 'sale', 'label': 'Best Sale', 'icon': Icons.local_offer},
+      {
+        'value': 'sale',
+        'label': l10n.pick(ar: 'أفضل العروض', en: 'Best Sale'),
+        'icon': Icons.local_offer,
+      },
     ];
 
     return Column(

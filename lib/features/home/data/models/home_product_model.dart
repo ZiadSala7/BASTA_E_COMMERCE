@@ -12,7 +12,7 @@ class HomeProductModel extends HomeProductEntity {
 
   factory HomeProductModel.fromJson(Map<String, dynamic> json) {
     return HomeProductModel(
-      id: (json['id'] ?? '').toString(),
+      id: (json['id'] ?? json['_id'] ?? '').toString(),
       name: (json['name'] ?? json['title'] ?? '').toString(),
       price: _numberFromJson(json['price']),
       compareAtPrice: _numberFromJson(json['compareAtPrice']),

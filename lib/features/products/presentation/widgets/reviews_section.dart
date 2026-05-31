@@ -6,19 +6,37 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../domain/entities/product_review_entity.dart';
 
-class ReviewsSection extends StatelessWidget {
+class ReviewsSection extends StatefulWidget {
   final List<ProductReviewEntity> reviews;
   final bool isLoading;
+  final bool isSubmitting;
   final String? error;
   final VoidCallback onRetry;
+  final Future<bool> Function(int rating, String comment) onSubmitReview;
 
   const ReviewsSection({
     super.key,
     required this.reviews,
     required this.isLoading,
+    required this.isSubmitting,
     required this.error,
     required this.onRetry,
+    required this.onSubmitReview,
   });
+
+  @override
+  State<ReviewsSection> createState() => _ReviewsSectionState();
+}
+
+class _ReviewsSectionState extends State<ReviewsSection> {
+  final TextEditingController _commentController = TextEditingController();
+  int _rating = 5;
+
+  @override
+  void dispose() {
+    _commentController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +63,7 @@ class ReviewsSection extends StatelessWidget {
                 borderRadius: BorderRadius.circular(99),
               ),
               child: Text(
-                '${reviews.length}',
+                '${widget.reviews.length}',
                 style: GoogleFonts.cairo(
                   color: AppColors.primary,
                   fontSize: 12,
@@ -56,17 +74,25 @@ class ReviewsSection extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        if (isLoading)
+        _ReviewComposer(
+          rating: _rating,
+          commentController: _commentController,
+          isSubmitting: widget.isSubmitting,
+          onRatingChanged: (rating) => setState(() => _rating = rating),
+          onSubmit: _submitReview,
+        ),
+        const SizedBox(height: 12),
+        if (widget.isLoading)
           const _ReviewsLoading()
-        else if (error != null)
+        else if (widget.error != null)
           _ReviewsMessage(
             icon: Icons.error_outline_rounded,
             title: 'Reviews unavailable',
-            message: error!,
+            message: widget.error!,
             actionLabel: 'Retry',
-            onAction: onRetry,
+            onAction: widget.onRetry,
           )
-        else if (reviews.isEmpty)
+        else if (widget.reviews.isEmpty)
           const _ReviewsMessage(
             icon: Icons.rate_review_outlined,
             title: 'No reviews yet',
@@ -74,7 +100,7 @@ class ReviewsSection extends StatelessWidget {
                 'Be the first customer to share a review for this product.',
           )
         else
-          ...reviews
+          ...widget.reviews
               .take(3)
               .map(
                 (review) => Padding(
@@ -85,6 +111,130 @@ class ReviewsSection extends StatelessWidget {
       ],
     );
   }
+
+  Future<void> _submitReview() async {
+    final comment = _commentController.text.trim();
+    if (comment.isEmpty || widget.isSubmitting) return;
+
+    final submitted = await widget.onSubmitReview(_rating, comment);
+    if (!mounted) return;
+    if (!submitted) return;
+
+    _commentController.clear();
+    setState(() => _rating = 5);
+  }
+}
+
+class _ReviewComposer extends StatelessWidget {
+  final int rating;
+  final TextEditingController commentController;
+  final bool isSubmitting;
+  final ValueChanged<int> onRatingChanged;
+  final VoidCallback onSubmit;
+
+  const _ReviewComposer({
+    required this.rating,
+    required this.commentController,
+    required this.isSubmitting,
+    required this.onRatingChanged,
+    required this.onSubmit,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: colorScheme.outlineVariant),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Write a review',
+            style: GoogleFonts.cairo(
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+              color: colorScheme.onSurface,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: List.generate(5, (index) {
+              final value = index + 1;
+              return IconButton(
+                onPressed: isSubmitting ? null : () => onRatingChanged(value),
+                visualDensity: VisualDensity.compact,
+                padding: EdgeInsets.zero,
+                constraints: const BoxConstraints(minWidth: 32, minHeight: 32),
+                icon: Icon(
+                  value <= rating
+                      ? Icons.star_rounded
+                      : Icons.star_border_rounded,
+                  color: const Color(0xFFF59E0B),
+                  size: 24,
+                ),
+              );
+            }),
+          ),
+          const SizedBox(height: 8),
+          TextField(
+            controller: commentController,
+            enabled: !isSubmitting,
+            minLines: 2,
+            maxLines: 4,
+            textInputAction: TextInputAction.newline,
+            decoration: InputDecoration(
+              hintText: 'Amazing quality!',
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 12,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+          SizedBox(
+            width: double.infinity,
+            height: 42,
+            child: ElevatedButton(
+              onPressed: isSubmitting ? null : onSubmit,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: isSubmitting
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(
+                      'Submit Review',
+                      style: GoogleFonts.cairo(
+                        fontSize: 13.5,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _ReviewsLoading extends StatelessWidget {
@@ -92,11 +242,13 @@ class _ReviewsLoading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+
     return Container(
       height: 92,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.38),
         borderRadius: BorderRadius.circular(12),
       ),
       child: const SizedBox(
@@ -131,7 +283,7 @@ class _ReviewsMessage extends StatelessWidget {
       width: double.infinity,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.38),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colorScheme.outlineVariant),
       ),
@@ -197,7 +349,7 @@ class _ReviewItem extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: const Color(0xFFF9FAFB),
+        color: colorScheme.surfaceContainerHighest.withOpacity(0.38),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: colorScheme.outlineVariant),
       ),
@@ -229,6 +381,7 @@ class _ReviewItem extends StatelessWidget {
                       style: GoogleFonts.cairo(
                         fontSize: 13.5,
                         fontWeight: FontWeight.w800,
+                        color: colorScheme.onSurface,
                       ),
                     ),
                     Row(
@@ -267,7 +420,7 @@ class _ReviewItem extends StatelessWidget {
               style: GoogleFonts.cairo(
                 fontSize: 13,
                 height: 1.5,
-                color: const Color(0xFF4B5563),
+                color: colorScheme.onSurfaceVariant,
               ),
             ),
           ],

@@ -23,6 +23,7 @@ class HomeFeaturedStoresSection extends StatelessWidget {
   Widget build(BuildContext context) {
     if (stores.isEmpty) return const SizedBox.shrink();
     final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -39,7 +40,7 @@ class HomeFeaturedStoresSection extends StatelessWidget {
                 child: Text(
                   l10n.featuredStores,
                   style: GoogleFonts.cairo(
-                    color: AppColors.textPrimary,
+                    color: colorScheme.onSurface,
                     fontSize: 21,
                     fontWeight: FontWeight.w700,
                     height: 1.25,
@@ -49,7 +50,7 @@ class HomeFeaturedStoresSection extends StatelessWidget {
               TextButton(
                 onPressed: onShowAllTap ?? () {},
                 style: TextButton.styleFrom(
-                  foregroundColor: const Color(0xFF1687F5),
+                  foregroundColor: colorScheme.primary,
                   padding: const EdgeInsets.symmetric(horizontal: 6),
                   minimumSize: const Size(0, 36),
                   tapTargetSize: MaterialTapTargetSize.shrinkWrap,

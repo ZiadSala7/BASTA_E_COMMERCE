@@ -8,6 +8,8 @@ import '../../../../core/widgets/common/section_header.dart';
 import '../../../../core/widgets/products/product_card.dart';
 import '../../../../l10n/app_localizations.dart';
 
+enum HomeProductsSectionVariant { standard, specialOffer }
+
 class HomeFeaturedProductsSection extends StatelessWidget {
   final List<HomeFeaturedProduct> items;
   final String? title;
@@ -19,6 +21,7 @@ class HomeFeaturedProductsSection extends StatelessWidget {
   final Set<String> favoriteProductIds;
   final Set<String> updatingFavoriteProductIds;
   final bool showRisingBadge;
+  final HomeProductsSectionVariant variant;
 
   const HomeFeaturedProductsSection({
     super.key,
@@ -32,6 +35,7 @@ class HomeFeaturedProductsSection extends StatelessWidget {
     this.favoriteProductIds = const <String>{},
     this.updatingFavoriteProductIds = const <String>{},
     this.showRisingBadge = true,
+    this.variant = HomeProductsSectionVariant.standard,
   });
 
   @override
@@ -39,17 +43,17 @@ class HomeFeaturedProductsSection extends StatelessWidget {
     if (items.isEmpty) return const SizedBox.shrink();
     final l10n = AppLocalizations.of(context)!;
 
-    return Column(
+    final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Directionality(
-          textDirection: l10n.isArabic ? TextDirection.rtl : TextDirection.ltr,
-          child: SectionHeader(
-            title: title ?? l10n.chosenForYou,
-            actionLabel: l10n.showAll,
-            onActionTap: onShowAllTap,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-          ),
+        _SectionHeading(
+          title: title ?? l10n.chosenForYou,
+          subtitle: variant == HomeProductsSectionVariant.specialOffer
+              ? l10n.specialOfferBody
+              : null,
+          actionLabel: l10n.showAll,
+          onActionTap: onShowAllTap,
+          variant: variant,
         ),
         const SizedBox(height: 12),
         SizedBox(
@@ -92,6 +96,145 @@ class HomeFeaturedProductsSection extends StatelessWidget {
           ),
         ),
       ],
+    );
+
+    if (variant == HomeProductsSectionVariant.standard) {
+      return content;
+    }
+
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: isDark ? const Color(0xFF2A221B) : const Color(0xFFFFF6EA),
+        border: Border.symmetric(
+          horizontal: BorderSide(
+            color: isDark ? const Color(0xFF5A422D) : const Color(0xFFFFD9AA),
+          ),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 18),
+        child: content,
+      ),
+    );
+  }
+}
+
+class _SectionHeading extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+  final String actionLabel;
+  final VoidCallback? onActionTap;
+  final HomeProductsSectionVariant variant;
+
+  const _SectionHeading({
+    required this.title,
+    required this.subtitle,
+    required this.actionLabel,
+    required this.onActionTap,
+    required this.variant,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Directionality(
+      textDirection: l10n.isArabic ? TextDirection.rtl : TextDirection.ltr,
+      child: variant == HomeProductsSectionVariant.specialOffer
+          ? _SpecialOfferHeading(
+              title: title,
+              subtitle: subtitle,
+              actionLabel: actionLabel,
+              onActionTap: onActionTap,
+            )
+          : SectionHeader(
+              title: title,
+              actionLabel: actionLabel,
+              onActionTap: onActionTap,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+            ),
+    );
+  }
+}
+
+class _SpecialOfferHeading extends StatelessWidget {
+  final String title;
+  final String? subtitle;
+  final String actionLabel;
+  final VoidCallback? onActionTap;
+
+  const _SpecialOfferHeading({
+    required this.title,
+    required this.subtitle,
+    required this.actionLabel,
+    required this.onActionTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final isDark = theme.brightness == Brightness.dark;
+    final accent = isDark ? const Color(0xFFFFB86B) : const Color(0xFFC75A00);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            width: 42,
+            height: 42,
+            decoration: BoxDecoration(
+              color: accent.withOpacity(isDark ? 0.20 : 0.12),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: accent.withOpacity(0.28)),
+            ),
+            child: Icon(Icons.local_offer_rounded, color: accent, size: 22),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w900,
+                    color: accent,
+                  ),
+                ),
+                if (subtitle != null) ...[
+                  const SizedBox(height: 3),
+                  Text(
+                    subtitle!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: onActionTap,
+            style: TextButton.styleFrom(
+              foregroundColor: accent,
+              minimumSize: const Size(0, 36),
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            ),
+            child: Text(actionLabel),
+          ),
+        ],
+      ),
     );
   }
 }

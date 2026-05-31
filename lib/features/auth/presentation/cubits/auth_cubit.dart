@@ -83,9 +83,8 @@ class AuthCubit extends Cubit<AuthState> {
     bool rememberSession = true,
   }) async {
     emit(AuthLoading());
-    UserEntity? registeredUser;
     try {
-      registeredUser = await _registerUseCase(
+      final registeredUser = await _registerUseCase(
         email: email,
         password: password,
         name: name,
@@ -93,26 +92,17 @@ class AuthCubit extends Cubit<AuthState> {
         role: role,
       );
 
-      final authenticatedUser = await _loginUseCase(
-        email: email,
-        password: password,
-        rememberSession: rememberSession,
+      final confirmationMessage = await _requestConfirmationCode(email);
+      emit(
+        AuthRegistrationPending(
+          registeredUser,
+          message: confirmationMessage,
+        ),
       );
-      emit(AuthAuthenticated(authenticatedUser));
     } catch (e) {
       final message = _mapErrorMessage(e);
       if (_isEmailConfirmationRequired(message)) {
-        if (registeredUser == null) {
-          emit(AuthEmailConfirmationRequired(email: email, message: message));
-        } else {
-          final confirmationMessage = await _requestConfirmationCode(email);
-          emit(
-            AuthRegistrationPending(
-              registeredUser,
-              message: confirmationMessage,
-            ),
-          );
-        }
+        emit(AuthEmailConfirmationRequired(email: email, message: message));
         return;
       }
 

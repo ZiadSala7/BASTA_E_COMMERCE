@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/auth/session_token_store.dart';
-import '../../../../core/di/service_locator.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -55,16 +53,6 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {
       _rememberMe = !_rememberMe;
     });
-  }
-
-  Future<void> _continueWithGoogle() async {
-    await sl<SessionTokenStore>().saveToken(
-      'mock_google_session',
-      persist: _rememberMe,
-    );
-
-    if (!mounted) return;
-    context.go(AppRoutes.mainNavigation);
   }
 
   @override
@@ -196,7 +184,7 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _submit,
                 ),
                 const SizedBox(height: 26),
-                AuthSocialActions(onGoogleTap: _continueWithGoogle),
+                const AuthSocialActions(),
                 const SizedBox(height: 22),
                 AuthFooterLink(
                   prompt: localizations.dontHaveAccountPrompt,

@@ -5,6 +5,11 @@ import '../api/dio_consumer.dart';
 import '../auth/session_token_store.dart';
 import '../cache/cache_helper.dart';
 import '../storage/secure_storage_service.dart';
+import '../../features/account/data/datasources/account_remote_datasource.dart';
+import '../../features/account/data/repositories/account_repository_impl.dart';
+import '../../features/account/domain/repositories/account_repository.dart';
+import '../../features/account/domain/usecases/get_account_stats_usecase.dart';
+import '../../features/account/presentation/cubits/account_cubit.dart';
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
@@ -45,6 +50,7 @@ import '../../features/orders/data/repositories/orders_repository_impl.dart';
 import '../../features/orders/domain/repositories/orders_repository.dart';
 import '../../features/orders/domain/usecases/get_my_orders_usecase.dart';
 import '../../features/products/data/datasources/product_reviews_remote_datasource.dart';
+import '../../features/products/domain/usecases/add_product_review_usecase.dart';
 import '../../features/products/domain/usecases/get_product_reviews_usecase.dart';
 import '../../features/splash/data/datasources/splash_local_datasource.dart';
 import '../../features/splash/data/repositories/splash_repository_impl.dart';
@@ -251,6 +257,12 @@ void setupServiceLocator() {
     );
   }
 
+  if (!getIt.isRegistered<AddProductReviewUseCase>()) {
+    getIt.registerLazySingleton<AddProductReviewUseCase>(
+      () => AddProductReviewUseCase(getIt()),
+    );
+  }
+
   if (!getIt.isRegistered<OrdersRemoteDataSource>()) {
     getIt.registerLazySingleton<OrdersRemoteDataSource>(
       () => OrdersRemoteDataSourceImpl(dioConsumer: getIt()),
@@ -266,6 +278,30 @@ void setupServiceLocator() {
   if (!getIt.isRegistered<GetMyOrdersUseCase>()) {
     getIt.registerLazySingleton<GetMyOrdersUseCase>(
       () => GetMyOrdersUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<AccountRemoteDataSource>()) {
+    getIt.registerLazySingleton<AccountRemoteDataSource>(
+      () => AccountRemoteDataSourceImpl(dioConsumer: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<AccountRepository>()) {
+    getIt.registerLazySingleton<AccountRepository>(
+      () => AccountRepositoryImpl(remoteDataSource: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<GetAccountStatsUseCase>()) {
+    getIt.registerLazySingleton<GetAccountStatsUseCase>(
+      () => GetAccountStatsUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<AccountCubit>()) {
+    getIt.registerFactory<AccountCubit>(
+      () => AccountCubit(getAccountStatsUseCase: getIt()),
     );
   }
 

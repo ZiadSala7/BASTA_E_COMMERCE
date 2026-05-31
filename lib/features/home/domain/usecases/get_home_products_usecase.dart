@@ -9,12 +9,14 @@ class GetHomeProductsUseCase {
   Future<List<HomeProductEntity>> call({
     String? categorySlug,
     String? storeSlug,
+    String? search,
     int page = 1,
     int limit = 10,
   }) {
     return _repository.getProducts(
       categorySlug: categorySlug,
       storeSlug: storeSlug,
+      search: search,
       page: page,
       limit: limit,
     );

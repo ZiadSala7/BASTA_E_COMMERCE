@@ -1,8 +1,11 @@
 import '../../../../core/api/dio_consumer.dart';
 import '../../../../core/api/endpoints.dart';
+import '../../../home/data/models/home_product_model.dart';
+import '../../../home/domain/entities/home_product_entity.dart';
 
 abstract class FavoritesRemoteDataSource {
   Future<Set<String>> getFavoriteProductIds();
+  Future<List<HomeProductEntity>> getFavoriteProducts();
   Future<void> toggleFavorite(String productId);
 }
 
@@ -18,6 +21,14 @@ class FavoritesRemoteDataSourceImpl implements FavoritesRemoteDataSource {
     return _dataList(
       response.data,
     ).map(_productIdFromFavorite).where((id) => id.isNotEmpty).toSet();
+  }
+
+  @override
+  Future<List<HomeProductEntity>> getFavoriteProducts() async {
+    final response = await _dioConsumer.get(Endpoints.favorites);
+    return _dataList(
+      response.data,
+    ).map(_productFromFavorite).whereType<HomeProductEntity>().toList();
   }
 
   @override
@@ -72,5 +83,22 @@ class FavoritesRemoteDataSourceImpl implements FavoritesRemoteDataSource {
             favorite['_id'] ??
             '')
         .toString();
+  }
+
+  HomeProductEntity? _productFromFavorite(dynamic item) {
+    if (item is! Map) return null;
+
+    final favorite = Map<String, dynamic>.from(item);
+    final rawProduct = favorite['product'] ?? favorite['productData'];
+    if (rawProduct is Map) {
+      return HomeProductModel.fromJson(Map<String, dynamic>.from(rawProduct));
+    }
+
+    final id = _productIdFromFavorite(favorite);
+    if (id.isEmpty) return null;
+
+    final productLike = Map<String, dynamic>.from(favorite);
+    productLike['id'] = id;
+    return HomeProductModel.fromJson(productLike);
   }
 }

@@ -1,3 +1,4 @@
+import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -24,9 +25,10 @@ class IonbitECommerce extends StatelessWidget {
       themeMode: themeState.mode,
       theme: AppTheme.light(languageState.locale),
       darkTheme: AppTheme.dark(languageState.locale),
-      locale: languageState.locale,
+      locale: DevicePreview.locale(context) ?? languageState.locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
+      builder: DevicePreview.appBuilder,
       routerConfig: _appRouter.router,
     );
   }

@@ -12,10 +12,29 @@ class UserModel extends UserEntity {
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
+    final firstName = _nullableString(
+      json['firstName'] ?? json['first_name'] ?? json['givenName'],
+    );
+    final lastName = _nullableString(
+      json['lastName'] ?? json['last_name'] ?? json['familyName'],
+    );
+    final combinedName = [
+      firstName,
+      lastName,
+    ].where((part) => part != null && part.trim().isNotEmpty).join(' ');
+
     return UserModel(
       id: _asString(json['id'] ?? json['_id']),
       email: _asString(json['email']),
-      name: _asString(json['name'] ?? json['fullName'] ?? json['username']),
+      name: _asString(
+        json['name'] ??
+            json['fullName'] ??
+            json['full_name'] ??
+            json['displayName'] ??
+            json['display_name'] ??
+            json['username'] ??
+            combinedName,
+      ),
       phone: _nullableString(json['phone']),
       role: _nullableString(json['role']),
       status: _nullableString(json['status']),

@@ -7,6 +7,7 @@ import '../../../cart/domain/usecases/add_cart_item_usecase.dart';
 import '../../../cart/presentation/pages/cart_checkout_page.dart';
 import '../../../favorites/domain/services/favorites_controller.dart';
 import '../../domain/entities/product_review_entity.dart';
+import '../../domain/usecases/add_product_review_usecase.dart';
 import '../../domain/usecases/get_product_reviews_usecase.dart';
 export '../models/product_detail_args.dart';
 
@@ -40,17 +41,20 @@ class ProductDetailPage extends StatefulWidget {
 class _ProductDetailPageState extends State<ProductDetailPage> {
   int _selectedQuantity = 1;
   late final AddCartItemUseCase _addCartItem;
+  late final AddProductReviewUseCase _addProductReview;
   late final GetProductReviewsUseCase _getProductReviews;
   late final FavoritesController _favoritesController;
   final List<ProductReviewEntity> _reviews = <ProductReviewEntity>[];
   bool _isAddingToCart = false;
   bool _isLoadingReviews = true;
+  bool _isSubmittingReview = false;
   String? _reviewsError;
 
   @override
   void initState() {
     super.initState();
     _addCartItem = sl<AddCartItemUseCase>();
+    _addProductReview = sl<AddProductReviewUseCase>();
     _getProductReviews = sl<GetProductReviewsUseCase>();
     _favoritesController = sl<FavoritesController>();
     _favoritesController.refresh();
@@ -100,11 +104,14 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                   ReviewsSection(
                     reviews: _reviews,
                     isLoading: _isLoadingReviews,
+                    isSubmitting: _isSubmittingReview,
                     error: _reviewsError,
                     onRetry: _loadReviews,
+                    onSubmitReview: (rating, comment) =>
+                        _submitReview(product, rating, comment),
                   ),
                   const SizedBox(height: 20),
-                  const RelatedProductsSection(),
+                  RelatedProductsSection(currentProduct: product),
                 ],
               ),
             ),
@@ -159,6 +166,43 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         _reviewsError = _cleanError(error);
         _isLoadingReviews = false;
       });
+    }
+  }
+
+  Future<bool> _submitReview(
+    ProductDetailArgs product,
+    int rating,
+    String comment,
+  ) async {
+    if (_isSubmittingReview) return false;
+
+    setState(() => _isSubmittingReview = true);
+    try {
+      await _addProductReview(
+        productId: product.id,
+        rating: rating,
+        comment: comment,
+      );
+      await _loadReviews();
+      if (!mounted) return true;
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(
+          const SnackBar(content: Text('Review submitted successfully')),
+        );
+      return true;
+    } catch (error) {
+      if (!mounted) return false;
+
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(_cleanError(error))));
+      return false;
+    } finally {
+      if (mounted) {
+        setState(() => _isSubmittingReview = false);
+      }
     }
   }
 
