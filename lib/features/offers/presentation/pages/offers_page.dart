@@ -6,9 +6,11 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/extensions/app_localizations_x.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../notifications/domain/services/notifications_controller.dart';
 
 class OffersPage extends StatefulWidget {
   final VoidCallback? onMenuPressed;
@@ -363,7 +365,7 @@ class _OffersHeader extends StatelessWidget {
           child: Column(
             children: [
               SizedBox(
-                height: 48,
+                height: 52,
                 child: Row(
                   textDirection: TextDirection.ltr,
                   children: [
@@ -377,34 +379,41 @@ class _OffersHeader extends StatelessWidget {
                       onTap: onNotificationTap,
                       showDot: true,
                     ),
-                    const Spacer(),
-                    Flexible(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            title,
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                            style: GoogleFonts.cairo(
-                              color: Colors.white,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w900,
-                              height: 1.05,
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              AppLocalizations.of(context)!.offers,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.end,
+                              style: GoogleFonts.cairo(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.w900,
+                                height: 1.18,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 5),
-                          Text(
-                            AppLocalizations.of(context)!.offers,
-                            style: GoogleFonts.cairo(
-                              color: Colors.white.withOpacity(0.78),
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                              height: 1,
+                            const SizedBox(height: 3),
+                            Text(
+                              title,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.end,
+                              style: GoogleFonts.cairo(
+                                color: Colors.white.withOpacity(0.78),
+                                fontSize: 12,
+                                fontWeight: FontWeight.w700,
+                                height: 1.15,
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -496,6 +505,18 @@ class _HeaderIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (showDot && sl.isRegistered<NotificationsController>()) {
+      final controller = sl<NotificationsController>();
+      return AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) => _buildButton(controller.hasUnread),
+      );
+    }
+
+    return _buildButton(false);
+  }
+
+  Widget _buildButton(bool shouldShowDot) {
     return Material(
       color: Colors.white.withOpacity(0.14),
       shape: const CircleBorder(),
@@ -509,7 +530,7 @@ class _HeaderIconButton extends StatelessWidget {
             alignment: Alignment.center,
             children: [
               Icon(icon, color: Colors.white, size: 22),
-              if (showDot)
+              if (shouldShowDot)
                 PositionedDirectional(
                   top: 9,
                   end: 9,
@@ -824,7 +845,6 @@ class _OfferHeroBand extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       height: 50,
       padding: const EdgeInsets.all(6),

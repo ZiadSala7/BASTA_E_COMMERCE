@@ -9,6 +9,7 @@ class ProductCard extends StatelessWidget {
   final String title;
   final String price;
   final String? oldPrice;
+  final String? storeName;
   final String? imageUrl;
   final String? discountBadge;
   final int? rating;
@@ -26,6 +27,7 @@ class ProductCard extends StatelessWidget {
     required this.title,
     required this.price,
     this.oldPrice,
+    this.storeName,
     this.imageUrl,
     this.discountBadge,
     this.rating,
@@ -148,6 +150,32 @@ class ProductCard extends StatelessWidget {
                           height: 1.24,
                         ),
                       ),
+                      if (storeName != null && storeName!.isNotEmpty) ...[
+                        const SizedBox(height: 5),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.storefront_rounded,
+                              size: 13,
+                              color: colorScheme.onSurfaceVariant,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                storeName!,
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: GoogleFonts.cairo(
+                                  fontSize: 10.8,
+                                  fontWeight: FontWeight.w700,
+                                  color: colorScheme.onSurfaceVariant,
+                                  height: 1.1,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                       const SizedBox(height: 7),
                       if (rating != null || reviewCount != null)
                         _RatingMeta(rating: rating, reviewCount: reviewCount),

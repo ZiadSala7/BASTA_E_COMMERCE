@@ -6,6 +6,7 @@ abstract class AuthRepository {
     String password, {
     bool rememberSession = true,
   });
+  Future<UserEntity> loginWithGoogle({bool rememberSession = true});
   Future<UserEntity> register(
     String email,
     String password,

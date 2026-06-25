@@ -1,4 +1,5 @@
 import '../../domain/entities/cart_item_entity.dart';
+import '../../domain/entities/cart_coupon_entity.dart';
 import '../../domain/repositories/cart_repository.dart';
 import '../datasources/cart_remote_datasource.dart';
 
@@ -15,7 +16,8 @@ class CartRepositoryImpl implements CartRepository {
 
   @override
   Future<void> addToCart(CartItemEntity item) {
-    return addItem(productId: item.id, quantity: item.quantity);
+    final productId = item.productId.isEmpty ? item.id : item.productId;
+    return addItem(productId: productId, quantity: item.quantity);
   }
 
   @override
@@ -30,7 +32,11 @@ class CartRepositoryImpl implements CartRepository {
 
   @override
   Future<double> getCartTotal() async {
-    return 0;
+    final items = await getCartItems();
+    return items.fold<double>(
+      0,
+      (total, item) => total + (item.activePrice * item.quantity),
+    );
   }
 
   @override
@@ -41,5 +47,10 @@ class CartRepositoryImpl implements CartRepository {
   @override
   Future<void> updateQuantity(String itemId, int quantity) {
     return _remoteDataSource.updateQuantity(itemId: itemId, quantity: quantity);
+  }
+
+  @override
+  Future<CartCouponEntity> applyCoupon(String code) {
+    return _remoteDataSource.applyCoupon(code);
   }
 }

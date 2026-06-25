@@ -4,6 +4,8 @@ class OrderModel extends OrderEntity {
   const OrderModel({
     required super.id,
     required super.status,
+    required super.paymentStatus,
+    required super.paymentMethod,
     required super.total,
     required super.itemsCount,
     required super.createdAt,
@@ -16,8 +18,26 @@ class OrderModel extends OrderEntity {
     return OrderModel(
       id: (json['id'] ?? json['_id'] ?? json['orderId'] ?? json['number'] ?? '')
           .toString(),
-      status: (json['status'] ?? json['orderStatus'] ?? json['state'] ?? '')
-          .toString(),
+      status:
+          (json['status'] ??
+                  json['orderStatus'] ??
+                  json['currentStatus'] ??
+                  json['current_status'] ??
+                  json['state'] ??
+                  '')
+              .toString(),
+      paymentStatus:
+          (json['paymentStatus'] ??
+                  json['payment_status'] ??
+                  json['payment']?['status'] ??
+                  '')
+              .toString(),
+      paymentMethod:
+          (json['paymentMethod'] ??
+                  json['payment_method'] ??
+                  json['payment']?['method'] ??
+                  '')
+              .toString(),
       total: _numberFromJson(
         json['total'] ??
             json['totalAmount'] ??

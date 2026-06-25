@@ -92,6 +92,7 @@ class HomeSearchResultsSection extends StatelessWidget {
                   title: product.title,
                   price: product.price,
                   oldPrice: product.oldPrice,
+                  storeName: product.storeName,
                   imageUrl: product.imageUrl,
                   discountBadge: product.discountLabel,
                   reviewCount: product.reviewCount,

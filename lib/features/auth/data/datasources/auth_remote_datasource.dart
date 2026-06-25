@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 import '../../../../core/api/dio_consumer.dart';
 import '../../../../core/api/endpoints.dart';
@@ -12,11 +13,13 @@ import '../models/login_response.dart';
 import '../models/register_request.dart';
 import '../models/register_response.dart';
 import '../models/reset_password_request.dart';
+import '../models/social_login_request.dart';
 import '../models/update_profile_request.dart';
 import '../models/user_model.dart';
 
 abstract class AuthRemoteDataSource {
   Future<LoginResponse> login(LoginRequest request);
+  Future<LoginResponse> socialLogin(SocialLoginRequest request);
   Future<RegisterResponse> register(RegisterRequest request);
   Future<String> confirmEmail(String token);
   Future<String> resendConfirmation(String email);
@@ -45,6 +48,24 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
       return LoginResponse.fromJson(_asMap(response.data));
     } on DioException catch (error, stackTrace) {
       log('Login request failed', error: error, stackTrace: stackTrace);
+      throw Exception(_messageFromDio(error));
+    }
+  }
+
+  @override
+  Future<LoginResponse> socialLogin(SocialLoginRequest request) async {
+    try {
+      _debugLogSocialLoginRequest(request);
+      final response = await _dioConsumer.post(
+        Endpoints.socialLogin,
+        data: request.toJson(),
+      );
+
+      _debugLogSocialLoginResponse(response);
+      return LoginResponse.fromJson(_asMap(response.data));
+    } on DioException catch (error, stackTrace) {
+      _debugLogSocialLoginError(error);
+      log('Social login request failed', error: error, stackTrace: stackTrace);
       throw Exception(_messageFromDio(error));
     }
   }
@@ -237,6 +258,75 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
 
     return body;
+  }
+
+  void _debugLogSocialLoginRequest(SocialLoginRequest request) {
+    if (!kDebugMode) return;
+    debugPrint('[GoogleSocialLogin][Request] POST ${Endpoints.socialLogin}');
+    debugPrint(
+      '[GoogleSocialLogin][Request] ${_sanitizeAuthPayload(request.toJson())}',
+    );
+  }
+
+  void _debugLogSocialLoginResponse(Response response) {
+    if (!kDebugMode) return;
+    debugPrint(
+      '[GoogleSocialLogin][Response] ${response.statusCode} ${response.statusMessage ?? ''}',
+    );
+    debugPrint(
+      '[GoogleSocialLogin][Response] ${_sanitizeAuthPayload(response.data)}',
+    );
+  }
+
+  void _debugLogSocialLoginError(DioException error) {
+    if (!kDebugMode) return;
+    debugPrint(
+      '[GoogleSocialLogin][Error] ${error.response?.statusCode ?? error.type} ${error.message ?? ''}',
+    );
+    debugPrint(
+      '[GoogleSocialLogin][Error] ${_sanitizeAuthPayload(error.response?.data)}',
+    );
+  }
+
+  Object? _sanitizeAuthPayload(Object? value) {
+    if (value is Map<String, dynamic>) {
+      return value.map((key, item) {
+        if (_isSensitiveKey(key)) {
+          return MapEntry(key, _tokenPreview(item?.toString()));
+        }
+        return MapEntry(key, _sanitizeAuthPayload(item));
+      });
+    }
+
+    if (value is Map) {
+      return value.map((key, item) {
+        final safeKey = key.toString();
+        if (_isSensitiveKey(safeKey)) {
+          return MapEntry(safeKey, _tokenPreview(item?.toString()));
+        }
+        return MapEntry(safeKey, _sanitizeAuthPayload(item));
+      });
+    }
+
+    if (value is List) {
+      return value.map(_sanitizeAuthPayload).toList(growable: false);
+    }
+
+    return value;
+  }
+
+  bool _isSensitiveKey(String key) {
+    final normalized = key.toLowerCase();
+    return normalized.contains('token') ||
+        normalized == 'authorization' ||
+        normalized == 'password';
+  }
+
+  String _tokenPreview(String? token) {
+    if (token == null || token.isEmpty) return '<empty>';
+    final start = token.length <= 12 ? token : token.substring(0, 12);
+    final end = token.length <= 8 ? '' : token.substring(token.length - 8);
+    return '$start...$end (${token.length} chars)';
   }
 
   String _messageFromDio(DioException error) {

@@ -57,6 +57,8 @@ class AccountMenuItem extends StatelessWidget {
   final String? subtitle;
   final VoidCallback? onTap;
   final bool showSwitch;
+  final ValueChanged<bool>? onSwitchChanged;
+  final bool switchValue;
 
   const AccountMenuItem({
     super.key,
@@ -65,6 +67,8 @@ class AccountMenuItem extends StatelessWidget {
     this.onTap,
     this.subtitle,
     this.showSwitch = false,
+    this.onSwitchChanged,
+    this.switchValue = true,
   });
 
   @override
@@ -119,8 +123,8 @@ class AccountMenuItem extends StatelessWidget {
               ),
               if (showSwitch)
                 Switch(
-                  value: true,
-                  onChanged: (value) {},
+                  value: switchValue,
+                  onChanged: onSwitchChanged,
                   activeColor: AppColors.primary,
                 )
               else

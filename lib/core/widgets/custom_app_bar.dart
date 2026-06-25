@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../../features/notifications/domain/services/notifications_controller.dart';
+import '../di/service_locator.dart';
 import '../extensions/app_localizations_x.dart';
 import '../utils/app_colors.dart';
 
@@ -14,6 +16,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final TextEditingController? searchController;
   final ValueChanged<String>? onSearchChanged;
   final ValueChanged<String>? onSearchSubmitted;
+  final VoidCallback? onSearchTap;
   final String? storeName;
   final String storeCode;
   final String logoAsset;
@@ -34,6 +37,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.searchController,
     this.onSearchChanged,
     this.onSearchSubmitted,
+    this.onSearchTap,
     this.storeName,
     this.storeCode = 'BS6A',
     this.logoAsset = 'assets/images/app_logo.png',
@@ -118,14 +122,14 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       Row(
                         textDirection: l10n.inverseAppBarDirection,
                         children: [
-                          _FilterButton(onTap: onFilterPressed),
-                          const SizedBox(width: 12),
                           Expanded(
                             child: _AppSearchField(
                               controller: searchController,
                               hintText: searchHint ?? l10n.searchHint,
                               onChanged: onSearchChanged,
                               onSubmitted: onSearchSubmitted,
+                              onTap: onSearchTap,
+                              onFilterTap: onFilterPressed,
                             ),
                           ),
                         ],
@@ -291,6 +295,35 @@ class _NotificationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (sl.isRegistered<NotificationsController>()) {
+      final controller = sl<NotificationsController>();
+      return AnimatedBuilder(
+        animation: controller,
+        builder: (context, _) {
+          return _NotificationButtonShell(
+            onTap: onTap,
+            unreadCount: controller.unreadCount,
+          );
+        },
+      );
+    }
+
+    return _NotificationButtonShell(onTap: onTap, unreadCount: 0);
+  }
+}
+
+class _NotificationButtonShell extends StatelessWidget {
+  final VoidCallback? onTap;
+  final int unreadCount;
+
+  const _NotificationButtonShell({
+    required this.onTap,
+    required this.unreadCount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final hasUnread = unreadCount > 0;
     final icon = SizedBox(
       width: 42,
       height: 42,
@@ -302,19 +335,31 @@ class _NotificationButton extends StatelessWidget {
             color: Colors.white,
             size: 22,
           ),
-          Positioned(
-            top: 9,
-            right: 10,
-            child: Container(
-              width: 8,
-              height: 8,
-              decoration: BoxDecoration(
-                color: AppColors.badgeRed,
-                shape: BoxShape.circle,
-                border: Border.all(color: Colors.white, width: 1.2),
+          if (hasUnread)
+            Positioned(
+              top: 7,
+              right: 7,
+              child: Container(
+                constraints: const BoxConstraints(minWidth: 16),
+                height: 16,
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: AppColors.badgeRed,
+                  borderRadius: BorderRadius.circular(99),
+                  border: Border.all(color: Colors.white, width: 1.2),
+                ),
+                child: Text(
+                  unreadCount > 99 ? '99+' : '$unreadCount',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 8,
+                    fontWeight: FontWeight.w900,
+                    height: 1,
+                  ),
+                ),
               ),
             ),
-          ),
         ],
       ),
     );
@@ -388,40 +433,21 @@ class _LogoBadge extends StatelessWidget {
   }
 }
 
-class _FilterButton extends StatelessWidget {
-  final VoidCallback? onTap;
-
-  const _FilterButton({this.onTap});
-
-  @override
-  Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white.withOpacity(0.96),
-      borderRadius: BorderRadius.circular(14),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(14),
-        child: const SizedBox(
-          width: 46,
-          height: 46,
-          child: Icon(Icons.tune_rounded, color: AppColors.primary, size: 23),
-        ),
-      ),
-    );
-  }
-}
-
 class _AppSearchField extends StatelessWidget {
   final TextEditingController? controller;
   final String hintText;
   final ValueChanged<String>? onChanged;
   final ValueChanged<String>? onSubmitted;
+  final VoidCallback? onTap;
+  final VoidCallback? onFilterTap;
 
   const _AppSearchField({
     required this.hintText,
     this.controller,
     this.onChanged,
     this.onSubmitted,
+    this.onTap,
+    this.onFilterTap,
   });
 
   @override
@@ -432,6 +458,9 @@ class _AppSearchField extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         onSubmitted: onSubmitted,
+        onTap: onTap,
+        readOnly: onTap != null,
+        enableInteractiveSelection: onTap == null,
         textInputAction: TextInputAction.search,
         textAlign: TextAlign.right,
         textDirection: TextDirection.rtl,
@@ -450,20 +479,31 @@ class _AppSearchField extends StatelessWidget {
             color: AppColors.primary,
             size: 21,
           ),
+          suffixIcon: IconButton(
+            onPressed: onFilterTap ?? onTap,
+            tooltip: AppLocalizations.of(
+              context,
+            )!.pick(ar: 'تصفية', en: 'Filter'),
+            icon: const Icon(
+              Icons.tune_rounded,
+              color: AppColors.primary,
+              size: 22,
+            ),
+          ),
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 18,
             vertical: 10,
           ),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(999),
             borderSide: BorderSide.none,
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(999),
             borderSide: BorderSide.none,
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(14),
+            borderRadius: BorderRadius.circular(999),
             borderSide: BorderSide(color: Colors.white.withOpacity(0.2)),
           ),
         ),

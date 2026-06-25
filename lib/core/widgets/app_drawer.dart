@@ -9,6 +9,7 @@ import '../../features/account/domain/entities/account_stats_entity.dart';
 import '../../features/account/domain/usecases/get_account_stats_usecase.dart';
 import '../../features/auth/domain/entities/user_entity.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
+import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../l10n/app_localizations.dart';
 import '../di/service_locator.dart';
 import '../extensions/app_localizations_x.dart';
@@ -27,6 +28,11 @@ class AppDrawer extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+
+    void openRoute(String route) {
+      Navigator.of(context).maybePop();
+      context.push(route);
+    }
 
     return Drawer(
       width: 318,
@@ -65,18 +71,17 @@ class AppDrawer extends StatelessWidget {
                             _DrawerItem(
                               label: l10n.favorites,
                               icon: Icons.favorite_border_rounded,
-                              onTap: () {
-                                Navigator.of(context).maybePop();
-                                context.push(AppRoutes.favorites);
-                              },
+                              onTap: () => openRoute(AppRoutes.favorites),
                             ),
                             _DrawerItem(
                               label: l10n.myOrders,
                               icon: Icons.inventory_2_outlined,
+                              onTap: () => openRoute(AppRoutes.orders),
                             ),
                             _DrawerItem(
                               label: l10n.addresses,
                               icon: Icons.location_on_outlined,
+                              onTap: () => openRoute(AppRoutes.addresses),
                             ),
                           ],
                         ),
@@ -89,14 +94,17 @@ class AppDrawer extends StatelessWidget {
                             _DrawerItem(
                               label: l10n.inviteFriends,
                               icon: Icons.group_add_outlined,
+                              onTap: () => openRoute(AppRoutes.inviteFriends),
                             ),
                             _DrawerItem(
                               label: l10n.privacyPolicy,
                               icon: Icons.shield_outlined,
+                              onTap: () => openRoute(AppRoutes.privacyPolicy),
                             ),
                             _DrawerItem(
                               label: l10n.aboutUs,
                               icon: Icons.info_outline_rounded,
+                              onTap: () => openRoute(AppRoutes.aboutUs),
                             ),
                           ],
                         ),
@@ -674,10 +682,42 @@ class _ToggleDrawerItem extends StatelessWidget {
   }
 }
 
-class _LogoutTile extends StatelessWidget {
+class _LogoutTile extends StatefulWidget {
   const _LogoutTile({required this.label});
 
   final String label;
+
+  @override
+  State<_LogoutTile> createState() => _LogoutTileState();
+}
+
+class _LogoutTileState extends State<_LogoutTile> {
+  bool _isLoggingOut = false;
+
+  Future<void> _logout() async {
+    if (_isLoggingOut) return;
+
+    setState(() => _isLoggingOut = true);
+    try {
+      await sl<LogoutUseCase>()();
+      if (!mounted) return;
+
+      Navigator.of(context).maybePop();
+      context.go(AppRoutes.login);
+    } catch (error) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(error.toString().replaceFirst('Exception: ', '')),
+        ),
+      );
+    } finally {
+      if (mounted) {
+        setState(() => _isLoggingOut = false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -688,22 +728,31 @@ class _LogoutTile extends StatelessWidget {
       color: AppColors.badgeRed.withOpacity(0.10),
       borderRadius: BorderRadius.circular(16),
       child: InkWell(
-        onTap: () {},
+        onTap: _isLoggingOut ? null : _logout,
         borderRadius: BorderRadius.circular(16),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 13),
           child: Row(
             textDirection: rowDirection,
             children: [
-              const Icon(
-                Icons.logout_rounded,
-                color: AppColors.badgeRed,
-                size: 20,
-              ),
+              _isLoggingOut
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: AppColors.badgeRed,
+                      ),
+                    )
+                  : const Icon(
+                      Icons.logout_rounded,
+                      color: AppColors.badgeRed,
+                      size: 20,
+                    ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
-                  label,
+                  widget.label,
                   textAlign: l10n.isArabic ? TextAlign.right : TextAlign.left,
                   style: GoogleFonts.cairo(
                     color: AppColors.badgeRed,

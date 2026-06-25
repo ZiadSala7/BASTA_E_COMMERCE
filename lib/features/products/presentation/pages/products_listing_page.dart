@@ -271,6 +271,7 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
                 oldPrice: product.compareAtPrice == null
                     ? null
                     : _formatPrice(product.compareAtPrice, l10n),
+                storeName: product.storeName,
                 imageUrl: product.imageUrl,
                 discountBadge: _discountLabel(product),
                 isFavorite: _favoritesController.isFavorite(product.id),

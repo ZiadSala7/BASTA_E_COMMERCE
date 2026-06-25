@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "263444450427",
+    "project_id": "bs6a-app",
+    "storage_bucket": "bs6a-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263444450427:android:f03a4cdb078eff4714a6de",
+        "android_client_info": {
+          "package_name": "com.ionbit.bsTa"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263444450427-cinspc6s3r9920pml1korqdsmdb27v12.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ionbit.bsTa",
+            "certificate_hash": "3e782b2e1154b0abec44cc855260fb59836f99ac"
+          }
+        },
+        {
+          "client_id": "263444450427-lv0c84mv6e9hjef3ss5nf7rc7mk0uo7j.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.ionbit.bsTa",
+            "certificate_hash": "40c4ca2ca174f3bf99c17fc5230b3c9da6d5ef20"
+          }
+        },
+        {
+          "client_id": "263444450427-3h0ge2kq7ncm639nesb3vhd963gipuc4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDIFEBtTicg-1ViMWxgTlUEhHxL6Vie1Io"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263444450427-3h0ge2kq7ncm639nesb3vhd963gipuc4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "263444450427-v7r2fvgnhv0pk69604ci96m3egq5qji5.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.ionbitECommerce"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 
 import '../../../../core/api/dio_consumer.dart';
 import '../../../../core/api/endpoints.dart';
+import '../models/cart_coupon_model.dart';
 import '../models/cart_item_model.dart';
 
 abstract class CartRemoteDataSource {
@@ -11,6 +12,7 @@ abstract class CartRemoteDataSource {
   Future<void> addItem({required String productId, required int quantity});
   Future<void> updateQuantity({required String itemId, required int quantity});
   Future<void> removeItem(String productId);
+  Future<CartCouponModel> applyCoupon(String code);
   Future<void> clearCart();
 }
 
@@ -93,6 +95,23 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
+  Future<CartCouponModel> applyCoupon(String code) async {
+    try {
+      final response = await _dioConsumer.post(
+        Endpoints.applyCoupon,
+        data: {'code': code},
+      );
+
+      return CartCouponModel.fromJson(_asMap(response.data));
+    } on DioException catch (error, stackTrace) {
+      log('Apply coupon request failed', error: error, stackTrace: stackTrace);
+      throw Exception(
+        _messageFromDio(error, fallback: 'Could not apply coupon.'),
+      );
+    }
+  }
+
+  @override
   Future<void> clearCart() async {
     try {
       await _dioConsumer.delete(Endpoints.cart);
@@ -150,6 +169,14 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
 
     if (data is List) return data;
     return const <dynamic>[];
+  }
+
+  Map<String, dynamic> _asMap(dynamic data) {
+    if (data is Map<String, dynamic>) return data;
+    if (data is Map) {
+      return data.map((key, value) => MapEntry(key.toString(), value));
+    }
+    return <String, dynamic>{};
   }
 
   String _messageFromDio(DioException error, {required String fallback}) {

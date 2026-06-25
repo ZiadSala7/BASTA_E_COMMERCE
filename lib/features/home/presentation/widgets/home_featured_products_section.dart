@@ -73,6 +73,7 @@ class HomeFeaturedProductsSection extends StatelessWidget {
                   title: product.title,
                   price: product.price,
                   oldPrice: product.oldPrice,
+                  storeName: product.storeName,
                   imageUrl: product.imageUrl,
                   discountBadge: product.discountLabel,
                   reviewCount: product.reviewCount,
@@ -181,21 +182,21 @@ class _SpecialOfferHeading extends StatelessWidget {
     final accent = isDark ? const Color(0xFFFFB86B) : const Color(0xFFC75A00);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            width: 42,
-            height: 42,
+            width: 34,
+            height: 34,
             decoration: BoxDecoration(
               color: accent.withOpacity(isDark ? 0.20 : 0.12),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
               border: Border.all(color: accent.withOpacity(0.28)),
             ),
-            child: Icon(Icons.local_offer_rounded, color: accent, size: 22),
+            child: Icon(Icons.local_offer_rounded, color: accent, size: 19),
           ),
-          const SizedBox(width: 12),
+          const SizedBox(width: 8),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,17 +206,21 @@ class _SpecialOfferHeading extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: theme.textTheme.titleMedium?.copyWith(
+                    fontSize: 13.5,
+                    height: 1.2,
                     fontWeight: FontWeight.w900,
                     color: accent,
                   ),
                 ),
                 if (subtitle != null) ...[
-                  const SizedBox(height: 3),
+                  const SizedBox(height: 2),
                   Text(
                     subtitle!,
-                    maxLines: 1,
+                    maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall?.copyWith(
+                      fontSize: 10.5,
+                      height: 1.25,
                       color: colorScheme.onSurfaceVariant,
                     ),
                   ),
@@ -227,11 +232,17 @@ class _SpecialOfferHeading extends StatelessWidget {
             onPressed: onActionTap,
             style: TextButton.styleFrom(
               foregroundColor: accent,
-              minimumSize: const Size(0, 36),
-              padding: const EdgeInsets.symmetric(horizontal: 8),
+              minimumSize: const Size(0, 30),
+              padding: const EdgeInsets.symmetric(horizontal: 6),
               tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             ),
-            child: Text(actionLabel),
+            child: Text(
+              actionLabel,
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: accent,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
           ),
         ],
       ),
@@ -246,6 +257,8 @@ class HomeFeaturedProduct {
   final String? oldPrice;
   final String imageUrl;
   final String? imageAsset;
+  final String? storeName;
+  final String? storeSlug;
   final String badgeText;
   final String? discountLabel;
   final int reviewCount;
@@ -257,6 +270,8 @@ class HomeFeaturedProduct {
     this.oldPrice,
     this.imageUrl = '',
     this.imageAsset,
+    this.storeName,
+    this.storeSlug,
     this.badgeText = '',
     this.discountLabel,
     this.reviewCount = 0,
@@ -277,6 +292,8 @@ class HomeFeaturedProduct {
           ? (json['old_price'] ?? json['oldPrice'])?.toString()
           : _formatPrice(compareAtPrice, compareAtPrice),
       imageUrl: imageUrl,
+      storeName: _nullableText(json['storeName'] ?? json['store_name']),
+      storeSlug: _nullableText(json['storeSlug'] ?? json['store_slug']),
       badgeText: (json['badge_text'] ?? json['badgeText'] ?? '').toString(),
       discountLabel:
           (json['discount_label'] ?? json['discountLabel'])?.toString() ??
@@ -303,6 +320,11 @@ class HomeFeaturedProduct {
     if (value == null) return null;
     if (value is num) return value.toDouble();
     return double.tryParse(value.toString());
+  }
+
+  static String? _nullableText(Object? value) {
+    final text = value?.toString().trim();
+    return text == null || text.isEmpty ? null : text;
   }
 
   static String _formatPrice(double? parsed, Object? fallback) {

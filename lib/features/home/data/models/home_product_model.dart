@@ -8,6 +8,8 @@ class HomeProductModel extends HomeProductEntity {
     required super.price,
     required super.compareAtPrice,
     required super.imageUrl,
+    super.storeName,
+    super.storeSlug,
   });
 
   factory HomeProductModel.fromJson(Map<String, dynamic> json) {
@@ -17,6 +19,8 @@ class HomeProductModel extends HomeProductEntity {
       price: _numberFromJson(json['price']),
       compareAtPrice: _numberFromJson(json['compareAtPrice']),
       imageUrl: _imageUrlFromJson(json),
+      storeName: _nullableText(json['storeName'] ?? json['store_name']),
+      storeSlug: _nullableText(json['storeSlug'] ?? json['store_slug']),
     );
   }
 
@@ -24,6 +28,11 @@ class HomeProductModel extends HomeProductEntity {
     if (value == null) return null;
     if (value is num) return value.toDouble();
     return double.tryParse(value.toString());
+  }
+
+  static String? _nullableText(Object? value) {
+    final text = value?.toString().trim();
+    return text == null || text.isEmpty ? null : text;
   }
 
   static String _imageUrlFromJson(Map<String, dynamic> json) {

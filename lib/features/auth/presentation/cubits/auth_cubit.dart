@@ -6,6 +6,7 @@ import '../../domain/usecases/change_password_usecase.dart';
 import '../../domain/usecases/confirm_email_usecase.dart';
 import '../../domain/usecases/forgot_password_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
+import '../../domain/usecases/google_social_login_usecase.dart';
 import '../../domain/usecases/login_usecase.dart';
 import '../../domain/usecases/logout_usecase.dart';
 import '../../domain/usecases/register_usecase.dart';
@@ -17,6 +18,7 @@ part 'auth_state.dart';
 
 class AuthCubit extends Cubit<AuthState> {
   final LoginUseCase _loginUseCase;
+  final GoogleSocialLoginUseCase _googleSocialLoginUseCase;
   final RegisterUseCase _registerUseCase;
   final ConfirmEmailUseCase _confirmEmailUseCase;
   final ResendConfirmationUseCase _resendConfirmationUseCase;
@@ -29,6 +31,7 @@ class AuthCubit extends Cubit<AuthState> {
 
   AuthCubit({
     required LoginUseCase loginUseCase,
+    required GoogleSocialLoginUseCase googleSocialLoginUseCase,
     required RegisterUseCase registerUseCase,
     required ConfirmEmailUseCase confirmEmailUseCase,
     required ResendConfirmationUseCase resendConfirmationUseCase,
@@ -39,6 +42,7 @@ class AuthCubit extends Cubit<AuthState> {
     required GetCurrentUserUseCase getCurrentUserUseCase,
     required LogoutUseCase logoutUseCase,
   }) : _loginUseCase = loginUseCase,
+       _googleSocialLoginUseCase = googleSocialLoginUseCase,
        _registerUseCase = registerUseCase,
        _confirmEmailUseCase = confirmEmailUseCase,
        _resendConfirmationUseCase = resendConfirmationUseCase,
@@ -74,13 +78,24 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> loginWithGoogle({bool rememberSession = true}) async {
+    emit(AuthLoading());
+    try {
+      final user = await _googleSocialLoginUseCase(
+        rememberSession: rememberSession,
+      );
+      emit(AuthAuthenticated(user));
+    } catch (e) {
+      emit(AuthError(_mapErrorMessage(e)));
+    }
+  }
+
   Future<void> register(
     String email,
     String password,
     String name,
     String phone, {
     String role = 'CUSTOMER',
-    bool rememberSession = true,
   }) async {
     emit(AuthLoading());
     try {
@@ -94,10 +109,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       final confirmationMessage = await _requestConfirmationCode(email);
       emit(
-        AuthRegistrationPending(
-          registeredUser,
-          message: confirmationMessage,
-        ),
+        AuthRegistrationPending(registeredUser, message: confirmationMessage),
       );
     } catch (e) {
       final message = _mapErrorMessage(e);
@@ -215,7 +227,15 @@ class AuthCubit extends Cubit<AuthState> {
 
   bool _isEmailConfirmationRequired(String message) {
     final normalized = message.toLowerCase();
-    return normalized.contains('confirm') && normalized.contains('email');
+    final mentionsEmail = normalized.contains('email');
+    final asksForConfirmation =
+        normalized.contains('confirm') ||
+        normalized.contains('verify') ||
+        normalized.contains('verification');
+    final isPendingAccount =
+        normalized.contains('pending') || normalized.contains('not active');
+
+    return (mentionsEmail && asksForConfirmation) || isPendingAccount;
   }
 
   Future<String> _requestConfirmationCode(String email) async {

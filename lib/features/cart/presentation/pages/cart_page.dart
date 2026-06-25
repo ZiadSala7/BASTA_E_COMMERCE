@@ -16,9 +16,10 @@ import '../../../favorites/domain/services/favorites_controller.dart';
 import 'cart_checkout_page.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({super.key, this.onStartShopping});
+  const CartPage({super.key, this.onStartShopping, this.onBack});
 
   final VoidCallback? onStartShopping;
+  final VoidCallback? onBack;
 
   @override
   State<CartPage> createState() => _CartPageState();
@@ -33,6 +34,9 @@ class _CartPageState extends State<CartPage> {
   final List<_CartProduct> _items = <_CartProduct>[];
   final Set<String> _updatingItemIds = <String>{};
   bool _isLoading = true;
+  bool _isApplyingCoupon = false;
+  double _couponDiscount = 0;
+  String? _appliedCoupon;
   String? _errorMessage;
 
   @override
@@ -66,6 +70,7 @@ class _CartPageState extends State<CartPage> {
           ),
         )
         .toList(growable: false);
+    final cartGroups = _cartGroups(localizedItems);
     final itemCount = localizedItems.fold<int>(
       0,
       (total, item) => total + item.quantity,
@@ -78,7 +83,7 @@ class _CartPageState extends State<CartPage> {
           _CartHeader(
             itemCount: itemCount,
             subtotal: _subtotal,
-            onBack: () => Navigator.of(context).maybePop(),
+            onBack: _handleBack,
           ),
           Expanded(
             child: _isLoading
@@ -122,27 +127,27 @@ class _CartPageState extends State<CartPage> {
                       ),
                       const SizedBox(height: 12),
                       for (
-                        var index = 0;
-                        index < localizedItems.length;
-                        index++
+                        var groupIndex = 0;
+                        groupIndex < cartGroups.length;
+                        groupIndex++
                       ) ...[
-                        _CartItemCard(
-                          item: localizedItems[index],
-                          isUpdating: _updatingItemIds.contains(
-                            localizedItems[index].id,
-                          ),
-                          onIncrement: () => _changeQuantity(index, 1),
-                          onDecrement: () => _changeQuantity(index, -1),
-                          onRemove: () => _removeItem(index),
-                          onFavoriteTap: () => _toggleFavorite(index),
+                        _VendorCartSection(
+                          group: cartGroups[groupIndex],
+                          updatingItemIds: _updatingItemIds,
+                          onIncrement: (index) => _changeQuantity(index, 1),
+                          onDecrement: (index) => _changeQuantity(index, -1),
+                          onRemove: _removeItem,
+                          onFavoriteTap: _toggleFavorite,
                         ),
-                        if (index != localizedItems.length - 1)
-                          const SizedBox(height: 12),
+                        if (groupIndex != cartGroups.length - 1)
+                          const SizedBox(height: 14),
                       ],
                       const SizedBox(height: 18),
-                      _CouponCard(
+                      _BackendCouponCard(
                         controller: _couponController,
                         hasDiscount: _discount > 0,
+                        isLoading: _isApplyingCoupon,
+                        onApply: _applyCoupon,
                       ),
                       const SizedBox(height: 12),
                       _DeliveryNote(
@@ -179,9 +184,37 @@ class _CartPageState extends State<CartPage> {
 
   double get _shipping => _items.isEmpty ? 0 : 5;
 
-  double get _discount => _couponController.text.trim().isEmpty ? 0 : 4;
+  double get _discount => _couponDiscount;
+
+  List<_VendorCartGroup> _cartGroups(List<_CartProduct> items) {
+    final groupsByKey = <String, _VendorCartGroup>{};
+
+    for (var index = 0; index < items.length; index++) {
+      final item = items[index];
+      groupsByKey
+          .putIfAbsent(
+            item.storeGroupKey,
+            () => _VendorCartGroup(
+              storeId: item.storeId,
+              storeName: item.storeName,
+              storeSlug: item.storeSlug,
+              items: <_IndexedCartProduct>[],
+            ),
+          )
+          .items
+          .add(_IndexedCartProduct(index: index, item: item));
+    }
+
+    return groupsByKey.values.toList(growable: false);
+  }
 
   void _refreshTotals() {
+    final code = _couponController.text.trim();
+    if (_appliedCoupon != null && code != _appliedCoupon) {
+      _appliedCoupon = null;
+      _couponDiscount = 0;
+    }
+
     if (mounted) {
       setState(() {});
     }
@@ -212,6 +245,14 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
+  Future<void> _handleBack() async {
+    final didPop = await Navigator.of(context).maybePop();
+    if (!mounted || didPop) return;
+
+    final fallback = widget.onBack ?? widget.onStartShopping;
+    fallback?.call();
+  }
+
   Future<void> _changeQuantity(int index, int change) async {
     final item = _items[index];
     if (_updatingItemIds.contains(item.id)) return;
@@ -226,8 +267,8 @@ class _CartPageState extends State<CartPage> {
     });
 
     try {
-      await _cartRepository.updateQuantity(item.id, quantity);
-      await _cartBadgeController.refresh();
+      await _cartRepository.updateQuantity(item.removeProductId, quantity);
+      await _refreshCartSnapshot();
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -250,6 +291,38 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
+  Future<void> _applyCoupon() async {
+    final code = _couponController.text.trim();
+    if (code.isEmpty || _isApplyingCoupon) return;
+
+    FocusScope.of(context).unfocus();
+    setState(() => _isApplyingCoupon = true);
+
+    try {
+      final coupon = await _cartRepository.applyCoupon(code);
+      if (!mounted) return;
+
+      setState(() {
+        _appliedCoupon = coupon.appliedCoupon.isEmpty
+            ? code
+            : coupon.appliedCoupon;
+        _couponDiscount = coupon.discountAmount;
+      });
+      _showSnackBar(coupon.message);
+    } catch (error) {
+      if (!mounted) return;
+      setState(() {
+        _appliedCoupon = null;
+        _couponDiscount = 0;
+      });
+      _showSnackBar(_cleanError(error));
+    } finally {
+      if (mounted) {
+        setState(() => _isApplyingCoupon = false);
+      }
+    }
+  }
+
   void _onFavoritesChanged() {
     if (mounted) setState(() {});
   }
@@ -265,7 +338,7 @@ class _CartPageState extends State<CartPage> {
 
     try {
       await _cartRepository.removeFromCart(removedItem.removeProductId);
-      await _cartBadgeController.refresh();
+      await _refreshCartSnapshot();
       if (!mounted) return true;
       _showSnackBar('${removedItem.title} removed');
       return true;
@@ -283,10 +356,31 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  void _openCheckout() {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const CartCheckoutPage()));
+  Future<void> _refreshCartSnapshot() async {
+    final items = await _cartRepository.getCartItems();
+    if (!mounted) return;
+
+    _cartBadgeController.setItems(items);
+    setState(() {
+      _items
+        ..clear()
+        ..addAll(items.map(_CartProduct.fromEntity));
+    });
+  }
+
+  Future<void> _openCheckout() async {
+    final completed = await Navigator.of(context).push<bool>(
+      MaterialPageRoute<bool>(builder: (_) => const CartCheckoutPage()),
+    );
+
+    if (!mounted || completed != true) return;
+
+    setState(() {
+      _appliedCoupon = null;
+      _couponDiscount = 0;
+      _couponController.clear();
+    });
+    await _refreshCartSnapshot();
   }
 
   void _showSnackBar(String message) {
@@ -310,7 +404,9 @@ class _CartProduct {
     required this.id,
     required this.productId,
     required this.title,
+    required this.storeId,
     required this.storeName,
+    required this.storeSlug,
     required this.price,
     required this.unitPrice,
     required this.quantity,
@@ -324,7 +420,9 @@ class _CartProduct {
   final String id;
   final String productId;
   final String title;
+  final String? storeId;
   final String storeName;
+  final String? storeSlug;
   final String price;
   final double unitPrice;
   final int quantity;
@@ -336,14 +434,26 @@ class _CartProduct {
 
   String get removeProductId => productId.isEmpty ? id : productId;
 
+  String get storeGroupKey {
+    final slug = storeSlug?.trim();
+    if (slug != null && slug.isNotEmpty) return slug;
+
+    final name = storeName.trim();
+    if (name.isNotEmpty) return name;
+
+    return 'unknown-store';
+  }
+
   factory _CartProduct.fromEntity(CartItemEntity item) {
     return _CartProduct(
       id: item.id,
       productId: item.productId,
       title: item.name,
-      storeName: item.storeName.isEmpty ? 'IonBit' : item.storeName,
-      price: _money(item.price),
-      unitPrice: item.price,
+      storeId: item.storeId,
+      storeName: item.storeName.trim(),
+      storeSlug: item.storeSlug,
+      price: _money(item.activePrice),
+      unitPrice: item.activePrice,
       quantity: item.quantity,
       badge: 'NEW',
       accent: AppColors.primary,
@@ -361,7 +471,9 @@ class _CartProduct {
       id: id,
       productId: productId,
       title: title ?? this.title,
+      storeId: storeId,
       storeName: storeName,
+      storeSlug: storeSlug,
       price: price ?? this.price,
       unitPrice: unitPrice,
       quantity: quantity ?? this.quantity,
@@ -370,6 +482,134 @@ class _CartProduct {
       imageUrl: imageUrl,
       isFavorite: isFavorite ?? this.isFavorite,
       darkImage: darkImage,
+    );
+  }
+}
+
+class _IndexedCartProduct {
+  const _IndexedCartProduct({required this.index, required this.item});
+
+  final int index;
+  final _CartProduct item;
+}
+
+class _VendorCartGroup {
+  _VendorCartGroup({
+    required this.storeId,
+    required this.storeName,
+    required this.storeSlug,
+    required this.items,
+  });
+
+  final String? storeId;
+  final String storeName;
+  final String? storeSlug;
+  final List<_IndexedCartProduct> items;
+
+  bool get hasStoreName => storeName.trim().isNotEmpty;
+
+  double get subtotal => items.fold<double>(
+    0,
+    (total, entry) => total + (entry.item.unitPrice * entry.item.quantity),
+  );
+}
+
+class _VendorCartSection extends StatelessWidget {
+  const _VendorCartSection({
+    required this.group,
+    required this.updatingItemIds,
+    required this.onIncrement,
+    required this.onDecrement,
+    required this.onRemove,
+    required this.onFavoriteTap,
+  });
+
+  final _VendorCartGroup group;
+  final Set<String> updatingItemIds;
+  final ValueChanged<int> onIncrement;
+  final ValueChanged<int> onDecrement;
+  final Future<bool> Function(int index) onRemove;
+  final ValueChanged<int> onFavoriteTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        if (group.hasStoreName) ...[
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+            child: Row(
+              children: [
+                Container(
+                  width: 34,
+                  height: 34,
+                  decoration: BoxDecoration(
+                    color: AppColors.primary.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Icon(
+                    Icons.storefront_rounded,
+                    color: AppColors.primary,
+                    size: 19,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(
+                    group.storeName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.cairo(
+                      color: colorScheme.onSurface,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w900,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  _money(group.subtotal),
+                  style: GoogleFonts.cairo(
+                    color: AppColors.primary,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+            child: Text(
+              l10n.pick(
+                ar: '${group.items.length} Ù…Ù†ØªØ¬',
+                en: '${group.items.length} products',
+              ),
+              style: GoogleFonts.cairo(
+                color: colorScheme.onSurfaceVariant,
+                fontSize: 11.5,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+        for (var index = 0; index < group.items.length; index++) ...[
+          _CartItemCard(
+            item: group.items[index].item,
+            isUpdating: updatingItemIds.contains(group.items[index].item.id),
+            onIncrement: () => onIncrement(group.items[index].index),
+            onDecrement: () => onDecrement(group.items[index].index),
+            onRemove: () => onRemove(group.items[index].index),
+            onFavoriteTap: () => onFavoriteTap(group.items[index].index),
+          ),
+          if (index != group.items.length - 1) const SizedBox(height: 12),
+        ],
+      ],
     );
   }
 }
@@ -406,12 +646,6 @@ class _CartHeader extends StatelessWidget {
             textDirection: l10n.inverseAppBarDirection,
             children: [
               _HeaderIconButton(icon: Icons.arrow_back_rounded, onTap: onBack),
-              const SizedBox(width: 8),
-              _HeaderIconButton(
-                icon: Icons.notifications_none_rounded,
-                onTap: () {},
-                showDot: true,
-              ),
               const Spacer(),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
@@ -481,15 +715,10 @@ class _CartHeader extends StatelessWidget {
 }
 
 class _HeaderIconButton extends StatelessWidget {
-  const _HeaderIconButton({
-    required this.icon,
-    required this.onTap,
-    this.showDot = false,
-  });
+  const _HeaderIconButton({required this.icon, required this.onTap});
 
   final IconData icon;
   final VoidCallback onTap;
-  final bool showDot;
 
   @override
   Widget build(BuildContext context) {
@@ -502,26 +731,7 @@ class _HeaderIconButton extends StatelessWidget {
         child: SizedBox(
           width: 40,
           height: 40,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              Icon(icon, color: Colors.white, size: 22),
-              if (showDot)
-                PositionedDirectional(
-                  top: 9,
-                  end: 9,
-                  child: Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: AppColors.badgeRed,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 1.2),
-                    ),
-                  ),
-                ),
-            ],
-          ),
+          child: Icon(icon, color: Colors.white, size: 22),
         ),
       ),
     );
@@ -1012,38 +1222,40 @@ class _CartItemDetails extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Container(
-                width: 20,
-                height: 20,
-                decoration: BoxDecoration(
-                  color: item.accent.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Icon(
-                  Icons.storefront_rounded,
-                  color: item.accent,
-                  size: 13,
-                ),
-              ),
-              const SizedBox(width: 6),
-              Expanded(
-                child: Text(
-                  item.storeName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: GoogleFonts.cairo(
-                    color: colorScheme.onSurfaceVariant,
-                    fontSize: 11.5,
-                    fontWeight: FontWeight.w800,
-                    height: 1.1,
+          if (item.storeName.trim().isNotEmpty) ...[
+            Row(
+              children: [
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: item.accent.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: Icon(
+                    Icons.storefront_rounded,
+                    color: item.accent,
+                    size: 13,
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
+                const SizedBox(width: 6),
+                Expanded(
+                  child: Text(
+                    item.storeName,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.cairo(
+                      color: colorScheme.onSurfaceVariant,
+                      fontSize: 11.5,
+                      fontWeight: FontWeight.w800,
+                      height: 1.1,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+          ],
           Text(
             item.title,
             maxLines: 2,
@@ -1186,11 +1398,19 @@ class _StepperButton extends StatelessWidget {
   }
 }
 
-class _CouponCard extends StatelessWidget {
-  const _CouponCard({required this.controller, required this.hasDiscount});
+class LegacyCouponCard extends StatelessWidget {
+  const LegacyCouponCard({
+    super.key,
+    required this.controller,
+    required this.hasDiscount,
+    required this.isLoading,
+    required this.onApply,
+  });
 
   final TextEditingController controller;
   final bool hasDiscount;
+  final bool isLoading;
+  final VoidCallback onApply;
 
   @override
   Widget build(BuildContext context) {
@@ -1277,6 +1497,109 @@ class _CouponCard extends StatelessWidget {
                   );
               },
               child: Text(l10n.applyCoupon),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _BackendCouponCard extends StatelessWidget {
+  const _BackendCouponCard({
+    required this.controller,
+    required this.hasDiscount,
+    required this.isLoading,
+    required this.onApply,
+  });
+
+  final TextEditingController controller;
+  final bool hasDiscount;
+  final bool isLoading;
+  final VoidCallback onApply;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final colorScheme = Theme.of(context).colorScheme;
+
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(
+          color: hasDiscount
+              ? AppColors.accentGreen.withOpacity(0.35)
+              : colorScheme.outlineVariant.withOpacity(0.7),
+        ),
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 44,
+            height: 44,
+            decoration: BoxDecoration(
+              color: hasDiscount
+                  ? AppColors.accentGreen.withOpacity(0.12)
+                  : AppColors.accent.withOpacity(0.12),
+              borderRadius: BorderRadius.circular(13),
+            ),
+            child: Icon(
+              hasDiscount
+                  ? Icons.check_circle_outline_rounded
+                  : Icons.local_offer_outlined,
+              color: hasDiscount ? AppColors.accentGreen : AppColors.accent,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: TextField(
+              controller: controller,
+              style: GoogleFonts.cairo(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+              ),
+              decoration: InputDecoration(
+                hintText: l10n.coupon,
+                filled: true,
+                fillColor: colorScheme.surfaceContainerHighest.withOpacity(
+                  0.35,
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: const BorderSide(color: AppColors.primary),
+                ),
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          SizedBox(
+            height: 44,
+            child: FilledButton(
+              onPressed: isLoading ? null : onApply,
+              child: isLoading
+                  ? const SizedBox(
+                      width: 18,
+                      height: 18,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.white,
+                      ),
+                    )
+                  : Text(l10n.applyCoupon),
             ),
           ),
         ],

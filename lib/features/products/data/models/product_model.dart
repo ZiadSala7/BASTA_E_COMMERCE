@@ -12,6 +12,8 @@ class ProductModel extends ProductEntity {
     super.images,
     super.category,
     super.brand,
+    super.storeName,
+    super.storeSlug,
     super.stockQuantity,
     super.rating,
     super.reviewCount,
@@ -33,6 +35,8 @@ class ProductModel extends ProductEntity {
       images: _extractImages(json),
       category: _nameFromJson(json['category']),
       brand: _nameFromJson(json['brand']),
+      storeName: _nullableText(json['storeName'] ?? json['store_name']),
+      storeSlug: _nullableText(json['storeSlug'] ?? json['store_slug']),
       stockQuantity: _numberFromJson(
         json['stockQuantity'] ?? json['stock_quantity'],
       )?.toInt(),
@@ -121,6 +125,11 @@ class ProductModel extends ProductEntity {
     return value.toString();
   }
 
+  static String? _nullableText(Object? value) {
+    final text = value?.toString().trim();
+    return text == null || text.isEmpty ? null : text;
+  }
+
   static String _absoluteUrl(String url) {
     if (url.startsWith('http://') || url.startsWith('https://')) return url;
 
@@ -142,6 +151,8 @@ class ProductModel extends ProductEntity {
       'images': images,
       'category': category,
       'brand': brand,
+      'storeName': storeName,
+      'storeSlug': storeSlug,
       'stockQuantity': stockQuantity,
       'rating': rating,
       'reviewCount': reviewCount,

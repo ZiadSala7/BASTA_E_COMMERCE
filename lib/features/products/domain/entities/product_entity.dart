@@ -8,6 +8,8 @@ class ProductEntity {
   final List<String>? images;
   final String? category;
   final String? brand;
+  final String? storeName;
+  final String? storeSlug;
   final int? stockQuantity;
   final double? rating;
   final int? reviewCount;
@@ -25,6 +27,8 @@ class ProductEntity {
     this.images,
     this.category,
     this.brand,
+    this.storeName,
+    this.storeSlug,
     this.stockQuantity,
     this.rating,
     this.reviewCount,
@@ -36,8 +40,7 @@ class ProductEntity {
   bool get hasDiscount =>
       price != null && compareAtPrice != null && compareAtPrice! > price!;
 
-  double? get discountAmount =>
-      hasDiscount ? compareAtPrice! - price! : null;
+  double? get discountAmount => hasDiscount ? compareAtPrice! - price! : null;
 
   double? get discountPercentageCalculated {
     if (!hasDiscount || compareAtPrice == null || compareAtPrice == 0) {

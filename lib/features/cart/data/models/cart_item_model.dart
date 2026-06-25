@@ -7,40 +7,91 @@ class CartItemModel extends CartItemEntity {
     required super.productId,
     required super.name,
     required super.price,
+    required super.activePrice,
     required super.quantity,
+    super.storeId,
     required super.storeName,
+    super.storeSlug,
     required super.imageUrl,
     super.color,
     super.size,
   });
 
   factory CartItemModel.fromJson(Map<String, dynamic> json) {
-    final rawProduct = json['product'];
+    final rawProduct =
+        json['product'] ?? json['productId'] ?? json['product_id'];
     final product = _asMap(rawProduct);
-    final store = _asMap(product['store'] ?? json['store']);
-    final productId = _text(
-      json['productId'] ??
-          json['product_id'] ??
-          (rawProduct is Map ? null : rawProduct) ??
-          product['id'] ??
-          product['_id'],
-    );
+    final rawStore =
+        product['store'] ??
+        product['storeId'] ??
+        product['store_id'] ??
+        json['store'] ??
+        json['storeId'] ??
+        json['store_id'];
+    final store = _asMap(rawStore);
+    final productId = _firstText([
+      product['id'],
+      product['_id'],
+      json['productId'],
+      json['product_id'],
+      json['product'],
+    ]);
 
     return CartItemModel(
       id: _text(json['id'] ?? json['_id'] ?? json['cartItemId'] ?? productId),
       productId: productId,
-      name: _text(
-        json['name'] ?? json['title'] ?? product['name'] ?? product['title'],
-      ),
+      name: _firstText([
+        json['name'],
+        json['title'],
+        json['productName'],
+        json['product_name'],
+        json['productTitle'],
+        json['product_title'],
+        product['name'],
+        product['title'],
+        product['productName'],
+        product['product_name'],
+      ], fallback: productId.isEmpty ? 'Product' : 'Product #$productId'),
       price: _number(
         json['price'] ??
             json['unitPrice'] ??
             json['unit_price'] ??
             product['price'],
       ),
+      activePrice: _number(
+        json['activePrice'] ??
+            json['active_price'] ??
+            json['salePrice'] ??
+            json['sale_price'] ??
+            json['price'] ??
+            json['unitPrice'] ??
+            json['unit_price'] ??
+            product['activePrice'] ??
+            product['active_price'] ??
+            product['price'],
+      ),
       quantity: _int(json['quantity'], fallback: 1),
-      storeName: _text(
-        json['storeName'] ?? store['name'] ?? product['storeName'],
+      storeId: _nullableText(
+        store['id'] ??
+            store['_id'] ??
+            json['storeId'] ??
+            json['store_id'] ??
+            product['storeId'] ??
+            product['store_id'],
+      ),
+      storeName: _firstText([
+        json['storeName'],
+        json['store_name'],
+        store['name'] ?? store['title'],
+        product['storeName'],
+        product['store_name'],
+      ]),
+      storeSlug: _nullableText(
+        store['slug'] ??
+            json['storeSlug'] ??
+            json['store_slug'] ??
+            product['storeSlug'] ??
+            product['store_slug'],
       ),
       color: _nullableText(json['color']),
       size: _nullableText(json['size']),
@@ -58,7 +109,20 @@ class CartItemModel extends CartItemEntity {
 
   static String _text(Object? value) => (value ?? '').toString();
 
+  static String _firstText(List<Object?> values, {String fallback = ''}) {
+    for (final value in values) {
+      if (value == null || value is Map || value is List) continue;
+
+      final text = value.toString().trim();
+      if (text.isNotEmpty) return text;
+    }
+
+    return fallback;
+  }
+
   static String? _nullableText(Object? value) {
+    if (value is Map || value is List) return null;
+
     final text = _text(value);
     return text.isEmpty ? null : text;
   }

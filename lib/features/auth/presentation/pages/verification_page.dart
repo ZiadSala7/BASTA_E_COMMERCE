@@ -142,23 +142,18 @@ class _VerificationPageState extends State<VerificationPage> {
             context,
           ).showSnackBar(SnackBar(content: Text(state.message)));
 
-          // After email confirmation, handle different flows
-          if (widget.arguments.flow == AuthVerificationFlow.emailConfirmation) {
-            // For registration flow, use cached credentials to login
-            if (widget.arguments.email != null && widget.arguments.password != null) {
-              context.read<AuthCubit>().login(
-                widget.arguments.email!,
-                widget.arguments.password!,
-                rememberSession: true,
-              );
-            } else {
-              // If no cached credentials, go to login page
-              context.go(AppRoutes.login);
-            }
-          } else {
-            // For password reset or other flows, go to appropriate page
-            context.go(AppRoutes.login);
+          if (widget.arguments.flow == AuthVerificationFlow.registration &&
+              widget.arguments.email != null &&
+              widget.arguments.password != null) {
+            context.read<AuthCubit>().login(
+              widget.arguments.email!,
+              widget.arguments.password!,
+              rememberSession: true,
+            );
+            return;
           }
+
+          context.go(AppRoutes.login);
         }
 
         if (state is AuthAuthenticated) {

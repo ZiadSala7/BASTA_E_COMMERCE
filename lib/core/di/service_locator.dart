@@ -11,6 +11,7 @@ import '../../features/account/domain/repositories/account_repository.dart';
 import '../../features/account/domain/usecases/get_account_stats_usecase.dart';
 import '../../features/account/presentation/cubits/account_cubit.dart';
 import '../../features/auth/data/datasources/auth_local_datasource.dart';
+import '../../features/auth/data/datasources/firebase_social_auth_datasource.dart';
 import '../../features/auth/data/datasources/auth_remote_datasource.dart';
 import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
@@ -18,6 +19,7 @@ import '../../features/auth/domain/usecases/change_password_usecase.dart';
 import '../../features/auth/domain/usecases/confirm_email_usecase.dart';
 import '../../features/auth/domain/usecases/forgot_password_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
+import '../../features/auth/domain/usecases/google_social_login_usecase.dart';
 import '../../features/auth/domain/usecases/login_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
 import '../../features/auth/domain/usecases/register_usecase.dart';
@@ -45,6 +47,10 @@ import '../../features/onboarding/domain/repositories/onboarding_repository.dart
 import '../../features/onboarding/domain/usecases/complete_onboarding_usecase.dart';
 import '../../features/onboarding/domain/usecases/get_onboarding_pages_usecase.dart';
 import '../../features/onboarding/presentation/bloc/onboarding_bloc.dart';
+import '../../features/notifications/data/datasources/notifications_remote_datasource.dart';
+import '../../features/notifications/data/repositories/notifications_repository_impl.dart';
+import '../../features/notifications/domain/repositories/notifications_repository.dart';
+import '../../features/notifications/domain/services/notifications_controller.dart';
 import '../../features/orders/data/datasources/orders_remote_datasource.dart';
 import '../../features/orders/data/repositories/orders_repository_impl.dart';
 import '../../features/orders/domain/repositories/orders_repository.dart';
@@ -93,15 +99,31 @@ void setupServiceLocator() {
     );
   }
 
+  if (!getIt.isRegistered<FirebaseSocialAuthDataSource>()) {
+    getIt.registerLazySingleton<FirebaseSocialAuthDataSource>(
+      FirebaseSocialAuthDataSourceImpl.new,
+    );
+  }
+
   // Register repositories
   if (!getIt.isRegistered<AuthRepository>()) {
     getIt.registerSingleton<AuthRepository>(
-      AuthRepositoryImpl(remoteDataSource: getIt(), localDataSource: getIt()),
+      AuthRepositoryImpl(
+        remoteDataSource: getIt(),
+        localDataSource: getIt(),
+        firebaseSocialAuthDataSource: getIt(),
+      ),
     );
   }
 
   if (!getIt.isRegistered<LoginUseCase>()) {
     getIt.registerLazySingleton<LoginUseCase>(() => LoginUseCase(getIt()));
+  }
+
+  if (!getIt.isRegistered<GoogleSocialLoginUseCase>()) {
+    getIt.registerLazySingleton<GoogleSocialLoginUseCase>(
+      () => GoogleSocialLoginUseCase(getIt()),
+    );
   }
 
   if (!getIt.isRegistered<RegisterUseCase>()) {
@@ -160,6 +182,7 @@ void setupServiceLocator() {
     getIt.registerFactory<AuthCubit>(
       () => AuthCubit(
         loginUseCase: getIt(),
+        googleSocialLoginUseCase: getIt(),
         registerUseCase: getIt(),
         confirmEmailUseCase: getIt(),
         resendConfirmationUseCase: getIt(),
@@ -212,6 +235,24 @@ void setupServiceLocator() {
   if (!getIt.isRegistered<FavoritesController>()) {
     getIt.registerLazySingleton<FavoritesController>(
       () => FavoritesController(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<NotificationsRemoteDataSource>()) {
+    getIt.registerLazySingleton<NotificationsRemoteDataSource>(
+      () => NotificationsRemoteDataSourceImpl(dioConsumer: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<NotificationsRepository>()) {
+    getIt.registerLazySingleton<NotificationsRepository>(
+      () => NotificationsRepositoryImpl(remoteDataSource: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<NotificationsController>()) {
+    getIt.registerLazySingleton<NotificationsController>(
+      () => NotificationsController(getIt()),
     );
   }
 

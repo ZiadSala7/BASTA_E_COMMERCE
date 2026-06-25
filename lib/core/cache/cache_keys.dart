@@ -3,4 +3,5 @@ class CacheKeys {
 
   static const String themeMode = 'themeMode';
   static const String appLanguage = 'appLanguage';
+  static const String savedAddresses = 'savedAddresses';
 }

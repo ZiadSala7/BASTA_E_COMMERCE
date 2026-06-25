@@ -10,12 +10,15 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/auth/presentation/pages/verification_page.dart';
-import '../../features/cart/presentation/pages/enhanced_checkout_page.dart';
+import '../../features/account/presentation/pages/addresses_page.dart';
+import '../../features/account/presentation/pages/drawer_info_page.dart';
+import '../../features/cart/presentation/pages/cart_checkout_page.dart';
 import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/home/presentation/pages/stores_listing_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/orders/presentation/pages/orders_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/products_listing_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
@@ -36,6 +39,11 @@ abstract class AppRoutes {
   static const String productDetail = '/product-detail';
   static const String checkout = '/checkout';
   static const String favorites = '/favorites';
+  static const String orders = '/orders';
+  static const String addresses = '/addresses';
+  static const String inviteFriends = '/invite-friends';
+  static const String privacyPolicy = '/privacy-policy';
+  static const String aboutUs = '/about-us';
 }
 
 class AppRouter {
@@ -132,11 +140,34 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.checkout,
-        builder: (context, state) => const EnhancedCheckoutPage(),
+        builder: (context, state) => const CartCheckoutPage(),
       ),
       GoRoute(
         path: AppRoutes.favorites,
         builder: (context, state) => const FavoritesPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.orders,
+        builder: (context, state) => const OrdersPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.addresses,
+        builder: (context, state) => const AddressesPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.inviteFriends,
+        builder: (context, state) =>
+            const DrawerInfoPage(type: DrawerInfoPageType.inviteFriends),
+      ),
+      GoRoute(
+        path: AppRoutes.privacyPolicy,
+        builder: (context, state) =>
+            const DrawerInfoPage(type: DrawerInfoPageType.privacyPolicy),
+      ),
+      GoRoute(
+        path: AppRoutes.aboutUs,
+        builder: (context, state) =>
+            const DrawerInfoPage(type: DrawerInfoPageType.aboutUs),
       ),
     ],
   );

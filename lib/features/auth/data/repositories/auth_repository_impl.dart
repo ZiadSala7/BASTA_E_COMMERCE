@@ -3,24 +3,30 @@ import 'dart:convert';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_datasource.dart';
+import '../datasources/firebase_social_auth_datasource.dart';
 import '../models/change_password_request.dart';
 import '../datasources/auth_remote_datasource.dart';
 import '../models/forgot_password_request.dart';
 import '../models/login_request.dart';
+import '../models/login_response.dart';
 import '../models/register_request.dart';
 import '../models/reset_password_request.dart';
+import '../models/social_login_request.dart';
 import '../models/update_profile_request.dart';
 import '../models/user_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;
   final AuthLocalDataSource _localDataSource;
+  final FirebaseSocialAuthDataSource _firebaseSocialAuthDataSource;
 
   const AuthRepositoryImpl({
     required AuthRemoteDataSource remoteDataSource,
     required AuthLocalDataSource localDataSource,
+    required FirebaseSocialAuthDataSource firebaseSocialAuthDataSource,
   }) : _remoteDataSource = remoteDataSource,
-       _localDataSource = localDataSource;
+       _localDataSource = localDataSource,
+       _firebaseSocialAuthDataSource = firebaseSocialAuthDataSource;
 
   @override
   Future<UserEntity> login(
@@ -32,6 +38,30 @@ class AuthRepositoryImpl implements AuthRepository {
       LoginRequest(email: email, password: password),
     );
 
+    return _persistLoginResponse(
+      loginResponse,
+      rememberSession: rememberSession,
+    );
+  }
+
+  @override
+  Future<UserEntity> loginWithGoogle({bool rememberSession = true}) async {
+    final firebaseIdToken = await _firebaseSocialAuthDataSource
+        .getGoogleFirebaseIdToken();
+    final loginResponse = await _remoteDataSource.socialLogin(
+      SocialLoginRequest(idToken: firebaseIdToken, role: 'CUSTOMER'),
+    );
+
+    return _persistLoginResponse(
+      loginResponse,
+      rememberSession: rememberSession,
+    );
+  }
+
+  Future<UserEntity> _persistLoginResponse(
+    LoginResponse loginResponse, {
+    required bool rememberSession,
+  }) async {
     await _localDataSource.clearUser();
     await _localDataSource.saveToken(
       loginResponse.token,
@@ -171,6 +201,11 @@ class AuthRepositoryImpl implements AuthRepository {
     } catch (_) {
       // Stateless JWT logout is satisfied once the local token is cleared.
     } finally {
+      try {
+        await _firebaseSocialAuthDataSource.signOut();
+      } catch (_) {
+        // Local session clearing must still complete if Firebase sign-out fails.
+      }
       await _localDataSource.clearToken();
       await _localDataSource.clearUser();
     }

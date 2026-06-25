@@ -46,6 +46,9 @@ class _AuthOtpInputRowState extends State<AuthOtpInputRow> {
     final theme = Theme.of(context);
     final inputTheme = theme.inputDecorationTheme;
     final code = _controller.text;
+    final isRtlOtp =
+        Localizations.localeOf(context).languageCode == 'ar' ||
+        Directionality.of(context) == TextDirection.rtl;
 
     return Semantics(
       textField: true,
@@ -66,6 +69,7 @@ class _AuthOtpInputRowState extends State<AuthOtpInputRow> {
                   autofillHints: const [AutofillHints.oneTimeCode],
                   keyboardType: TextInputType.number,
                   textInputAction: TextInputAction.done,
+                  textDirection: TextDirection.ltr,
                   maxLength: _codeLength,
                   showCursor: false,
                   enableInteractiveSelection: false,
@@ -83,6 +87,7 @@ class _AuthOtpInputRowState extends State<AuthOtpInputRow> {
               ),
             ),
             Row(
+              textDirection: isRtlOtp ? TextDirection.rtl : TextDirection.ltr,
               children: List.generate(_codeLength, (index) {
                 final digit = index < code.length ? code[index] : '';
                 final isActive = _focusNode.hasFocus && index == code.length;

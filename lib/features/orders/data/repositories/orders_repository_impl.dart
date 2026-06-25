@@ -1,4 +1,5 @@
 import '../../domain/entities/order_entity.dart';
+import '../../domain/entities/checkout_result_entity.dart';
 import '../../domain/repositories/orders_repository.dart';
 import '../datasources/orders_remote_datasource.dart';
 
@@ -11,5 +12,21 @@ class OrdersRepositoryImpl implements OrdersRepository {
   @override
   Future<List<OrderEntity>> getMyOrders() {
     return _remoteDataSource.getMyOrders();
+  }
+
+  @override
+  Future<CheckoutResultEntity> checkout({
+    required Map<String, dynamic> address,
+    required String paymentMethod,
+  }) {
+    return _remoteDataSource.checkout(
+      address: address,
+      paymentMethod: paymentMethod,
+    );
+  }
+
+  @override
+  Future<OrderEntity> verifyPayment(String orderId) {
+    return _remoteDataSource.verifyPayment(orderId);
   }
 }

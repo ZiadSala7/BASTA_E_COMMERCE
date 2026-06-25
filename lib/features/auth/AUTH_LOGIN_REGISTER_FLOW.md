@@ -236,9 +236,9 @@ void _submit() {
 }
 ```
 
-### 2. AuthCubit calls register, then tries login
+### 2. AuthCubit calls register, then opens verification
 
-In `auth_cubit.dart`, register first creates the account. If successful, the app immediately logs the user in with the same email/password.
+In `auth_cubit.dart`, register creates the account. The backend creates new users as `PENDING`, so the app emits a pending state and sends the user to the OTP screen instead of trying to log in immediately.
 
 ```dart
 registeredUser = await _registerUseCase(
@@ -249,29 +249,20 @@ registeredUser = await _registerUseCase(
   role: role,
 );
 
-final authenticatedUser = await _loginUseCase(
-  email: email,
-  password: password,
-  rememberSession: rememberSession,
+emit(
+  AuthRegistrationPending(
+    registeredUser,
+    message:
+        'User registered successfully. Please check your email for the confirmation code.',
+  ),
 );
-emit(AuthAuthenticated(authenticatedUser));
 ```
 
-If the API requires email confirmation, the cubit emits a verification state instead:
+If login later fails because the account is still pending, the cubit emits a verification state:
 
 ```dart
 if (_isEmailConfirmationRequired(message)) {
-  if (registeredUser == null) {
-    emit(AuthEmailConfirmationRequired(email: email, message: message));
-  } else {
-    final confirmationMessage = await _requestConfirmationCode(email);
-    emit(
-      AuthRegistrationPending(
-        registeredUser,
-        message: confirmationMessage,
-      ),
-    );
-  }
+  emit(AuthEmailConfirmationRequired(email: email, message: message));
   return;
 }
 ```
@@ -445,7 +436,10 @@ RegisterPage
  -> AuthRemoteDataSource.register
  -> POST api/users/register
  -> RegisterResponse
- -> AuthCubit tries LoginUseCase
- -> save token and user locally if login succeeds
- -> AuthAuthenticated or verification state
+ -> AuthRegistrationPending
+ -> VerificationPage
+ -> POST api/users/confirm-email
+ -> AuthCubit tries LoginUseCase with cached registration credentials
+ -> save token and user locally
+ -> AuthAuthenticated
 ```

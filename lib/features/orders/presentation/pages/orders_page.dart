@@ -1,12 +1,14 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_router.dart';
 import '../../../../core/widgets/common/custom_app_bar.dart';
 import '../../../../core/widgets/status/empty_state.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -14,7 +16,9 @@ import '../../domain/entities/order_entity.dart';
 import '../../domain/usecases/get_my_orders_usecase.dart';
 
 class OrdersPage extends StatefulWidget {
-  const OrdersPage({super.key});
+  const OrdersPage({super.key, this.onBack});
+
+  final VoidCallback? onBack;
 
   @override
   State<OrdersPage> createState() => _OrdersPageState();
@@ -60,7 +64,7 @@ class _OrdersPageState extends State<OrdersPage>
         centerTitle: true,
         showSearch: false,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: _handleBack,
           icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
         ),
       ),
@@ -122,6 +126,21 @@ class _OrdersPageState extends State<OrdersPage>
         ],
       ),
     );
+  }
+
+  void _handleBack() {
+    final onBack = widget.onBack;
+    if (onBack != null) {
+      onBack();
+      return;
+    }
+
+    if (context.canPop()) {
+      context.pop();
+      return;
+    }
+
+    context.go(AppRoutes.mainNavigation);
   }
 }
 
@@ -194,9 +213,13 @@ class _OrdersList extends StatelessWidget {
   }
 
   List<OrderEntity> _filterOrders(List<OrderEntity> orders) {
-    if (status == _OrderStatusFilter.all) return orders;
+    final payableOrders = orders.where((order) => !order.isUnpaidCardOrder);
 
-    return orders
+    if (status == _OrderStatusFilter.all) {
+      return payableOrders.toList();
+    }
+
+    return payableOrders
         .where((order) => _statusFilterFor(order.status) == status)
         .toList();
   }
@@ -462,4 +485,26 @@ Color _statusColor(String status) {
 
 String _normalizeStatus(String status) {
   return status.toLowerCase().replaceAll(RegExp(r'[^a-z]'), '');
+}
+
+extension _OrderPaymentState on OrderEntity {
+  bool get isUnpaidCardOrder {
+    final method = paymentMethod.toLowerCase().replaceAll(
+      RegExp(r'[^a-z]'),
+      '',
+    );
+    final payment = paymentStatus.toLowerCase().replaceAll(
+      RegExp(r'[^a-z]'),
+      '',
+    );
+
+    if (!method.contains('card')) return false;
+    if (payment.isEmpty) return false;
+
+    return payment != 'paid' &&
+        payment != 'success' &&
+        payment != 'successful' &&
+        payment != 'completed' &&
+        payment != 'complete';
+  }
 }

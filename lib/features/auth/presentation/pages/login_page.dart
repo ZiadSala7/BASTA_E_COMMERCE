@@ -184,7 +184,13 @@ class _LoginPageState extends State<LoginPage> {
                   onPressed: _submit,
                 ),
                 const SizedBox(height: 26),
-                const AuthSocialActions(),
+                AuthSocialActions(
+                  onGoogleTap: state is AuthLoading
+                      ? null
+                      : () => context.read<AuthCubit>().loginWithGoogle(
+                          rememberSession: _rememberMe,
+                        ),
+                ),
                 const SizedBox(height: 22),
                 AuthFooterLink(
                   prompt: localizations.dontHaveAccountPrompt,

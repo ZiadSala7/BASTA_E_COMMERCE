@@ -8,6 +8,7 @@ import '../../../home/presentation/pages/home_page.dart';
 import '../../../../core/widgets/app_drawer.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../cart/domain/services/cart_badge_controller.dart';
+import '../../../notifications/domain/services/notifications_controller.dart';
 
 class MainNavigationPage extends StatefulWidget {
   const MainNavigationPage({super.key});
@@ -16,16 +17,34 @@ class MainNavigationPage extends StatefulWidget {
   State<MainNavigationPage> createState() => _MainNavigationPageState();
 }
 
-class _MainNavigationPageState extends State<MainNavigationPage> {
+class _MainNavigationPageState extends State<MainNavigationPage>
+    with WidgetsBindingObserver {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   late final CartBadgeController _cartBadgeController;
+  late final NotificationsController _notificationsController;
   int _currentIndex = 0;
 
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _cartBadgeController = sl<CartBadgeController>();
+    _notificationsController = sl<NotificationsController>();
     _cartBadgeController.refresh();
+    _notificationsController.setupAfterLogin();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      _notificationsController.refreshUnreadCount();
+    }
   }
 
   @override
@@ -63,9 +82,20 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
           onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
         );
       case 2:
-        return const OrdersPage();
+        return OrdersPage(
+          onBack: () {
+            setState(() {
+              _currentIndex = 0;
+            });
+          },
+        );
       case 3:
         return CartPage(
+          onBack: () {
+            setState(() {
+              _currentIndex = 0;
+            });
+          },
           onStartShopping: () {
             setState(() {
               _currentIndex = 0;
