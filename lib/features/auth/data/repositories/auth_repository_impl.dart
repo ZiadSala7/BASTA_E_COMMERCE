@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import '../../domain/entities/user_entity.dart';
+import '../../domain/entities/profile_update_result.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_local_datasource.dart';
 import '../datasources/firebase_social_auth_datasource.dart';
@@ -136,19 +137,58 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<UserEntity> updateProfile({
+  Future<ProfileUpdateResult> updateProfile({
     String? name,
     String? phone,
     String? email,
   }) async {
+    final request = UpdateProfileRequest(
+      name: name,
+      phone: phone,
+      email: email,
+    );
+    if (request.toJson().isEmpty) {
+      throw Exception('Please change at least one profile field.');
+    }
+
     final token = await _localDataSource.getToken();
-    final user = await _remoteDataSource.updateProfile(
-      UpdateProfileRequest(name: name, phone: phone, email: email),
+    final cachedUser = await _localDataSource.getUser();
+    final response = await _remoteDataSource.updateProfile(request);
+    final user = _mergeUser(
+      primary: response.user,
+      fallback: cachedUser,
+      token: token ?? response.user.token ?? cachedUser?.token ?? '',
     );
 
-    final userWithToken = user.copyWith(token: token);
-    await _localDataSource.saveUser(UserModel.fromEntity(userWithToken));
-    return userWithToken;
+    final emailChanged = _isChangedEmail(email, cachedUser?.email);
+    final needsVerification =
+        emailChanged || response.requiresEmailVerification;
+
+    if (needsVerification) {
+      try {
+        await _firebaseSocialAuthDataSource.signOut();
+      } catch (_) {}
+      await _localDataSource.clearToken();
+      await _localDataSource.clearUser();
+
+      return ProfileUpdateResult(
+        user: UserEntity(
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          phone: user.phone,
+          role: user.role,
+          status: user.status,
+        ),
+        message:
+            response.message ??
+            'Profile updated. Please verify your new email before logging in again.',
+        emailVerificationRequired: true,
+      );
+    }
+
+    await _localDataSource.saveUser(UserModel.fromEntity(user));
+    return ProfileUpdateResult(user: user, message: response.message);
   }
 
   @override
@@ -289,5 +329,13 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     return null;
+  }
+
+  bool _isChangedEmail(String? nextEmail, String? previousEmail) {
+    final normalizedNext = nextEmail?.trim().toLowerCase();
+    if (normalizedNext == null || normalizedNext.isEmpty) return false;
+
+    final normalizedPrevious = previousEmail?.trim().toLowerCase();
+    return normalizedNext != normalizedPrevious;
   }
 }

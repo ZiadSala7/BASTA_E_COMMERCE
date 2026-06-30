@@ -7,12 +7,12 @@ class SplashModel extends SplashEntity {
   });
 
   factory SplashModel.fromJson(Map<String, dynamic> json) => SplashModel(
-        initialRoute: json['initialRoute'] as String,
-        isFirstLaunch: json['isFirstLaunch'] as bool,
-      );
+    initialRoute: json['initialRoute'] as String,
+    isFirstLaunch: json['isFirstLaunch'] as bool,
+  );
 
   Map<String, dynamic> toJson() => {
-        'initialRoute': initialRoute,
-        'isFirstLaunch': isFirstLaunch,
-      };
+    'initialRoute': initialRoute,
+    'isFirstLaunch': isFirstLaunch,
+  };
 }

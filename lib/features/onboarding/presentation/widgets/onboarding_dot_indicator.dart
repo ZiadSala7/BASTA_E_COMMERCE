@@ -10,7 +10,7 @@ class OnboardingDotIndicator extends StatelessWidget {
     super.key,
     required this.count,
     required this.currentIndex,
-    this.activeColor   = const Color(0xFF5B5BFF),
+    this.activeColor = const Color(0xFF5B5BFF),
     this.inactiveColor = const Color(0xFFD0D0F0),
   });
 
@@ -24,10 +24,10 @@ class OnboardingDotIndicator extends StatelessWidget {
           duration: const Duration(milliseconds: 280),
           curve: Curves.easeInOut,
           margin: const EdgeInsets.symmetric(horizontal: 4),
-          width:  isActive ? 22 : 8,
+          width: isActive ? 22 : 8,
           height: 8,
           decoration: BoxDecoration(
-            color:        isActive ? activeColor : inactiveColor,
+            color: isActive ? activeColor : inactiveColor,
             borderRadius: BorderRadius.circular(4),
           ),
         );

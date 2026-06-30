@@ -43,9 +43,7 @@ class _OnboardingLoadingView extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: Color(0xFFF4F4FF),
-      body: Center(
-        child: CircularProgressIndicator(color: Color(0xFF5B5BFF)),
-      ),
+      body: Center(child: CircularProgressIndicator(color: Color(0xFF5B5BFF))),
     );
   }
 }
@@ -57,8 +55,6 @@ class _OnboardingFailureView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(child: Text(message)),
-    );
+    return Scaffold(body: Center(child: Text(message)));
   }
 }

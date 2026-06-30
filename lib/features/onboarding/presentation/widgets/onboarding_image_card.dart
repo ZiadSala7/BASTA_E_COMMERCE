@@ -31,18 +31,12 @@ class OnboardingImageCard extends StatelessWidget {
             color: const Color(0xFF5B5BFF).withOpacity(0.15),
             blurRadius: ResponsiveUtils.getResponsiveSize(context, 40),
             spreadRadius: ResponsiveUtils.getResponsiveSize(context, 2),
-            offset: Offset(
-              0,
-              ResponsiveUtils.getResponsiveSize(context, 16),
-            ),
+            offset: Offset(0, ResponsiveUtils.getResponsiveSize(context, 16)),
           ),
           BoxShadow(
             color: Colors.black.withOpacity(0.07),
             blurRadius: ResponsiveUtils.getResponsiveSize(context, 20),
-            offset: Offset(
-              0,
-              ResponsiveUtils.getResponsiveSize(context, 8),
-            ),
+            offset: Offset(0, ResponsiveUtils.getResponsiveSize(context, 8)),
           ),
         ],
       ),

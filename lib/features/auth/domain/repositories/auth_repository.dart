@@ -1,4 +1,5 @@
 import '../entities/user_entity.dart';
+import '../entities/profile_update_result.dart';
 
 abstract class AuthRepository {
   Future<UserEntity> login(
@@ -19,7 +20,7 @@ abstract class AuthRepository {
   Future<String> forgotPassword(String email);
   Future<String> resetPassword(String token, String newPassword);
   Future<String> changePassword(String oldPassword, String newPassword);
-  Future<UserEntity> updateProfile({
+  Future<ProfileUpdateResult> updateProfile({
     String? name,
     String? phone,
     String? email,

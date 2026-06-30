@@ -30,8 +30,7 @@ class _OnboardingPageState extends State<OnboardingPage> {
   }
 
   void _syncPage(int index) {
-    if (_pageController.hasClients &&
-        _pageController.page?.round() != index) {
+    if (_pageController.hasClients && _pageController.page?.round() != index) {
       _pageController.animateToPage(
         index,
         duration: const Duration(milliseconds: 380),

@@ -67,8 +67,8 @@ class OnboardingBottomSheetActions extends StatelessWidget {
                           ? localizations.startNow
                           : localizations.next,
                       onTap: () => context.read<OnboardingBloc>().add(
-                            const OnboardingNextPressed(),
-                          ),
+                        const OnboardingNextPressed(),
+                      ),
                     ),
                   ),
                 ],
@@ -109,8 +109,8 @@ class OnboardingBottomSheetActions extends StatelessWidget {
                 child: OnboardingSheetNextButton(
                   label: isLast ? localizations.startNow : localizations.next,
                   onTap: () => context.read<OnboardingBloc>().add(
-                        const OnboardingNextPressed(),
-                      ),
+                    const OnboardingNextPressed(),
+                  ),
                 ),
               ),
             ),

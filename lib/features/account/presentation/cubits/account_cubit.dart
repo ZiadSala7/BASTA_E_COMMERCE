@@ -8,10 +8,9 @@ part 'account_state.dart';
 class AccountCubit extends Cubit<AccountState> {
   final GetAccountStatsUseCase _getAccountStatsUseCase;
 
-  AccountCubit({
-    required GetAccountStatsUseCase getAccountStatsUseCase,
-  }) : _getAccountStatsUseCase = getAccountStatsUseCase,
-       super(AccountInitial());
+  AccountCubit({required GetAccountStatsUseCase getAccountStatsUseCase})
+    : _getAccountStatsUseCase = getAccountStatsUseCase,
+      super(AccountInitial());
 
   Future<void> getAccountStats() async {
     emit(AccountLoading());

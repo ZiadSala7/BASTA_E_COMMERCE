@@ -5,6 +5,5 @@ class GetOnboardingPagesUseCase {
   final OnboardingRepository _repository;
   const GetOnboardingPagesUseCase(this._repository);
 
-  Future<List<OnboardingPageEntity>> call() =>
-      _repository.getOnboardingPages();
+  Future<List<OnboardingPageEntity>> call() => _repository.getOnboardingPages();
 }

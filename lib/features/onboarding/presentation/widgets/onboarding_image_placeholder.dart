@@ -5,10 +5,7 @@ import '../../../../l10n/app_localizations.dart';
 class OnboardingImagePlaceholder extends StatelessWidget {
   final String path;
 
-  const OnboardingImagePlaceholder({
-    super.key,
-    required this.path,
-  });
+  const OnboardingImagePlaceholder({super.key, required this.path});
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +35,7 @@ class OnboardingImagePlaceholder extends StatelessWidget {
           Text(
             path,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Color(0xFF9090CC),
-              fontSize: 11,
-            ),
+            style: const TextStyle(color: Color(0xFF9090CC), fontSize: 11),
           ),
           const SizedBox(height: 16),
           Text(

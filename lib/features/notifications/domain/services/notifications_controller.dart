@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
+import '../../../../core/notifications/local_notification_service.dart';
 import '../repositories/notifications_repository.dart';
 
 class NotificationsController extends ChangeNotifier {
@@ -62,6 +63,7 @@ class NotificationsController extends ChangeNotifier {
         badge: true,
         sound: true,
       );
+      await LocalNotificationService.requestPermissions();
 
       if (settings.authorizationStatus == AuthorizationStatus.denied) {
         return;

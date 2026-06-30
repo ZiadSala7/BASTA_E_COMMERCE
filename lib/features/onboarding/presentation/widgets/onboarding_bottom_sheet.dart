@@ -42,15 +42,9 @@ class OnboardingBottomSheet extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: AppTextStyles.onboardingSheetTitle(context),
-          ),
+          Text(title, style: AppTextStyles.onboardingSheetTitle(context)),
           const SizedBox(height: 12),
-          Text(
-            subtitle,
-            style: AppTextStyles.onboardingSheetSubtitle(context),
-          ),
+          Text(subtitle, style: AppTextStyles.onboardingSheetSubtitle(context)),
           const SizedBox(height: 36),
           OnboardingBottomSheetActions(
             currentIndex: currentIndex,

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:latlong2/latlong.dart';
 
 import '../extensions/app_localizations_x.dart';
 import '../utils/app_colors.dart';
@@ -24,7 +23,7 @@ class LocationPickerPage extends StatefulWidget {
 }
 
 class _LocationPickerPageState extends State<LocationPickerPage> {
-  final MapController _controller = MapController();
+  GoogleMapController? _controller;
   late LatLng _currentCenter;
   LatLng? _selected;
 
@@ -37,6 +36,18 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
 
   void _confirm() {
     Navigator.of(context).pop<LatLng>(_selected ?? _currentCenter);
+  }
+
+  Future<void> _moveToSelection() async {
+    await _controller?.animateCamera(
+      CameraUpdate.newLatLngZoom(_selected ?? _currentCenter, 15),
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
   }
 
   @override
@@ -62,39 +73,25 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          FlutterMap(
-            mapController: _controller,
-            options: MapOptions(
-              initialCenter: _currentCenter,
-              initialZoom: 15,
-              minZoom: 3,
-              maxZoom: 19,
-              onTap: (_, point) => setState(() => _selected = point),
-              onPositionChanged: (camera, _) {
-                _currentCenter = camera.center;
-              },
+          GoogleMap(
+            initialCameraPosition: CameraPosition(
+              target: _currentCenter,
+              zoom: 15,
             ),
-            children: [
-              TileLayer(
-                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-                userAgentPackageName: 'com.ionbit.bsTa',
-              ),
-              if (_selected != null)
-                MarkerLayer(
-                  markers: [
+            minMaxZoomPreference: const MinMaxZoomPreference(3, 19),
+            zoomControlsEnabled: false,
+            myLocationButtonEnabled: false,
+            onMapCreated: (controller) => _controller = controller,
+            onTap: (point) => setState(() => _selected = point),
+            onCameraMove: (position) => _currentCenter = position.target,
+            markers: _selected == null
+                ? const <Marker>{}
+                : {
                     Marker(
-                      point: _selected!,
-                      width: 48,
-                      height: 48,
-                      child: const Icon(
-                        Icons.location_on_rounded,
-                        color: Color(0xFFE53935),
-                        size: 48,
-                      ),
+                      markerId: const MarkerId('selected_location'),
+                      position: _selected!,
                     ),
-                  ],
-                ),
-            ],
+                  },
           ),
           IgnorePointer(
             child: Icon(
@@ -153,7 +150,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _controller.move(_selected ?? _currentCenter, 15),
+        onPressed: _moveToSelection,
         tooltip: l10n.pick(ar: 'العودة للموقع المحدد', en: 'Return to pin'),
         child: const Icon(Icons.center_focus_strong_rounded),
       ),

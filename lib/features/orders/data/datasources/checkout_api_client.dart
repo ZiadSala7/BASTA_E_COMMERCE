@@ -1,0 +1,63 @@
+import 'dart:developer';
+
+import 'package:dio/dio.dart';
+
+import '../../../../core/api/dio_consumer.dart';
+import '../../../../core/api/endpoints.dart';
+import '../models/checkout_result_model.dart';
+import 'orders_dio_error.dart';
+import 'orders_response_parser.dart';
+import 'payment_log.dart';
+
+class CheckoutApiClient {
+  const CheckoutApiClient(this._dio);
+
+  final DioConsumer _dio;
+
+  Future<CheckoutResultModel> checkout({
+    required Map<String, dynamic> address,
+    required String paymentMethod,
+  }) async {
+    final body = _requestBody(address, paymentMethod);
+    try {
+      logPayment('Checkout request', {
+        'method': 'POST',
+        'endpoint': Endpoints.checkout,
+        'body': body,
+      });
+      final response = await _dio.post(Endpoints.checkout, data: body);
+      logPayment('Checkout response', {
+        'statusCode': response.statusCode,
+        'statusMessage': response.statusMessage,
+        'body': sanitizePaymentPayload(response.data),
+      });
+      return CheckoutResultModel.fromJson(responseMap(response.data));
+    } on DioException catch (error, stackTrace) {
+      logPayment('Checkout error', {
+        'statusCode': error.response?.statusCode,
+        'message': error.message,
+        'body': sanitizePaymentPayload(error.response?.data),
+      });
+      log('Checkout request failed', error: error, stackTrace: stackTrace);
+      throw Exception(ordersDioMessage(error));
+    }
+  }
+
+  Map<String, dynamic> _requestBody(
+    Map<String, dynamic> address,
+    String paymentMethod,
+  ) {
+    return {
+      'address': address,
+      for (final key in const [
+        'streetAddress',
+        'city',
+        'state',
+        'postalCode',
+        'country',
+      ])
+        key: address[key]?.toString() ?? '',
+      'paymentMethod': paymentMethod,
+    };
+  }
+}

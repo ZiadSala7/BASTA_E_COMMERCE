@@ -14,7 +14,7 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
   final DioConsumer _dioConsumer;
 
   const AccountRemoteDataSourceImpl({required DioConsumer dioConsumer})
-      : _dioConsumer = dioConsumer;
+    : _dioConsumer = dioConsumer;
 
   @override
   Future<AccountStatsModel> getAccountStats() async {
@@ -37,7 +37,11 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
         favoritesCount: favoritesCount,
       );
     } on DioException catch (error, stackTrace) {
-      log('Get account stats request failed', error: error, stackTrace: stackTrace);
+      log(
+        'Get account stats request failed',
+        error: error,
+        stackTrace: stackTrace,
+      );
       throw Exception(_messageFromDio(error));
     }
   }
@@ -50,7 +54,10 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       if (directData is List) return directData.length;
 
       if (directData is Map<String, dynamic>) {
-        final items = directData['items'] ?? directData['orders'] ?? directData['favorites'];
+        final items =
+            directData['items'] ??
+            directData['orders'] ??
+            directData['favorites'];
         if (items is List) return items.length;
       }
 

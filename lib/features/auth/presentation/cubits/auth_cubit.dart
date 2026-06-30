@@ -190,7 +190,19 @@ class AuthCubit extends Cubit<AuthState> {
         phone: phone,
         email: email,
       );
-      emit(AuthProfileUpdated(user));
+      if (user.emailVerificationRequired) {
+        emit(
+          AuthProfileEmailVerificationRequired(
+            email: user.user.email,
+            message:
+                user.message ??
+                'Profile updated. Please verify your new email before logging in again.',
+          ),
+        );
+        return;
+      }
+
+      emit(AuthProfileUpdated(user.user));
     } catch (e) {
       emit(AuthError(_mapErrorMessage(e)));
     }

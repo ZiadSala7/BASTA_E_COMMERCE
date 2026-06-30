@@ -1,4 +1,4 @@
-import '../entities/user_entity.dart';
+import '../entities/profile_update_result.dart';
 import '../repositories/auth_repository.dart';
 
 class UpdateProfileUseCase {
@@ -6,7 +6,11 @@ class UpdateProfileUseCase {
 
   const UpdateProfileUseCase(this._repository);
 
-  Future<UserEntity> call({String? name, String? phone, String? email}) {
+  Future<ProfileUpdateResult> call({
+    String? name,
+    String? phone,
+    String? email,
+  }) {
     return _repository.updateProfile(name: name, phone: phone, email: email);
   }
 }

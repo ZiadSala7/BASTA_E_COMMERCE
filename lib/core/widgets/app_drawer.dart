@@ -87,6 +87,22 @@ class AppDrawer extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
                         _DrawerSection(
+                          title: l10n.supportAndHelp,
+                          children: [
+                            _DrawerItem(
+                              label: l10n.faq,
+                              icon: Icons.help_outline_rounded,
+                              onTap: () => openRoute(AppRoutes.faq),
+                            ),
+                            _DrawerItem(
+                              label: l10n.contactUs,
+                              icon: Icons.contact_support_outlined,
+                              onTap: () => openRoute(AppRoutes.contactUs),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(height: 14),
+                        _DrawerSection(
                           title: l10n.accountSettings,
                           children: [
                             const _LanguageItem(),

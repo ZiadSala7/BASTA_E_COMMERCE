@@ -44,6 +44,8 @@ abstract class AppRoutes {
   static const String inviteFriends = '/invite-friends';
   static const String privacyPolicy = '/privacy-policy';
   static const String aboutUs = '/about-us';
+  static const String faq = '/faq';
+  static const String contactUs = '/contact-us';
 }
 
 class AppRouter {
@@ -168,6 +170,16 @@ class AppRouter {
         path: AppRoutes.aboutUs,
         builder: (context, state) =>
             const DrawerInfoPage(type: DrawerInfoPageType.aboutUs),
+      ),
+      GoRoute(
+        path: AppRoutes.faq,
+        builder: (context, state) =>
+            const DrawerInfoPage(type: DrawerInfoPageType.faq),
+      ),
+      GoRoute(
+        path: AppRoutes.contactUs,
+        builder: (context, state) =>
+            const DrawerInfoPage(type: DrawerInfoPageType.contactUs),
       ),
     ],
   );
