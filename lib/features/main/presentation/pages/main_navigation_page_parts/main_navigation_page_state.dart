@@ -7,6 +7,8 @@ class _MainNavigationPageState extends State<MainNavigationPage>
   late final NotificationsController _notificationsController;
   int _currentIndex = 0;
 
+  late final List<Widget> _pages;
+
   @override
   void initState() {
     super.initState();
@@ -15,6 +17,37 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     _notificationsController = sl<NotificationsController>();
     _cartBadgeController.refresh();
     _notificationsController.setupAfterLogin();
+
+    _pages = [
+      HomePage(
+        onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+      OffersPage(
+        onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+      OrdersPage(
+        onBack: () {
+          setState(() {
+            _currentIndex = 0;
+          });
+        },
+      ),
+      CartPage(
+        onBack: () {
+          setState(() {
+            _currentIndex = 0;
+          });
+        },
+        onStartShopping: () {
+          setState(() {
+            _currentIndex = 0;
+          });
+        },
+      ),
+      AccountPage(
+        onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
+      ),
+    ];
   }
 
   @override
@@ -35,7 +68,10 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     return Scaffold(
       key: _scaffoldKey,
       drawer: const AppDrawer(),
-      body: _buildCurrentScreen(),
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: AnimatedBuilder(
         animation: _cartBadgeController,
         builder: (context, child) {
@@ -43,7 +79,6 @@ class _MainNavigationPageState extends State<MainNavigationPage>
             currentIndex: _currentIndex,
             cartItemCount: _cartBadgeController.itemCount,
             onTap: (index) {
-              if (index == 3) _cartBadgeController.refresh();
               setState(() {
                 _currentIndex = index;
               });
@@ -52,47 +87,5 @@ class _MainNavigationPageState extends State<MainNavigationPage>
         },
       ),
     );
-  }
-
-  Widget _buildCurrentScreen() {
-    switch (_currentIndex) {
-      case 0:
-        return HomePage(
-          onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        );
-      case 1:
-        return OffersPage(
-          onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        );
-      case 2:
-        return OrdersPage(
-          onBack: () {
-            setState(() {
-              _currentIndex = 0;
-            });
-          },
-        );
-      case 3:
-        return CartPage(
-          onBack: () {
-            setState(() {
-              _currentIndex = 0;
-            });
-          },
-          onStartShopping: () {
-            setState(() {
-              _currentIndex = 0;
-            });
-          },
-        );
-      case 4:
-        return AccountPage(
-          onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        );
-      default:
-        return HomePage(
-          onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
-        );
-    }
   }
 }

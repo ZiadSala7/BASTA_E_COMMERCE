@@ -4,6 +4,7 @@ import '../../domain/entities/home_product_entity.dart';
 class HomeProductModel extends HomeProductEntity {
   const HomeProductModel({
     required super.id,
+    super.slug = '',
     required super.name,
     required super.price,
     required super.compareAtPrice,
@@ -15,9 +16,10 @@ class HomeProductModel extends HomeProductEntity {
   factory HomeProductModel.fromJson(Map<String, dynamic> json) {
     return HomeProductModel(
       id: (json['id'] ?? json['_id'] ?? '').toString(),
+      slug: (json['slug'] ?? '').toString(),
       name: (json['name'] ?? json['title'] ?? '').toString(),
       price: _numberFromJson(json['price']),
-      compareAtPrice: _numberFromJson(json['compareAtPrice']),
+      compareAtPrice: _numberFromJson(json['compareAtPrice'] ?? json['compare_at_price'] ?? json['oldPrice']),
       imageUrl: _imageUrlFromJson(json),
       storeName: _nullableText(json['storeName'] ?? json['store_name']),
       storeSlug: _nullableText(json['storeSlug'] ?? json['store_slug']),

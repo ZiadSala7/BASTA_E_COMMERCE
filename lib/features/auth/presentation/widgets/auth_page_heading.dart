@@ -26,7 +26,7 @@ class AuthPageHeading extends StatelessWidget {
             height: 4,
             decoration: BoxDecoration(
               gradient: const LinearGradient(
-                colors: [AppColors.primary, Color(0xFF20B7A8)],
+                colors: [AppColors.primary, AppColors.primary],
               ),
               borderRadius: BorderRadius.circular(999),
             ),

@@ -15,7 +15,7 @@ class _RememberMeIconButton extends StatelessWidget {
       constraints: const BoxConstraints(minWidth: 34, minHeight: 28),
       icon: Icon(
         value ? Icons.toggle_on_rounded : Icons.toggle_off_rounded,
-        color: value ? const Color(0xFF5B6BFF) : const Color(0xFFB1B4C8),
+        color: value ? const Color(0xFF1800AD) : const Color(0xFFB1B4C8),
         size: 34,
       ),
     );

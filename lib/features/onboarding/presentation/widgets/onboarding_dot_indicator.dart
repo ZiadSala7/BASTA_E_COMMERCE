@@ -10,7 +10,7 @@ class OnboardingDotIndicator extends StatelessWidget {
     super.key,
     required this.count,
     required this.currentIndex,
-    this.activeColor = const Color(0xFF5B5BFF),
+    this.activeColor = const Color(0xFF1800AD),
     this.inactiveColor = const Color(0xFFD0D0F0),
   });
 

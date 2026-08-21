@@ -81,5 +81,7 @@
   "noStoresFound": "لا توجد متاجر",
   "viewProducts": "عرض المنتجات",
   "tryAgain": "حاول مرة أخرى",
-  "primeVideo": "برايم فيديو"
+  "primeVideo": "برايم فيديو",
+  "couponHint": "كود الخصم (اختياري)",
+  "referralCodeHint": "رمز الدعوة (اختياري)"
 }

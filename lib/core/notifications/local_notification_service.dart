@@ -4,6 +4,8 @@ import 'dart:async';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
+import 'notification_navigator.dart';
+
 class LocalNotificationService {
   static const String channelId = 'ionbit_alert_notifications';
   static const String channelName = 'Notifications';
@@ -39,7 +41,22 @@ class LocalNotificationService {
       ),
     );
 
-    await _plugin.initialize(settings: initializationSettings);
+    await _plugin.initialize(
+      settings: initializationSettings,
+      onDidReceiveNotificationResponse: (NotificationResponse response) {
+        final payload = response.payload;
+        if (payload == null || payload.isEmpty) return;
+
+        try {
+          final decoded = jsonDecode(payload);
+          if (decoded is Map) {
+            NotificationNavigator.handleNotificationTap(
+              decoded.map((key, value) => MapEntry(key.toString(), value)),
+            );
+          }
+        } catch (_) {}
+      },
+    );
 
     await _plugin
         .resolvePlatformSpecificImplementation<

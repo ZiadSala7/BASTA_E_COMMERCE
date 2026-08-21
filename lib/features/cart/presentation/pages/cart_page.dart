@@ -7,6 +7,7 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets.dart';
+import '../../../../core/utils/currency_helper.dart';
 import '../../../../core/widgets/status/empty_state.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/cart_item_entity.dart';

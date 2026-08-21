@@ -4,6 +4,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 import '../../../../core/notifications/local_notification_service.dart';
+import '../../../../core/notifications/notification_navigator.dart';
 import '../repositories/notifications_repository.dart';
 
 class NotificationsController extends ChangeNotifier {
@@ -54,6 +55,7 @@ class NotificationsController extends ChangeNotifier {
     await refreshUnreadCount();
     await _registerFcmToken();
     _listenForPushEvents();
+    await checkInitialMessage();
   }
 
   Future<void> _registerFcmToken() async {
@@ -90,9 +92,27 @@ class NotificationsController extends ChangeNotifier {
       refreshUnreadCount();
     });
 
-    _openedAppSubscription ??= FirebaseMessaging.onMessageOpenedApp.listen((_) {
-      refreshUnreadCount();
-    });
+    _openedAppSubscription ??= FirebaseMessaging.onMessageOpenedApp.listen(
+      (message) {
+        refreshUnreadCount();
+        _navigateFromMessage(message);
+      },
+    );
+  }
+
+  /// Handles a notification that launched the app from a terminated state.
+  Future<void> checkInitialMessage() async {
+    try {
+      final message = await _messaging.getInitialMessage();
+      if (message != null) {
+        _navigateFromMessage(message);
+      }
+    } catch (_) {}
+  }
+
+  void _navigateFromMessage(RemoteMessage message) {
+    if (message.data.isEmpty) return;
+    NotificationNavigator.handleNotificationTap(message.data);
   }
 
   @override

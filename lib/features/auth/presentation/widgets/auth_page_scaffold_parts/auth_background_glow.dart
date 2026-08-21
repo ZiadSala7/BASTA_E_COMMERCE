@@ -15,7 +15,7 @@ class _AuthBackgroundGlow extends StatelessWidget {
           child: _GlowCircle(
             size: 290,
             colors: [
-              isDark ? const Color(0x335B5BD6) : const Color(0x245B5BD6),
+              isDark ? const Color(0x331800AD) : const Color(0x241800AD),
               const Color(0x00FFFFFF),
             ],
           ),
@@ -26,7 +26,7 @@ class _AuthBackgroundGlow extends StatelessWidget {
           child: _GlowCircle(
             size: 320,
             colors: [
-              isDark ? const Color(0x3320B7A8) : const Color(0x2220B7A8),
+              isDark ? const Color(0x331800AD) : const Color(0x221800AD),
               const Color(0x00FFFFFF),
             ],
           ),

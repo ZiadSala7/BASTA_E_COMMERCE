@@ -4,7 +4,24 @@ class HomeCatalogRemoteDataSourceImpl implements HomeCatalogRemoteDataSource {
   final DioConsumer _dioConsumer;
 
   const HomeCatalogRemoteDataSourceImpl({required DioConsumer dioConsumer})
-    : _dioConsumer = dioConsumer;
+      : _dioConsumer = dioConsumer;
+
+  @override
+  Future<List<HomeBannerModel>> getBanners() async {
+    try {
+      final response = await _dioConsumer.get(Endpoints.banners);
+      final items = _dataList(response.data);
+
+      return items
+          .whereType<Map>()
+          .map(
+            (item) => HomeBannerModel.fromJson(Map<String, dynamic>.from(item)),
+          )
+          .toList();
+    } catch (_) {
+      return const [];
+    }
+  }
 
   @override
   Future<List<HomeCategoryModel>> getCategories() async {
@@ -79,13 +96,35 @@ class HomeCatalogRemoteDataSourceImpl implements HomeCatalogRemoteDataSource {
     );
   }
 
+  @override
+  Future<HomeStoreModel?> getStoreBySlug(String slug) async {
+    try {
+      final response = await _dioConsumer.get(Endpoints.storeDetails(slug));
+      final Map<String, dynamic> body = response.data is Map<String, dynamic>
+          ? response.data as Map<String, dynamic>
+          : (response.data is Map
+              ? Map<String, dynamic>.from(response.data as Map)
+              : <String, dynamic>{});
+
+      final storePayload = body['data'] is Map<String, dynamic>
+          ? body['data'] as Map<String, dynamic>
+          : (body['store'] is Map<String, dynamic>
+              ? body['store'] as Map<String, dynamic>
+              : body);
+
+      return HomeStoreModel.fromJson(storePayload);
+    } catch (_) {
+      return null;
+    }
+  }
+
   List<dynamic> _dataList(dynamic data) {
     if (data is Map<String, dynamic>) {
-      final items = data['data'];
+      final items = data['data'] ?? data['banners'];
       if (items is List) return items;
       if (items is Map<String, dynamic>) {
         final nestedItems =
-            items['products'] ?? items['items'] ?? items['results'];
+            items['products'] ?? items['items'] ?? items['results'] ?? items['banners'];
         if (nestedItems is List) return nestedItems;
       }
 
@@ -94,17 +133,19 @@ class HomeCatalogRemoteDataSourceImpl implements HomeCatalogRemoteDataSource {
     }
 
     if (data is Map) {
-      final items = data['data'];
+      final items = data['data'] ?? data['banners'];
       if (items is List) return items;
       if (items is Map) {
         final nestedItems =
-            items['products'] ?? items['items'] ?? items['results'];
+            items['products'] ?? items['items'] ?? items['results'] ?? items['banners'];
         if (nestedItems is List) return nestedItems;
       }
 
       final products = data['products'] ?? data['items'] ?? data['results'];
       if (products is List) return products;
     }
+
+    if (data is List) return data;
 
     return const [];
   }

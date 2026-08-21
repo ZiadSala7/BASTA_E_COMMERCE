@@ -271,4 +271,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get primeVideo => 'Prime Video';
+
+  @override
+  String get couponHint => 'Coupon code (optional)';
+
+  @override
+  String get referralCodeHint => 'Referral code (optional)';
 }

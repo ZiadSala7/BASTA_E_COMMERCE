@@ -1,8 +1,10 @@
 {
   "info": {
-    "_postman_id": "423281ba-4411-4abe-b37c-4ca481c40c5e",
-    "name": "Pasta E-Commerce",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "_postman_id": "534268c3-3fc3-401e-871f-e7c8841f0846",
+    "name": "Pasta E-Commerce (Live Production)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "32969593",
+    "_collection_link": "https://go.postman.co/collection/32969593-534268c3-3fc3-401e-871f-e7c8841f0846?source=collection_link"
   },
   "item": [
     {
@@ -23,12 +25,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/register",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/register",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -53,12 +56,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/login",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/login",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -83,12 +87,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/login",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/login",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -113,12 +118,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/login",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/login",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -144,12 +150,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/users/me",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/me",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -175,12 +182,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/users?page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users?page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users"
@@ -215,12 +223,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/users?role=VENDOR&page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users?role=VENDOR&page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users"
@@ -259,12 +268,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/users?status=PENDING&page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users?status=PENDING&page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users"
@@ -303,12 +313,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/users?search=user@pasta.com&page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users?search=user@pasta.com&page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users"
@@ -346,12 +357,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/forgot-password",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/forgot-password",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -376,12 +388,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/reset-password",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/reset-password",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -406,12 +419,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/confirm-email",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/confirm-email",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -436,12 +450,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/resend-confirmation",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/resend-confirmation",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -476,12 +491,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/change-password",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/change-password",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -516,12 +532,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/profile",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/profile",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -556,12 +573,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/PASTE_USER_ID_HERE/status",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/PASTE_USER_ID_HERE/status",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "users",
@@ -597,18 +615,19 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/admin/PASTE_USER_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/admin/PASTE_USER_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
               "path": [
                 "api",
                 "users",
                 "admin",
                 "PASTE_USER_ID_HERE"
-              ],
-              "port": "3000"
+              ]
             }
           },
           "response": []
@@ -638,17 +657,18 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/users/fcm-token",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/users/fcm-token",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
               "path": [
                 "api",
                 "users",
                 "fcm-token"
-              ],
-              "port": "3000"
+              ]
             }
           },
           "response": []
@@ -683,12 +703,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/stores/",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/stores/",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "stores",
@@ -704,12 +725,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/stores/?page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/stores/?page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "stores",
@@ -745,12 +767,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/stores/admin?page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/stores/admin?page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "stores",
@@ -776,12 +799,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/stores/amman-tech-hub",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/stores/amman-tech-hub",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "stores",
@@ -816,12 +840,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/stores/PASTE_STORE_ID_HERE/status",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/stores/PASTE_STORE_ID_HERE/status",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "stores",
@@ -857,12 +882,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/stores/PASTE_STORE_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/stores/PASTE_STORE_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "stores",
@@ -888,33 +914,35 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/stores/me",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/stores/me",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
               "path": [
                 "api",
                 "stores",
                 "me"
-              ],
-              "port": "3000"
+              ]
             }
           },
           "response": []
         },
         {
-          "name": "Get Banners",
+          "name": "Get all active banners",
           "request": {
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/stores/banners",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/stores/banners",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "stores",
@@ -925,24 +953,8 @@
           "response": []
         },
         {
-          "name": "Upload store banner",
+          "name": "Upload Store Banner",
           "request": {
-            "method": "PATCH",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:3000/api/stores/PASTE_STORE_ID_HERE/banner",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "api",
-                "stores",
-                "PASTE_STORE_ID_HERE",
-                "banner"
-              ]
-            },
             "auth": {
               "type": "bearer",
               "bearer": [
@@ -953,14 +965,31 @@
                 }
               ]
             },
+            "method": "PATCH",
+            "header": [],
             "body": {
               "mode": "formdata",
               "formdata": [
                 {
                   "key": "banner",
                   "type": "file",
-                  "src": []
+                  "value": null
                 }
+              ]
+            },
+            "url": {
+              "raw": "https://api.bs6a.com/api/stores/PASTE_STORE_ID_HERE/banner",
+              "protocol": "https",
+              "host": [
+                "api",
+                "bs6a",
+                "com"
+              ],
+              "path": [
+                "api",
+                "stores",
+                "PASTE_STORE_ID_HERE",
+                "banner"
               ]
             }
           },
@@ -996,12 +1025,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/products",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products"
@@ -1016,12 +1046,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products?page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products?page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products"
@@ -1046,12 +1077,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products?store=amman-tech-hub&page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products?store=amman-tech-hub&page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products"
@@ -1080,12 +1112,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products?search=jameed&page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products?search=jameed&page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products"
@@ -1114,12 +1147,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products/rtx-4090",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/rtx-4090",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products",
@@ -1135,12 +1169,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products?category=electronics&limit=10&page=1",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products?category=electronics&limit=10&page=1",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products"
@@ -1179,12 +1214,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products/vendor/me?page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/vendor/me?page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products",
@@ -1230,12 +1266,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/products/PASTE_PRODUCT_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/PASTE_PRODUCT_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products",
@@ -1261,12 +1298,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products/PASTE_PRODUCT_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/PASTE_PRODUCT_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products",
@@ -1301,12 +1339,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/products/PASTE_PRODUCT_ID_HERE/reviews",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/PASTE_PRODUCT_ID_HERE/reviews",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products",
@@ -1323,12 +1362,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products/PASTE_PRODUCT_ID_HERE/reviews",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/PASTE_PRODUCT_ID_HERE/reviews",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products",
@@ -1355,12 +1395,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products/reviews/PASTE_REVIEW_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/reviews/PASTE_REVIEW_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products",
@@ -1397,12 +1438,13 @@
               ]
             },
             "url": {
-              "raw": "http://localhost:3000/api/products/PASTE_PRODUCT_ID_HERE/images",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/PASTE_PRODUCT_ID_HERE/images",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products",
@@ -1429,12 +1471,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/products/PASTE_PRODUCT_ID_HERE/images/PASTE_IMAGE_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/PASTE_PRODUCT_ID_HERE/images/PASTE_IMAGE_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products",
@@ -1467,22 +1510,23 @@
                 {
                   "key": "file",
                   "type": "file",
-                  "src": []
+                  "value": null
                 }
               ]
             },
             "url": {
-              "raw": "http://localhost:3000/api/products/bulk-upload",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products/bulk-upload",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
               "path": [
                 "api",
                 "products",
                 "bulk-upload"
-              ],
-              "port": "3000"
+              ]
             }
           },
           "response": []
@@ -1517,12 +1561,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/carts/items",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/carts/items",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "carts",
@@ -1548,12 +1593,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/carts",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/carts",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "carts"
@@ -1587,12 +1633,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/carts/items/PASTE_PRODUCT_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/carts/items/PASTE_PRODUCT_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "carts",
@@ -1619,12 +1666,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/carts/items/PASTE_PRODUCT_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/carts/items/PASTE_PRODUCT_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "carts",
@@ -1660,12 +1708,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/carts/apply-coupon",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/carts/apply-coupon",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "carts",
@@ -1697,7 +1746,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"streetAddress\": \"123 Pasta Lane\",\n  \"city\": \"Amman\",\n  \"state\": \"Amman\",\n  \"postalCode\": \"11118\",\n  \"country\": \"Jordan\",\n  \"shippingRateId\": \"PASTE_SHIPPING_RATE_ID_HERE\",\n  \"couponCode\": \"TECH10\"\n}",
+              "raw": "{\n  \"streetAddress\": \"123 Pasta Lane\",\n  \"city\": \"Amman\",\n  \"state\": \"Amman\",\n  \"postalCode\": \"11118\",\n  \"country\": \"Jordan\",\n  \"paymentMethod\": \"CARD\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -1705,12 +1754,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/orders/checkout",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/orders/checkout",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "orders",
@@ -1736,12 +1786,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/orders/me",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/orders/me",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "orders",
@@ -1767,12 +1818,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/orders/PASTE_ORDER_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/orders/PASTE_ORDER_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "orders",
@@ -1798,12 +1850,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/orders/vendor",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/orders/vendor",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "orders",
@@ -1838,17 +1891,56 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/orders/PASTE_ORDER_ID_HERE/status",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/orders/PASTE_ORDER_ID_HERE/status",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "orders",
                 "PASTE_ORDER_ID_HERE",
                 "status"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Payments",
+      "item": [
+        {
+          "name": "Verify Payment",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{customer_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://api.bs6a.com/api/payments/verify/PASTE_ORDER_ID_HERE",
+              "protocol": "https",
+              "host": [
+                "api",
+                "bs6a",
+                "com"
+              ],
+              "path": [
+                "api",
+                "payments",
+                "verify",
+                "PASTE_ORDER_ID_HERE"
               ]
             }
           },
@@ -1865,12 +1957,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/subscriptions/packages?page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/subscriptions/packages?page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "subscriptions",
@@ -1906,12 +1999,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/subscriptions/me",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/subscriptions/me",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "subscriptions",
@@ -1946,12 +2040,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/subscriptions/subscribe",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/subscriptions/subscribe",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "subscriptions",
@@ -1986,12 +2081,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/subscriptions/packages",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/subscriptions/packages",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "subscriptions",
@@ -2026,18 +2122,19 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/subscriptions/packages/PASTE_PACKAGE_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/subscriptions/packages/PASTE_PACKAGE_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
               "path": [
                 "api",
                 "subscriptions",
                 "packages",
                 "PASTE_PACKAGE_ID_HERE"
-              ],
-              "port": "3000"
+              ]
             }
           },
           "response": []
@@ -2058,18 +2155,19 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/subscriptions/packages/PASTE_PACKAGE_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/subscriptions/packages/PASTE_PACKAGE_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
               "path": [
                 "api",
                 "subscriptions",
                 "packages",
                 "PASTE_PACKAGE_ID_HERE"
-              ],
-              "port": "3000"
+              ]
             }
           },
           "response": []
@@ -2090,18 +2188,19 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/subscriptions/admin/pending",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/subscriptions/admin/pending",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
               "path": [
                 "api",
                 "subscriptions",
                 "admin",
                 "pending"
-              ],
-              "port": "3000"
+              ]
             }
           },
           "response": []
@@ -2131,10 +2230,12 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/subscriptions/admin/PASTE_SUB_ID_HERE/status",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/subscriptions/admin/PASTE_SUB_ID_HERE/status",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
               "path": [
                 "api",
@@ -2142,8 +2243,7 @@
                 "admin",
                 "PASTE_SUB_ID_HERE",
                 "status"
-              ],
-              "port": "3000"
+              ]
             }
           },
           "response": []
@@ -2159,12 +2259,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/categories",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/categories",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "categories"
@@ -2198,12 +2299,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/categories",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/categories",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "categories"
@@ -2237,12 +2339,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/categories/PASTE_CATEGORY_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/categories/PASTE_CATEGORY_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "categories",
@@ -2268,12 +2371,13 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/categories/PASTE_CATEGORY_ID_HERE",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/categories/PASTE_CATEGORY_ID_HERE",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "categories",
@@ -2304,12 +2408,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/notifications?page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/notifications?page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "notifications"
@@ -2344,12 +2449,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/notifications/unread-count",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/notifications/unread-count",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "notifications",
@@ -2375,12 +2481,13 @@
             "method": "PATCH",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/notifications/PASTE_NOTIFICATION_ID_HERE/read",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/notifications/PASTE_NOTIFICATION_ID_HERE/read",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "notifications",
@@ -2416,18 +2523,19 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/notifications/admin/send",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/notifications/admin/send",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
               "path": [
                 "api",
                 "notifications",
                 "admin",
                 "send"
-              ],
-              "port": "3000"
+              ]
             }
           },
           "response": []
@@ -2436,49 +2544,10 @@
     },
     {
       "name": "Shipping",
+      "description": "Endpoints managing the integration and calculation of logistics via Spex.",
       "item": [
         {
-          "name": "Add shipping zone",
-          "request": {
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{admin_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "method": "POST",
-            "header": [],
-            "body": {
-              "mode": "raw",
-              "raw": "{\n  \"name\": \"Greater Amman\",\n  \"coveredCities\": [\"Amman\", \"Zarqa\", \"Salt\", \"Madaba\"]\n}",
-              "options": {
-                "raw": {
-                  "language": "json"
-                }
-              }
-            },
-            "url": {
-              "raw": "http://localhost:3000/api/shipping/zones",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "api",
-                "shipping",
-                "zones"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Calculate shipping at checkout",
+          "name": "Calculate Shipping Cost",
           "request": {
             "auth": {
               "type": "bearer",
@@ -2494,7 +2563,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"city\": \"Amman\"\n}",
+              "raw": "{\n  \"city\": \"رام الله\"\n}",
               "options": {
                 "raw": {
                   "language": "json"
@@ -2502,23 +2571,17 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/shipping/calculate",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "api",
-                "shipping",
-                "calculate"
-              ]
-            }
+              "raw": "https://api.bs6a.com/api/shipping/calculate",
+              "protocol": "https",
+              "host": ["api", "bs6a", "com"],
+              "path": ["api", "shipping", "calculate"]
+            },
+            "description": "Calculates dynamic shipping rates based on the customer's city and the number of unique vendors in their active cart."
           },
           "response": []
         },
         {
-          "name": "Get Spex Live Areas",
+          "name": "Get Spex Live Areas (Admin)",
           "request": {
             "auth": {
               "type": "bearer",
@@ -2533,18 +2596,46 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/shipping/spex-live-areas",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "path": [
-                "api",
-                "shipping",
-                "spex-live-areas"
-              ],
-              "port": "3000"
-            }
+              "raw": "https://api.bs6a.com/api/shipping/spex-live-areas",
+              "protocol": "https",
+              "host": ["api", "bs6a", "com"],
+              "path": ["api", "shipping", "spex-live-areas"]
+            },
+            "description": "Admin endpoint that triggers a backend JSON-RPC POST request to Spex to fetch the latest operational delivery zones."
+          },
+          "response": []
+        },
+        {
+          "name": "Save Configured Zone (Admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"zoneName\": \"المنطقة الوسطى\",\n  \"baseFee\": 15,\n  \"subAreas\": [\"رام الله\", \"البيرة\", \"بيتونيا\"]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "https://api.bs6a.com/api/shipping/zones",
+              "protocol": "https",
+              "host": ["api", "bs6a", "com"],
+              "path": ["api", "shipping", "zones"]
+            },
+            "description": "Saves the mapped Spex sub-areas into the local marketplace database to establish pricing rules."
           },
           "response": []
         }
@@ -2578,12 +2669,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/favorites/toggle",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/favorites/toggle",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "favorites",
@@ -2609,12 +2701,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/favorites",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/favorites",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "favorites"
@@ -2653,12 +2746,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/coupons/admin",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/coupons/admin",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "coupons",
@@ -2693,12 +2787,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/coupons/vendor",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/coupons/vendor",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "coupons",
@@ -2724,12 +2819,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/coupons?page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/coupons?page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "coupons"
@@ -2764,12 +2860,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/coupons/vendor/me?page=1&limit=10",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/coupons/vendor/me?page=1&limit=10",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "coupons",
@@ -2806,12 +2903,13 @@
             "method": "PATCH",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/coupons/PASTE_COUPON_ID_HERE/status",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/coupons/PASTE_COUPON_ID_HERE/status",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "coupons",
@@ -2852,12 +2950,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/products",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products"
@@ -2891,12 +2990,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/products",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/products",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "products"
@@ -2921,12 +3021,13 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "http://localhost:3000/api/carts",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/carts",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "carts"
@@ -2960,12 +3061,13 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/carts/apply-coupon",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/carts/apply-coupon",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "carts",
@@ -3000,16 +3102,88 @@
               }
             },
             "url": {
-              "raw": "http://localhost:3000/api/orders/checkout",
-              "protocol": "http",
+              "raw": "https://api.bs6a.com/api/orders/checkout",
+              "protocol": "https",
               "host": [
-                "localhost"
+                "api",
+                "bs6a",
+                "com"
               ],
-              "port": "3000",
               "path": [
                 "api",
                 "orders",
                 "checkout"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Statistics",
+      "item": [
+        {
+          "name": "Get platform statistics (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://api.bs6a.com/api/statistics/admin",
+              "protocol": "https",
+              "host": [
+                "api",
+                "bs6a",
+                "com"
+              ],
+              "path": [
+                "api",
+                "statistics",
+                "admin"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get user statistics history (admin)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{admin_token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "https://api.bs6a.com/api/statistics/admin/users/PASTE_USER_ID_HERE",
+              "protocol": "https",
+              "host": [
+                "api",
+                "bs6a",
+                "com"
+              ],
+              "path": [
+                "api",
+                "statistics",
+                "admin",
+                "users",
+                "PASTE_USER_ID_HERE"
               ]
             }
           },
@@ -3023,12 +3197,13 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "http://localhost:3000/api/health",
-          "protocol": "http",
+          "raw": "https://api.bs6a.com/api/health",
+          "protocol": "https",
           "host": [
-            "localhost"
+            "api",
+            "bs6a",
+            "com"
           ],
-          "port": "3000",
           "path": [
             "api",
             "health"
@@ -3036,171 +3211,6 @@
         }
       },
       "response": []
-    },
-    {
-      "name": "Banners",
-      "item": [
-        {
-          "name": "Get Banners",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:3000/api/banners",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "api",
-                "banners"
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Upload Banner",
-          "request": {
-            "method": "POST",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:3000/api/banners",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "api",
-                "banners"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{admin_token}}",
-                  "type": "string"
-                }
-              ]
-            },
-            "body": {
-              "mode": "formdata",
-              "formdata": [
-                {
-                  "key": "banner",
-                  "type": "file",
-                  "src": []
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Delete Banner",
-          "request": {
-            "method": "DELETE",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:3000/api/banners/PASTE_BANNER_ID_HERE",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "api",
-                "banners",
-                "PASTE_BANNER_ID_HERE"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{admin_token}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
-      "name": "Statistics",
-      "item": [
-        {
-          "name": "Get Platform Statistics",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:3000/api/statistics/admin",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "api",
-                "statistics",
-                "admin"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{admin_token}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "response": []
-        },
-        {
-          "name": "Get User Statistics History",
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "http://localhost:3000/api/statistics/admin/users/PASTE_USER_ID_HERE",
-              "protocol": "http",
-              "host": [
-                "localhost"
-              ],
-              "port": "3000",
-              "path": [
-                "api",
-                "statistics",
-                "admin",
-                "users",
-                "PASTE_USER_ID_HERE"
-              ]
-            },
-            "auth": {
-              "type": "bearer",
-              "bearer": [
-                {
-                  "key": "token",
-                  "value": "{{admin_token}}",
-                  "type": "string"
-                }
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
     }
   ]
 }

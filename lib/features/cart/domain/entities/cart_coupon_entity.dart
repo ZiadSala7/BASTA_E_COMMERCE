@@ -12,4 +12,20 @@ class CartCouponEntity {
     required this.appliedCoupon,
     required this.message,
   });
+
+  CartCouponEntity copyWith({
+    double? cartTotal,
+    double? discountAmount,
+    double? finalTotal,
+    String? appliedCoupon,
+    String? message,
+  }) {
+    return CartCouponEntity(
+      cartTotal: cartTotal ?? this.cartTotal,
+      discountAmount: discountAmount ?? this.discountAmount,
+      finalTotal: finalTotal ?? this.finalTotal,
+      appliedCoupon: appliedCoupon ?? this.appliedCoupon,
+      message: message ?? this.message,
+    );
+  }
 }

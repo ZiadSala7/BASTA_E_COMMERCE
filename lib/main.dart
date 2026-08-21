@@ -9,6 +9,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'core/di/service_locator.dart';
 import 'core/api/dio_helper.dart';
 import 'core/cache/cache_helper.dart';
+import 'core/deeplinks/deep_link_handler.dart';
 import 'core/notifications/local_notification_service.dart';
 import 'core/managers/language_cubit.dart';
 import 'core/managers/theme_cubit.dart';
@@ -49,6 +50,9 @@ Future<void> main() async {
 
   /// Initialize Dio
   DioHelper.init();
+
+  /// Listen for referral invite deep links (https://bs6a.com/register?ref=...)
+  await DeepLinkHandler.initialize();
 
   runApp(
     MultiBlocProvider(

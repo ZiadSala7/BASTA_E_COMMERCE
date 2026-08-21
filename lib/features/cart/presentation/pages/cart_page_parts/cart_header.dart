@@ -22,7 +22,7 @@ class _CartHeader extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF4747C2), Color(0xFF5B5BD6), Color(0xFF20B7A8)],
+          colors: [AppColors.primary, AppColors.primary],
         ),
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(26)),
       ),

@@ -62,7 +62,7 @@ class _EnhancedSplashPageState extends State<EnhancedSplashPage>
                     end: Alignment.bottomRight,
                     colors: [
                       AppColors.primary,
-                      Color(0xFF7C86FF),
+                      Color(0xFF1800AD),
                       Color(0xFF9D8EFF),
                     ],
                     stops: [0.0, 0.5, 1.0],

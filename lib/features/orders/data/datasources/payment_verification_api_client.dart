@@ -22,13 +22,26 @@ class PaymentVerificationApiClient {
         'endpoint': endpoint,
         'orderId': orderId,
       });
-      final response = await _dio.get(endpoint);
-      logPayment('Verify response', {
-        'statusCode': response.statusCode,
-        'statusMessage': response.statusMessage,
-        'body': sanitizePaymentPayload(response.data),
-      });
-      final body = responseMap(response.data);
+
+      dynamic responseData;
+      try {
+        final response = await _dio.get(endpoint);
+        responseData = response.data;
+      } on DioException catch (dioErr) {
+        if (dioErr.response?.statusCode == 404 ||
+            dioErr.response?.statusCode == 405) {
+          // Fallback to POST /api/payments/verify if legacy route is used
+          final postResponse = await _dio.post(
+            'api/payments/verify',
+            data: {'orderId': orderId},
+          );
+          responseData = postResponse.data;
+        } else {
+          rethrow;
+        }
+      }
+
+      final body = responseMap(responseData);
       _throwForFailure(body);
       return OrderModel.fromJson(orderFromVerification(body));
     } on DioException catch (error, stackTrace) {
@@ -39,6 +52,24 @@ class PaymentVerificationApiClient {
       });
       log('Payment verification failed', error: error, stackTrace: stackTrace);
       throw Exception(ordersDioMessage(error));
+    }
+  }
+
+  Future<void> cancel(String orderId) async {
+    final endpoint = Endpoints.cancelPayment(orderId);
+    try {
+      logPayment('Cancel payment request', {
+        'method': 'POST',
+        'endpoint': endpoint,
+        'orderId': orderId,
+      });
+      await _dio.post(endpoint, data: {'orderId': orderId});
+    } on DioException catch (error, stackTrace) {
+      logPayment('Cancel payment error', {
+        'statusCode': error.response?.statusCode,
+        'message': error.message,
+      });
+      log('Cancel payment failed', error: error, stackTrace: stackTrace);
     }
   }
 

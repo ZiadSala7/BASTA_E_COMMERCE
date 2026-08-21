@@ -21,7 +21,7 @@ class _SummaryRow extends StatelessWidget {
           label,
           style: GoogleFonts.cairo(
             color: colorScheme.onSurfaceVariant,
-            fontSize: 12,
+            fontSize: 12.5,
             fontWeight: FontWeight.w700,
           ),
         ),
@@ -30,7 +30,7 @@ class _SummaryRow extends StatelessWidget {
           value,
           style: GoogleFonts.cairo(
             color: valueColor ?? colorScheme.onSurface,
-            fontSize: 12,
+            fontSize: 13,
             fontWeight: FontWeight.w900,
           ),
         ),
@@ -39,4 +39,4 @@ class _SummaryRow extends StatelessWidget {
   }
 }
 
-String _money(double value) => 'JD ${value.toStringAsFixed(2)}';
+String _money(double value) => CurrencyHelper.format(value);

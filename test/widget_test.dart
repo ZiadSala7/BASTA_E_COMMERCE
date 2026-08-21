@@ -1,20 +1,42 @@
-// This is a basic Flutter widget test.
-//
-// To perform an interaction with a widget in your test, use the WidgetTester
-// utility in the flutter_test package. For example, you can send tap and scroll
-// gestures. You can also use WidgetTester to find child widgets in the widget
-// tree, read text, and verify that the values of widget properties are correct.
-
+import 'package:busta/features/products/presentation/widgets/bottom_action_bar.dart';
+import 'package:busta/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:busta/ionbit_e_commerce.dart';
 
 void main() {
-  testWidgets('App starts smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const IonbitECommerce());
+  testWidgets('BottomActionBar renders correctly with quantity and prices', (
+    WidgetTester tester,
+  ) async {
+    var quantity = 2;
+    var addedToCart = false;
 
-    // Verify that the app builds without errors
-    expect(find.byType(MaterialApp), findsOneWidget);
+    await tester.pumpWidget(
+      MaterialApp(
+        locale: const Locale('en'),
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
+        home: Scaffold(
+          body: BottomActionBar(
+            quantity: quantity,
+            unitPrice: 24.99,
+            stockQuantity: 10,
+            isOutOfStock: false,
+            onQuantityChanged: (newQ) => quantity = newQ,
+            onAddToCart: () => addedToCart = true,
+            onBuyNow: () {},
+          ),
+        ),
+      ),
+    );
+
+    await tester.pumpAndSettle();
+
+    // Verify quantity and total price are rendered
+    expect(find.text('2'), findsOneWidget);
+    expect(find.text('JD 49.98'), findsOneWidget);
+
+    // Tap Add to Cart button
+    await tester.tap(find.byType(ElevatedButton).first);
+    expect(addedToCart, isTrue);
   });
 }

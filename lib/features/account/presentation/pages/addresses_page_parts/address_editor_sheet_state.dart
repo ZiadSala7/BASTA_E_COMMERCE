@@ -13,6 +13,9 @@ class _AddressEditorSheetState extends State<_AddressEditorSheet> {
   late final TextEditingController _phoneController;
   late LatLng _location;
   late bool _isDefault;
+  String? _selectedPlaceName;
+  bool _isResolvingPlace = false;
+  int _placeLookupGeneration = 0;
 
   @override
   void initState() {
@@ -35,6 +38,7 @@ class _AddressEditorSheetState extends State<_AddressEditorSheet> {
         ? _defaultLocation
         : LatLng(address.latitude, address.longitude);
     _isDefault = address?.isDefault ?? false;
+    _resolvePlaceName(_location);
   }
 
   @override
@@ -60,7 +64,50 @@ class _AddressEditorSheetState extends State<_AddressEditorSheet> {
     );
 
     if (result == null) return;
-    setState(() => _location = result);
+    setState(() {
+      _location = result;
+      _selectedPlaceName = null;
+      _isResolvingPlace = true;
+    });
+    _resolvePlaceName(result);
+  }
+
+  Future<void> _resolvePlaceName(LatLng location) async {
+    final lookupGeneration = ++_placeLookupGeneration;
+    setState(() {
+      _isResolvingPlace = true;
+      _selectedPlaceName = null;
+    });
+
+    try {
+      final placemarks = await placemarkFromCoordinates(
+        location.latitude,
+        location.longitude,
+      );
+      if (!mounted || lookupGeneration != _placeLookupGeneration) return;
+
+      setState(() {
+        _selectedPlaceName = _placeNameFromPlacemarks(placemarks);
+        _isResolvingPlace = false;
+      });
+    } catch (_) {
+      if (!mounted || lookupGeneration != _placeLookupGeneration) return;
+      setState(() {
+        _selectedPlaceName = null;
+        _isResolvingPlace = false;
+      });
+    }
+  }
+
+  String? _placeNameFromPlacemarks(List<Placemark> placemarks) {
+    if (placemarks.isEmpty) return null;
+    final p = placemarks.first;
+    final parts = <String>[
+      if (p.street != null && p.street!.isNotEmpty) p.street!,
+      if (p.subLocality != null && p.subLocality!.isNotEmpty) p.subLocality!,
+      if (p.locality != null && p.locality!.isNotEmpty) p.locality!,
+    ];
+    return parts.isEmpty ? null : parts.join(', ');
   }
 
   void _save() {
@@ -168,8 +215,15 @@ class _AddressEditorSheetState extends State<_AddressEditorSheet> {
                 onPressed: _chooseLocation,
                 icon: const Icon(Icons.map_outlined),
                 label: Text(
-                  '${l10n.pick(ar: 'اختيار الموقع على الخريطة', en: 'Choose on map')} '
-                  '(${_location.latitude.toStringAsFixed(4)}, ${_location.longitude.toStringAsFixed(4)})',
+                  _isResolvingPlace
+                      ? l10n.pick(
+                          ar: 'جارٍ تحديد الموقع...',
+                          en: 'Resolving location...',
+                        )
+                      : _selectedPlaceName != null
+                      ? '${l10n.pick(ar: 'اختيار الموقع على الخريطة', en: 'Choose on map')} — $_selectedPlaceName'
+                      : '${l10n.pick(ar: 'اختيار الموقع على الخريطة', en: 'Choose on map')} '
+                            '(${_location.latitude.toStringAsFixed(4)}, ${_location.longitude.toStringAsFixed(4)})',
                 ),
               ),
               SwitchListTile(

@@ -33,8 +33,8 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
     super.initState();
     _checkout = PaymentCheckoutController(
       orderId: widget.orderId,
-      totalAmount: widget.totalAmount,
       session: widget.session,
+      totalAmount: widget.totalAmount,
       onLoadingChanged: (value) {
         if (mounted && !_hasReturnedResult) {
           setState(() => _isLoading = value);

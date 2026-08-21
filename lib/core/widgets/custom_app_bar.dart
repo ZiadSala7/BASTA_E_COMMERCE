@@ -90,11 +90,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF4747C2),
-                  Color(0xFF5B5BD6),
-                  Color(0xFF20B7A8),
-                ],
+                colors: [AppColors.primary, AppColors.primary],
               ),
             ),
             child: SafeArea(

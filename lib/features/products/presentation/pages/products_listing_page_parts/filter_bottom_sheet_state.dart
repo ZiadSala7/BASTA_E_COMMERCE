@@ -62,14 +62,8 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                     max: 10000,
                     divisions: 20,
                     labels: RangeLabels(
-                      l10n.pick(
-                        ar: '${_minPrice.toInt()} د.أ',
-                        en: 'JD ${_minPrice.toInt()}',
-                      ),
-                      l10n.pick(
-                        ar: '${_maxPrice.toInt()} د.أ',
-                        en: 'JD ${_maxPrice.toInt()}',
-                      ),
+                      l10n.formatPrice(_minPrice.toInt(), 0),
+                      l10n.formatPrice(_maxPrice.toInt(), 0),
                     ),
                     onChanged: (values) {
                       setState(() {

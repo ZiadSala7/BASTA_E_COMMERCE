@@ -269,4 +269,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get primeVideo => 'برايم فيديو';
+
+  @override
+  String get couponHint => 'كود الخصم (اختياري)';
+
+  @override
+  String get referralCodeHint => 'رمز الدعوة (اختياري)';
 }

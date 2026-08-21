@@ -81,5 +81,7 @@
   "noStoresFound": "No stores found",
   "viewProducts": "View products",
   "tryAgain": "Try Again",
-  "primeVideo": "Prime Video"
+  "primeVideo": "Prime Video",
+  "couponHint": "Coupon code (optional)",
+  "referralCodeHint": "Referral code (optional)"
 }

@@ -6,6 +6,7 @@ class AuthTextField extends StatefulWidget {
   final TextInputType keyboardType;
   final TextInputAction textInputAction;
   final bool obscureText;
+  final TextCapitalization textCapitalization;
   final FormFieldValidator<String>? validator;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -17,6 +18,7 @@ class AuthTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.next,
     this.obscureText = false,
+    this.textCapitalization = TextCapitalization.none,
     this.validator,
     this.prefixIcon,
     this.suffixIcon,

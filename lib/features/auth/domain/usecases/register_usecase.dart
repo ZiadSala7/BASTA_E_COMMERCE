@@ -12,7 +12,17 @@ class RegisterUseCase {
     required String name,
     required String phone,
     String role = 'CUSTOMER',
+    String? couponCode,
+    String? referralCode,
   }) {
-    return _repository.register(email, password, name, phone, role);
+    return _repository.register(
+      email,
+      password,
+      name,
+      phone,
+      role,
+      couponCode: couponCode,
+      referralCode: referralCode,
+    );
   }
 }

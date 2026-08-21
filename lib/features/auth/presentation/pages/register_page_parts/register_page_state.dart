@@ -7,6 +7,17 @@ class _RegisterPageState extends State<RegisterPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+  final _couponController = TextEditingController();
+  final _referralCodeController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    final initialReferralCode = widget.initialReferralCode?.trim();
+    if (initialReferralCode != null && initialReferralCode.isNotEmpty) {
+      _referralCodeController.text = initialReferralCode.toUpperCase();
+    }
+  }
 
   @override
   void dispose() {
@@ -15,6 +26,8 @@ class _RegisterPageState extends State<RegisterPage> {
     _emailController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
+    _couponController.dispose();
+    _referralCodeController.dispose();
     super.dispose();
   }
 
@@ -28,6 +41,12 @@ class _RegisterPageState extends State<RegisterPage> {
       _passwordController.text,
       _nameController.text.trim(),
       _phoneController.text.trim(),
+      couponCode: _couponController.text.trim().isEmpty
+          ? null
+          : _couponController.text.trim(),
+      referralCode: _referralCodeController.text.trim().isEmpty
+          ? null
+          : _referralCodeController.text.trim(),
     );
   }
 
@@ -152,6 +171,25 @@ class _RegisterPageState extends State<RegisterPage> {
                     color: Color(0xFF9CA0B6),
                   ),
                 ),
+                const SizedBox(height: 14),
+                AuthTextField(
+                  controller: _couponController,
+                  hintText: localizations.couponHint,
+                  prefixIcon: const Icon(
+                    Icons.local_offer_outlined,
+                    color: Color(0xFF9CA0B6),
+                  ),
+                ),
+                const SizedBox(height: 14),
+                AuthTextField(
+                  controller: _referralCodeController,
+                  hintText: localizations.referralCodeHint,
+                  textCapitalization: TextCapitalization.characters,
+                  prefixIcon: const Icon(
+                    Icons.card_giftcard_outlined,
+                    color: Color(0xFF9CA0B6),
+                  ),
+                ),
                 const SizedBox(height: 18),
                 AuthPrimaryButton(
                   label: localizations.createAccountButton,
@@ -159,7 +197,11 @@ class _RegisterPageState extends State<RegisterPage> {
                   onPressed: _submit,
                 ),
                 const SizedBox(height: 26),
-                const AuthSocialActions(),
+                AuthSocialActions(
+                  onGoogleTap: state is AuthLoading
+                      ? null
+                      : () => context.read<AuthCubit>().loginWithGoogle(),
+                ),
                 const SizedBox(height: 22),
                 AuthFooterLink(
                   prompt: localizations.alreadyHaveAccountPrompt,

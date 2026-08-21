@@ -1,10 +1,12 @@
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api/dio_consumer.dart';
 import '../auth/session_token_store.dart';
 import '../cache/cache_helper.dart';
 import '../storage/secure_storage_service.dart';
+import '../utils/app_router.dart';
 import '../../features/account/data/datasources/account_remote_datasource.dart';
 import '../../features/account/data/repositories/account_repository_impl.dart';
 import '../../features/account/domain/repositories/account_repository.dart';
@@ -35,9 +37,14 @@ import '../../features/cart/domain/usecases/add_cart_item_usecase.dart';
 import '../../features/cart/domain/usecases/get_cart_items_usecase.dart';
 import '../../features/favorites/data/datasources/favorites_remote_datasource.dart';
 import '../../features/favorites/domain/services/favorites_controller.dart';
+import '../../features/cart/data/datasources/shipping_remote_datasource.dart';
+import '../../features/cart/data/repositories/shipping_repository_impl.dart';
+import '../../features/cart/domain/repositories/shipping_repository.dart';
+import '../../features/cart/domain/usecases/calculate_shipping_usecase.dart';
 import '../../features/home/data/datasources/home_catalog_remote_datasource.dart';
 import '../../features/home/data/repositories/home_catalog_repository_impl.dart';
 import '../../features/home/domain/repositories/home_catalog_repository.dart';
+import '../../features/home/domain/usecases/get_home_banners_usecase.dart';
 import '../../features/home/domain/usecases/get_home_categories_usecase.dart';
 import '../../features/home/domain/usecases/get_home_products_usecase.dart';
 import '../../features/home/domain/usecases/get_home_stores_usecase.dart';
@@ -55,8 +62,12 @@ import '../../features/orders/data/datasources/orders_remote_datasource.dart';
 import '../../features/orders/data/repositories/orders_repository_impl.dart';
 import '../../features/orders/domain/repositories/orders_repository.dart';
 import '../../features/orders/domain/usecases/get_my_orders_usecase.dart';
+import '../../features/products/data/datasources/product_details_remote_datasource.dart';
 import '../../features/products/data/datasources/product_reviews_remote_datasource.dart';
+import '../../features/products/data/repositories/products_repository_impl.dart';
+import '../../features/products/domain/repositories/products_repository.dart';
 import '../../features/products/domain/usecases/add_product_review_usecase.dart';
+import '../../features/products/domain/usecases/get_product_details_usecase.dart';
 import '../../features/products/domain/usecases/get_product_reviews_usecase.dart';
 import '../../features/splash/data/datasources/splash_local_datasource.dart';
 import '../../features/splash/data/repositories/splash_repository_impl.dart';
@@ -68,6 +79,11 @@ final getIt = GetIt.instance;
 final sl = getIt;
 
 void setupServiceLocator() {
+  // Register GoRouter as a singleton so services can navigate on notification taps.
+  if (!getIt.isRegistered<GoRouter>()) {
+    getIt.registerSingleton<GoRouter>(AppRouter.instance.router);
+  }
+
   // Register DioConsumer as singleton
   if (!getIt.isRegistered<DioConsumer>()) {
     getIt.registerSingleton<DioConsumer>(DioConsumer());
@@ -268,6 +284,30 @@ void setupServiceLocator() {
     );
   }
 
+  if (!getIt.isRegistered<GetHomeBannersUseCase>()) {
+    getIt.registerLazySingleton<GetHomeBannersUseCase>(
+      () => GetHomeBannersUseCase(repository: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<ShippingRemoteDataSource>()) {
+    getIt.registerLazySingleton<ShippingRemoteDataSource>(
+      () => ShippingRemoteDataSourceImpl(dioConsumer: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<ShippingRepository>()) {
+    getIt.registerLazySingleton<ShippingRepository>(
+      () => ShippingRepositoryImpl(remoteDataSource: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<CalculateShippingUseCase>()) {
+    getIt.registerLazySingleton<CalculateShippingUseCase>(
+      () => CalculateShippingUseCase(repository: getIt()),
+    );
+  }
+
   if (!getIt.isRegistered<GetHomeCategoriesUseCase>()) {
     getIt.registerLazySingleton<GetHomeCategoriesUseCase>(
       () => GetHomeCategoriesUseCase(getIt()),
@@ -283,6 +323,24 @@ void setupServiceLocator() {
   if (!getIt.isRegistered<GetHomeStoresUseCase>()) {
     getIt.registerLazySingleton<GetHomeStoresUseCase>(
       () => GetHomeStoresUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<ProductDetailsRemoteDataSource>()) {
+    getIt.registerLazySingleton<ProductDetailsRemoteDataSource>(
+      () => ProductDetailsRemoteDataSourceImpl(dioConsumer: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<ProductsRepository>()) {
+    getIt.registerLazySingleton<ProductsRepository>(
+      () => ProductsRepositoryImpl(remoteDataSource: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<GetProductDetailsUseCase>()) {
+    getIt.registerLazySingleton<GetProductDetailsUseCase>(
+      () => GetProductDetailsUseCase(getIt()),
     );
   }
 

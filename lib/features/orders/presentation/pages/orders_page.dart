@@ -28,7 +28,7 @@ class _OrdersPageState extends State<OrdersPage>
   late Future<List<OrderEntity>> _orders = _getOrders();
 
   Future<void> _refresh() async {
-    setState(() => _orders = _getOrders());
+    setState(() { _orders = _getOrders(); });
     await _orders;
   }
 

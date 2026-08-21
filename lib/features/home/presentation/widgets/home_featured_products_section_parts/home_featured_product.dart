@@ -2,9 +2,12 @@ part of '../home_featured_products_section.dart';
 
 class HomeFeaturedProduct {
   final String id;
+  final String slug;
   final String title;
   final String price;
+  final double? unitPrice;
   final String? oldPrice;
+  final double? compareAtPriceNum;
   final String imageUrl;
   final String? imageAsset;
   final String? storeName;
@@ -15,9 +18,12 @@ class HomeFeaturedProduct {
 
   const HomeFeaturedProduct({
     required this.id,
+    this.slug = '',
     required this.title,
     required this.price,
+    this.unitPrice,
     this.oldPrice,
+    this.compareAtPriceNum,
     this.imageUrl = '',
     this.imageAsset,
     this.storeName,
@@ -36,11 +42,14 @@ class HomeFeaturedProduct {
 
     return HomeFeaturedProduct(
       id: (json['id'] ?? '').toString(),
+      slug: (json['slug'] ?? '').toString(),
       title: (json['title'] ?? json['name'] ?? '').toString(),
       price: _formatPrice(price, json['formatted_price'] ?? json['price']),
+      unitPrice: price,
       oldPrice: compareAtPrice == null
           ? (json['old_price'] ?? json['oldPrice'])?.toString()
           : _formatPrice(compareAtPrice, compareAtPrice),
+      compareAtPriceNum: compareAtPrice,
       imageUrl: imageUrl,
       storeName: _nullableText(json['storeName'] ?? json['store_name']),
       storeSlug: _nullableText(json['storeSlug'] ?? json['store_slug']),
@@ -79,10 +88,7 @@ class HomeFeaturedProduct {
 
   static String _formatPrice(double? parsed, Object? fallback) {
     if (parsed == null) return (fallback ?? '').toString();
-    final value = parsed % 1 == 0
-        ? parsed.toStringAsFixed(0)
-        : parsed.toStringAsFixed(2);
-    return 'JOD $value';
+    return 'JD ${parsed.toStringAsFixed(2)}';
   }
 
   static String _imageUrlFromJson(Map<String, dynamic> json) {

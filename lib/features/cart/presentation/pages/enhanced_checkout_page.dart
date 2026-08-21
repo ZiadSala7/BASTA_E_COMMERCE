@@ -2,7 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../../../core/widgets/common/custom_app_bar.dart';
 import '../../../../core/widgets/common/custom_card.dart';
 import '../../../../core/widgets/common/section_header.dart';

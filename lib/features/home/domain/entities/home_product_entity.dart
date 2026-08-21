@@ -1,5 +1,6 @@
 class HomeProductEntity {
   final String id;
+  final String slug;
   final String name;
   final double? price;
   final double? compareAtPrice;
@@ -9,6 +10,7 @@ class HomeProductEntity {
 
   const HomeProductEntity({
     required this.id,
+    this.slug = '',
     required this.name,
     required this.price,
     required this.compareAtPrice,

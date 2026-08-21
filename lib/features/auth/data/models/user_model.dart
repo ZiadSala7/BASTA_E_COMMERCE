@@ -9,6 +9,7 @@ class UserModel extends UserEntity {
     super.role,
     super.status,
     super.token,
+    super.referralCode,
   });
 
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -39,6 +40,9 @@ class UserModel extends UserEntity {
       role: _nullableString(json['role']),
       status: _nullableString(json['status']),
       token: _nullableString(json['token']),
+      referralCode: _nullableString(
+        json['referralCode'] ?? json['referral_code'],
+      ),
     );
   }
 
@@ -51,6 +55,7 @@ class UserModel extends UserEntity {
       role: user.role,
       status: user.status,
       token: user.token,
+      referralCode: user.referralCode,
     );
   }
 
@@ -63,6 +68,7 @@ class UserModel extends UserEntity {
       if (role != null) 'role': role,
       if (status != null) 'status': status,
       if (token != null) 'token': token,
+      if (referralCode != null) 'referralCode': referralCode,
     };
   }
 

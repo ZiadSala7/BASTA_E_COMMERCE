@@ -27,6 +27,9 @@ PaymentWebViewResult? paymentResultFromUrl(String url, String orderId) {
   return PaymentWebViewResult(
     outcome: PaymentWebViewOutcome.completed,
     orderId: orderId,
+    resultIndicator:
+        uri.queryParameters['resultIndicator'] ??
+        uri.queryParameters['successIndicator'],
   );
 }
 
@@ -42,6 +45,7 @@ PaymentWebViewResult paymentResultFromMessage(String message, String orderId) {
     'completed' => PaymentWebViewResult(
       outcome: PaymentWebViewOutcome.completed,
       orderId: orderId,
+      resultIndicator: value,
     ),
     'failed' => PaymentWebViewResult(
       outcome: PaymentWebViewOutcome.failed,

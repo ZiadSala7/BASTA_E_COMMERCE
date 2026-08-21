@@ -90,8 +90,10 @@ class AuthRepositoryImpl implements AuthRepository {
     String password,
     String name,
     String phone,
-    String role,
-  ) async {
+    String role, {
+    String? couponCode,
+    String? referralCode,
+  }) async {
     final registerResponse = await _remoteDataSource.register(
       RegisterRequest(
         email: email,
@@ -99,6 +101,8 @@ class AuthRepositoryImpl implements AuthRepository {
         name: name,
         phone: phone,
         role: role,
+        couponCode: couponCode,
+        referralCode: referralCode,
       ),
     );
 
@@ -179,6 +183,7 @@ class AuthRepositoryImpl implements AuthRepository {
           phone: user.phone,
           role: user.role,
           status: user.status,
+          referralCode: user.referralCode,
         ),
         message:
             response.message ??
@@ -302,6 +307,10 @@ class AuthRepositoryImpl implements AuthRepository {
       role: _bestNullableString(primary.role, fallback?.role),
       status: _bestNullableString(primary.status, fallback?.status),
       token: token,
+      referralCode: _bestNullableString(
+        primary.referralCode,
+        fallback?.referralCode,
+      ),
     );
   }
 

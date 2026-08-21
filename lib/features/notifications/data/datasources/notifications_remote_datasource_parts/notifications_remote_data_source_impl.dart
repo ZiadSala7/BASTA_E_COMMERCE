@@ -83,7 +83,7 @@ class NotificationsRemoteDataSourceImpl
     try {
       await _dioConsumer.patch(
         Endpoints.updateFcmToken,
-        data: {'token': token},
+        data: {'fcmToken': token, 'token': token},
       );
     } on DioException catch (error, stackTrace) {
       log('Update FCM token failed', error: error, stackTrace: stackTrace);

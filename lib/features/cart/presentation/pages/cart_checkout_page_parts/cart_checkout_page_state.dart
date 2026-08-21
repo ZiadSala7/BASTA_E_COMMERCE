@@ -5,8 +5,11 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
 
   late final CartRepository _cartRepository;
   late final OrdersRepository _ordersRepository;
+  late final CartBadgeController _cartBadgeController;
+  late final CalculateShippingUseCase _calculateShipping;
   final List<CartItemEntity> _items = <CartItemEntity>[];
   final List<SavedAddressModel> _savedAddresses = <SavedAddressModel>[];
+  final Set<String> _stockIssueProductIds = <String>{};
 
   bool _isLoading = true;
   bool _isSubmitting = false;
@@ -14,14 +17,15 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
   int _selectedPaymentMethod = 1;
   LatLng? _selectedDeliveryLocation;
   String? _selectedAddressId;
-
-  static const double _shippingFee = 5;
+  double _liveShippingFee = 5.0;
 
   @override
   void initState() {
     super.initState();
     _cartRepository = sl<CartRepository>();
     _ordersRepository = sl<OrdersRepository>();
+    _cartBadgeController = sl<CartBadgeController>();
+    _calculateShipping = sl<CalculateShippingUseCase>();
     _loadCart();
   }
 
@@ -88,7 +92,11 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
           ),
           const SizedBox(height: 14),
           for (final store in stores) ...[
-            _StoreOrderSection(storeName: store.storeName, items: store.items),
+            _StoreOrderSection(
+              storeName: store.storeName,
+              items: store.items,
+              stockIssueProductIds: _stockIssueProductIds,
+            ),
             const SizedBox(height: 12),
           ],
           _PaymentMethodsPanel(
@@ -154,6 +162,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
         }
         _isLoading = false;
       });
+      _updateShippingFee();
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -161,6 +170,20 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
         _isLoading = false;
       });
     }
+  }
+
+  Future<void> _updateShippingFee() async {
+    final address = _selectedSavedAddress;
+    final city = (address != null && address.city.isNotEmpty) ? address.city : 'Amman';
+    final street = address?.street;
+
+    try {
+      final rate = await _calculateShipping(city: city, streetAddress: street);
+      if (!mounted) return;
+      setState(() {
+        _liveShippingFee = rate.shippingFee;
+      });
+    } catch (_) {}
   }
 
   Future<void> _continuePayment() async {
@@ -187,7 +210,8 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
         address:
             selectedAddress?.toCheckoutPayload() ??
             _addressPayload(deliveryLocation!),
-        paymentMethod: _selectedPaymentMethod == 1 ? 'CARD' : 'CASH',
+        paymentMethod: _selectedPaymentMethod == 1 ? 'CARD' : 'COD',
+        couponCode: widget.couponCode,
       );
 
       if (!mounted) return;
@@ -199,7 +223,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
             checkout.order.id.trim().isEmpty ||
             checkout.order.total <= 0) {
           setState(() => _isSubmitting = false);
-          await _loadCart();
+          await _clearLocalCartState();
           if (!mounted) return;
           await _showOrderResultDialog(
             success: true,
@@ -225,11 +249,15 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
 
         if (result == null ||
             result.outcome == PaymentWebViewOutcome.cancelled) {
+          try {
+            await _ordersRepository.cancelPayment(checkout.order.id);
+          } catch (_) {}
           setState(() => _isSubmitting = false);
+          await _clearLocalCartState();
           _showSnackBar(
             l10n.pick(
-              ar: 'تم إلغاء عملية الدفع.',
-              en: 'Payment was cancelled.',
+              ar: 'تم إلغاء عملية الدفع. راجع حالة الطلب من صفحة الطلبات.',
+              en: 'Payment was cancelled. Check this order from the orders page.',
             ),
           );
           return;
@@ -244,6 +272,11 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
                 ),
           );
         }
+
+        _verifySuccessIndicator(
+          expected: session.successIndicator,
+          actual: result.resultIndicator,
+        );
 
         try {
           // Verify only the order created by the backend. Never trust an ID
@@ -263,6 +296,8 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
         } catch (_) {
           if (!mounted) return;
           setState(() => _isSubmitting = false);
+          await _clearLocalCartState();
+          if (!mounted) return;
           await _showOrderResultDialog(
             success: false,
             verificationPending: true,
@@ -276,15 +311,53 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
       }
 
       if (!mounted) return;
-      setState(() => _isSubmitting = false);
-      await _loadCart();
+      await _clearLocalCartState();
       if (!mounted) return;
       await _showOrderResultDialog(success: true);
     } catch (error) {
       if (!mounted) return;
+      _highlightStockIssue(error);
       setState(() => _isSubmitting = false);
       await _showOrderResultDialog(success: false, message: _cleanError(error));
     }
+  }
+
+  void _verifySuccessIndicator({
+    required String expected,
+    required String? actual,
+  }) {
+    final normalizedExpected = expected.trim();
+    if (normalizedExpected.isEmpty) return;
+
+    if ((actual ?? '').trim() != normalizedExpected) {
+      throw Exception(
+        'Payment confirmation did not match the gateway session.',
+      );
+    }
+  }
+
+  void _highlightStockIssue(Object error) {
+    if (error is! CheckoutException || !error.isInsufficientStock) return;
+
+    final productId = error.productId;
+    if (productId == null) return;
+
+    setState(() {
+      _stockIssueProductIds.add(productId);
+    });
+  }
+
+  Future<void> _clearLocalCartState() async {
+    try {
+      await _cartRepository.clearCart();
+    } catch (_) {}
+    if (!mounted) return;
+    setState(() {
+      _isSubmitting = false;
+      _items.clear();
+      _stockIssueProductIds.clear();
+    });
+    _cartBadgeController.setItems(const <CartItemEntity>[]);
   }
 
   Future<void> _openAddressesManager() async {
@@ -307,18 +380,27 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
         );
       }
     });
+    _updateShippingFee();
   }
 
   Map<String, dynamic> _addressPayload(LatLng location) {
     final coordinates =
         '${location.latitude.toStringAsFixed(6)}, ${location.longitude.toStringAsFixed(6)}';
+    final saved = _selectedSavedAddress;
+    final street = (saved != null && saved.street.isNotEmpty)
+        ? saved.street
+        : 'Pinned delivery location: $coordinates';
+    final city = (saved != null && saved.city.isNotEmpty) ? saved.city : 'Amman';
+    final state = (saved != null && saved.state.isNotEmpty) ? saved.state : 'Amman';
+    final postalCode = (saved != null && saved.postalCode.isNotEmpty) ? saved.postalCode : '11183';
+    final country = (saved != null && saved.country.isNotEmpty) ? saved.country : 'Jordan';
 
     return {
-      'streetAddress': 'Pinned delivery location: $coordinates',
-      'city': 'Cairo',
-      'state': 'Cairo Governorate',
-      'postalCode': '11511',
-      'country': 'Egypt',
+      'streetAddress': street,
+      'city': city,
+      'state': state,
+      'postalCode': postalCode,
+      'country': country,
       'latitude': location.latitude,
       'longitude': location.longitude,
     };
@@ -437,7 +519,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
     (total, item) => total + (item.activePrice * item.quantity),
   );
 
-  double get _shipping => _items.isEmpty ? 0 : _shippingFee;
+  double get _shipping => _items.isEmpty ? 0 : _liveShippingFee;
 
   double get _total => _subtotal + _shipping;
 

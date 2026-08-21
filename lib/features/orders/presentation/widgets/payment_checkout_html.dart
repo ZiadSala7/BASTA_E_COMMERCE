@@ -5,59 +5,88 @@ import 'payment_webview_config.dart';
 
 String buildPaymentCheckoutHtml({
   required String orderId,
-  required double totalAmount,
   required PaymentSessionEntity session,
+  required double amount,
 }) {
   final sessionId = jsonEncode(session.sessionId);
   final encodedOrderId = jsonEncode(orderId);
-  final amount = totalAmount.toStringAsFixed(2);
-  final currency = jsonEncode(PaymentWebViewConfig.currency);
-  final merchant = jsonEncode(PaymentWebViewConfig.merchantName);
-  final address = jsonEncode(PaymentWebViewConfig.merchantAddress);
-  final description = jsonEncode(PaymentWebViewConfig.orderDescription);
-  final callback = jsonEncode(
-    Uri.https('bs6a.com', '/checkout/callback', {
-      'orderId': orderId,
-    }).toString(),
-  );
-  final script = const HtmlEscape().convert(PaymentWebViewConfig.scriptUrl);
+  const currency = PaymentWebViewConfig.currency;
+  const merchantName = PaymentWebViewConfig.merchantName;
+  const merchantAddress = PaymentWebViewConfig.merchantAddress;
+  const script = PaymentWebViewConfig.scriptUrl;
   return '''
 <!doctype html><html><head>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script src="$script" data-error="failed" data-cancel="cancelled"
- data-complete="completed"></script>
 <style>
 html,body{margin:0;min-height:100%;font-family:Arial;background:#fff}
 .loading{min-height:100vh;display:flex;align-items:center;justify-content:center;color:#53646f}
-button{padding:12px 18px;border:0;border-radius:8px;background:#006b5f;color:#fff;font-weight:700}
-#error{color:#b3261e;font-size:13px;max-width:280px}
+#error{color:#b3261e;font-size:16px;max-width:280px;text-align:center}
 </style></head><body><div class="loading"><div>
 <p>Opening secure payment...</p>
-<button onclick="openCheckout()">Open card form</button><p id="error"></p>
+<p id="error"></p>
 </div></div><script>
-const orderId=$encodedOrderId, callbackUrl=$callback; let opened=false;
+var mpgsSessionId=$sessionId;
+var mpgsOrderId=$encodedOrderId;
+var mpgsOrderAmount='${amount.toStringAsFixed(2)}';
+var mpgsOrderCurrency='$currency';
+var mpgsMerchantName='$merchantName';
+var mpgsMerchantAddress='$merchantAddress';
+var mpgsScriptUrl='$script';
+function log(msg){if(window.JsLog)JsLog.postMessage(msg);else console.log(msg)}
 function notify(event,message){
+ log('notify: '+event+' '+message);
  if(window.PaymentBridge?.postMessage){
   PaymentBridge.postMessage(JSON.stringify({event,message:message||''}));
- }
+ }else{log('PaymentBridge not available')}
 }
-function completed(){notify('completed')}
-function cancelled(){notify('cancelled')}
+function completed(resultIndicator){log('completed: '+resultIndicator);notify('completed',resultIndicator)}
+function cancelled(){log('cancelled');notify('cancelled')}
 function failed(error){
  const message=typeof error==='string'?error:JSON.stringify(error||{});
+ log('failed: '+message);
  document.getElementById('error').innerText=message;notify('failed',message);
 }
 function openCheckout(){
- if(opened)return;opened=true;
- try{Checkout.configure({
-  session:{id:$sessionId},
-  order:{amount:$amount,currency:$currency,description:$description,id:orderId},
-  interaction:{operation:'PURCHASE',merchant:{name:$merchant,address:{line1:$address}},
-   returnUrl:callbackUrl,displayControl:{billingAddress:'HIDE',shipping:'HIDE'}}
- });Checkout.showLightbox()}
- catch(error){opened=false;failed(error?.message||error)}
+ log('openCheckout, Checkout: '+(typeof Checkout));
+ if(typeof Checkout==='undefined'){failed('Checkout SDK not loaded');return}
+ try{
+  Checkout.configure({
+   session:{id:mpgsSessionId},
+   order:{
+    amount:mpgsOrderAmount,
+    currency:mpgsOrderCurrency,
+    id:mpgsOrderId
+   },
+   interaction:{
+    merchant:{
+     name:mpgsMerchantName,
+     address:{line1:mpgsMerchantAddress}
+    },
+    displayControl:{
+     billingAddress:'HIDE',
+     shipping:'HIDE'
+    }
+   }
+  }).then(function(){
+   log('configure resolved, calling showPaymentPage');
+   Checkout.showPaymentPage('CARD');
+  }).catch(function(e){
+   log('configure rejected: '+JSON.stringify(e));
+   failed(e?.message||JSON.stringify(e));
+  });
+ }catch(error){log('exception: '+error);failed(error?.message||JSON.stringify(error))}
 }
-window.onload=()=>setTimeout(openCheckout,250);
+function loadMpgsSdk(){
+ log('loadMpgsSdk: '+mpgsScriptUrl);
+ var s=document.createElement('script');
+ s.src=mpgsScriptUrl;
+ s.setAttribute('data-error','failed');
+ s.setAttribute('data-cancel','cancelled');
+ s.onload=function(){log('SDK script loaded');setTimeout(openCheckout,500)};
+ s.onerror=function(){log('SDK script load error');failed('Failed to load payment gateway script')};
+ document.head.appendChild(s);
+}
+log('HTML ready, waiting for loadMpgsSdk call');
 </script></body></html>
 ''';
 }

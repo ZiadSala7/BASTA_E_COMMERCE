@@ -65,7 +65,7 @@ class HomeBottomNavBar extends StatelessWidget {
                       Expanded(
                         child: _NavItem(
                           icon: Icons.local_offer_outlined,
-                          label: l10n.offers,
+                           label: l10n.coupons,
                           isSelected: currentIndex == 1,
                           onTap: () => onTap(1),
                         ),

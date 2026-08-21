@@ -83,4 +83,4 @@ class _CheckoutActionBar extends StatelessWidget {
   }
 }
 
-String _money(double value) => 'JD ${value.toStringAsFixed(2)}';
+String _money(double value) => CurrencyHelper.format(value);

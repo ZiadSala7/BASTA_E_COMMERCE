@@ -5,6 +5,8 @@ class ProductHeader extends StatefulWidget {
   final bool isFavorite;
   final bool isFavoriteUpdating;
   final VoidCallback? onFavoriteTap;
+  final int selectedImageIndex;
+  final ValueChanged<int>? onImageSelected;
 
   const ProductHeader({
     super.key,
@@ -12,6 +14,8 @@ class ProductHeader extends StatefulWidget {
     this.isFavorite = false,
     this.isFavoriteUpdating = false,
     this.onFavoriteTap,
+    this.selectedImageIndex = 0,
+    this.onImageSelected,
   });
 
   @override

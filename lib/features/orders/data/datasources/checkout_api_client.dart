@@ -17,8 +17,9 @@ class CheckoutApiClient {
   Future<CheckoutResultModel> checkout({
     required Map<String, dynamic> address,
     required String paymentMethod,
+    String? couponCode,
   }) async {
-    final body = _requestBody(address, paymentMethod);
+    final body = _requestBody(address, paymentMethod, couponCode);
     try {
       logPayment('Checkout request', {
         'method': 'POST',
@@ -39,16 +40,18 @@ class CheckoutApiClient {
         'body': sanitizePaymentPayload(error.response?.data),
       });
       log('Checkout request failed', error: error, stackTrace: stackTrace);
-      throw Exception(ordersDioMessage(error));
+      throw checkoutExceptionFromDio(error);
     }
   }
 
   Map<String, dynamic> _requestBody(
     Map<String, dynamic> address,
     String paymentMethod,
+    String? couponCode,
   ) {
+    final normalizedCoupon = couponCode?.trim();
     return {
-      'address': address,
+      'addressData': address,
       for (final key in const [
         'streetAddress',
         'city',
@@ -58,6 +61,8 @@ class CheckoutApiClient {
       ])
         key: address[key]?.toString() ?? '',
       'paymentMethod': paymentMethod,
+      if (normalizedCoupon != null && normalizedCoupon.isNotEmpty)
+        'couponCode': normalizedCoupon,
     };
   }
 }

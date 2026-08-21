@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 
+import '../utils/app_colors.dart';
 import 'app_font_families.dart';
 import 'app_font_weights.dart';
 
@@ -37,7 +38,7 @@ class AppTextStyles {
 
   static TextStyle authBrand(BuildContext context) {
     return Theme.of(context).textTheme.titleLarge!.copyWith(
-      color: const Color(0xFF2680FF),
+      color: AppColors.primary,
       fontSize: 20,
       fontWeight: AppFontWeights.bold,
     );
@@ -84,7 +85,7 @@ class AppTextStyles {
 
   static TextStyle authLinkText(BuildContext context) {
     return Theme.of(context).textTheme.labelMedium!.copyWith(
-      color: const Color(0xFF4C81FF),
+      color: AppColors.primary,
       fontSize: 14,
       fontWeight: AppFontWeights.semiBold,
     );
@@ -116,7 +117,7 @@ class AppTextStyles {
 
   static TextStyle onboardingSheetButton(BuildContext context) {
     return Theme.of(context).textTheme.labelLarge!.copyWith(
-      color: const Color(0xFF5B5BFF),
+      color: AppColors.primary,
       fontSize: 15,
       fontWeight: AppFontWeights.bold,
     );

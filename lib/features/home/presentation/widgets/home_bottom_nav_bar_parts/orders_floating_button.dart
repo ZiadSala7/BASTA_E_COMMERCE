@@ -63,7 +63,7 @@ class _OrdersFloatingButton extends StatelessWidget {
                     colors: [
                       AppColors.primaryDark,
                       AppColors.primary,
-                      Color(0xFF20B7A8),
+                      Color(0xFF1800AD),
                     ],
                   ),
                   shape: BoxShape.circle,

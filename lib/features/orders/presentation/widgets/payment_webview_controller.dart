@@ -9,8 +9,8 @@ import 'payment_webview_log.dart';
 class PaymentCheckoutController {
   PaymentCheckoutController({
     required this.orderId,
-    required this.totalAmount,
     required this.session,
+    required this.totalAmount,
     required this.onLoadingChanged,
     required this.onResult,
   }) {
@@ -18,8 +18,8 @@ class PaymentCheckoutController {
   }
 
   final String orderId;
-  final double totalAmount;
   final PaymentSessionEntity session;
+  final double totalAmount;
   final void Function(bool) onLoadingChanged;
   final void Function(PaymentWebViewResult) onResult;
   late final WebViewController webViewController;
@@ -37,6 +37,7 @@ class PaymentCheckoutController {
           onPageFinished: (url) {
             logPaymentWebView('Page finished', {'url': url});
             onLoadingChanged(false);
+            _loadSdk();
           },
           onWebResourceError: _handleResourceError,
           onNavigationRequest: _handleNavigation,
@@ -45,18 +46,29 @@ class PaymentCheckoutController {
       ..addJavaScriptChannel(
         'PaymentBridge',
         onMessageReceived: (message) {
-          logPaymentWebView('Payment JS callback');
+          logPaymentWebView('Payment JS callback', {'message': message.message});
           onResult(paymentResultFromMessage(message.message, orderId));
+        },
+      )
+      ..addJavaScriptChannel(
+        'JsLog',
+        onMessageReceived: (message) {
+          logPaymentWebView('[JS] ${message.message}');
         },
       )
       ..loadHtmlString(
         buildPaymentCheckoutHtml(
           orderId: orderId,
-          totalAmount: totalAmount,
           session: session,
+          amount: totalAmount,
         ),
         baseUrl: 'https://bs6a.com',
       );
+  }
+
+  void _loadSdk() {
+    logPaymentWebView('Injecting SDK load call');
+    webViewController.runJavaScript('loadMpgsSdk()');
   }
 
   void _handleResourceError(WebResourceError error) {

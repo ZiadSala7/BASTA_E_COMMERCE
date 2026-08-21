@@ -20,13 +20,13 @@ class OnboardingImagePlaceholder extends StatelessWidget {
           const Icon(
             Icons.phone_android_rounded,
             size: 64,
-            color: Color(0xFF5B5BFF),
+            color: Color(0xFF1800AD),
           ),
           const SizedBox(height: 16),
           Text(
             localizations.imagePlaceholder,
             style: const TextStyle(
-              color: Color(0xFF5B5BFF),
+              color: Color(0xFF1800AD),
               fontSize: 15,
               fontWeight: FontWeight.w700,
             ),

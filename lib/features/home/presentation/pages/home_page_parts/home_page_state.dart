@@ -2,11 +2,13 @@ part of '../home_page.dart';
 
 class _HomePageState extends State<HomePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
+  late final GetHomeBannersUseCase _getBanners;
   late final GetHomeCategoriesUseCase _getCategories;
   late final GetHomeProductsUseCase _getProducts;
   late final GetHomeStoresUseCase _getStores;
   late final AddCartItemUseCase _addCartItem;
   late final FavoritesController _favoritesController;
+  late Future<List<HomeAdBanner>> _bannersFuture;
   late Future<List<HomeCategoryEntity>> _categoriesFuture;
   late Future<List<HomeFeaturedProduct>> _productsFuture;
   late Future<List<HomeFeaturedStore>> _storesFuture;
@@ -17,15 +19,37 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    _getBanners = sl<GetHomeBannersUseCase>();
     _getCategories = sl<GetHomeCategoriesUseCase>();
     _getProducts = sl<GetHomeProductsUseCase>();
     _getStores = sl<GetHomeStoresUseCase>();
     _addCartItem = sl<AddCartItemUseCase>();
     _favoritesController = sl<FavoritesController>();
     _favoritesController.refresh();
+    _bannersFuture = _fetchBanners();
     _categoriesFuture = _getCategories();
     _productsFuture = _fetchProducts();
     _storesFuture = _fetchStores();
+  }
+
+  Future<List<HomeAdBanner>> _fetchBanners() async {
+    try {
+      final banners = await _getBanners();
+      if (banners.isNotEmpty) {
+        return banners
+            .map(
+              (b) => HomeAdBanner(
+                id: b.id,
+                title: b.title,
+                buttonText: b.buttonText,
+                imageUrl: b.imageUrl,
+                targetUrl: b.targetUrl,
+              ),
+            )
+            .toList();
+      }
+    } catch (_) {}
+    return const [];
   }
 
   Future<List<HomeFeaturedProduct>> _fetchProducts() async {
@@ -46,11 +70,14 @@ class _HomePageState extends State<HomePage> {
   HomeFeaturedProduct _toFeaturedProduct(HomeProductEntity product) {
     return HomeFeaturedProduct(
       id: product.id,
+      slug: product.slug,
       title: product.name,
       price: _formatPrice(product.price),
+      unitPrice: product.price,
       oldPrice: product.compareAtPrice == null
           ? null
           : _formatPrice(product.compareAtPrice),
+      compareAtPriceNum: product.compareAtPrice,
       imageUrl: product.imageUrl,
       discountLabel: _discountLabel(product),
     );
@@ -67,10 +94,9 @@ class _HomePageState extends State<HomePage> {
 
   String _formatPrice(double? value) {
     if (value == null) return '';
-    final formatted = value % 1 == 0
-        ? value.toStringAsFixed(0)
-        : value.toStringAsFixed(2);
-    return 'JOD $formatted';
+    final l10n = AppLocalizations.of(context);
+    if (l10n != null) return l10n.formatPrice(value);
+    return 'JD ${value.toStringAsFixed(2)}';
   }
 
   String? _discountLabel(HomeProductEntity product) {
@@ -90,6 +116,21 @@ class _HomePageState extends State<HomePage> {
       _selectedCategoryName = category?.name;
       _productsFuture = _fetchProducts();
     });
+  }
+
+  Future<void> _refreshHome() async {
+    setState(() {
+      _bannersFuture = _fetchBanners();
+      _categoriesFuture = _getCategories();
+      _productsFuture = _fetchProducts();
+      _storesFuture = _fetchStores();
+    });
+    await Future.wait([
+      _bannersFuture,
+      _categoriesFuture,
+      _productsFuture,
+      _storesFuture,
+    ]);
   }
 
   List<HomeAdBanner> _demoAds(AppLocalizations l10n) => [
@@ -130,10 +171,21 @@ class _HomePageState extends State<HomePage> {
         onNotificationPressed: () => context.push(AppRoutes.notifications),
         onSearchTap: () => context.push(AppRoutes.products),
       ),
-      body: ListView(
-        padding: const EdgeInsets.only(top: 12, bottom: 24),
-        children: [
-          HomeAdCarousel(items: _demoAds(l10n)),
+      body: RefreshIndicator(
+        onRefresh: _refreshHome,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.only(top: 12, bottom: 24),
+          children: [
+            FutureBuilder<List<HomeAdBanner>>(
+              future: _bannersFuture,
+              builder: (context, snapshot) {
+                final banners = (snapshot.hasData && snapshot.data!.isNotEmpty)
+                    ? snapshot.data!
+                    : _demoAds(l10n);
+                return HomeAdCarousel(items: banners);
+              },
+            ),
           const SizedBox(height: 20),
           FutureBuilder<List<HomeCategoryEntity>>(
             future: _categoriesFuture,
@@ -218,9 +270,16 @@ class _HomePageState extends State<HomePage> {
                           AppRoutes.productDetail,
                           extra: ProductDetailArgs(
                             id: product.id,
+                            slug: product.slug,
                             title: product.title,
                             price: product.price,
+                            unitPrice: product.unitPrice ??
+                                CurrencyHelper.parse(product.price),
                             oldPrice: product.oldPrice,
+                            compareAtPrice: product.compareAtPriceNum ??
+                                (product.oldPrice != null
+                                    ? CurrencyHelper.parse(product.oldPrice)
+                                    : null),
                             imageUrl: product.imageUrl,
                             discountBadge: product.discountLabel,
                             reviewCount: product.reviewCount,
@@ -252,9 +311,16 @@ class _HomePageState extends State<HomePage> {
                             AppRoutes.productDetail,
                             extra: ProductDetailArgs(
                               id: product.id,
+                              slug: product.slug,
                               title: product.title,
                               price: product.price,
+                              unitPrice: product.unitPrice ??
+                                  CurrencyHelper.parse(product.price),
                               oldPrice: product.oldPrice,
+                              compareAtPrice: product.compareAtPriceNum ??
+                                  (product.oldPrice != null
+                                      ? CurrencyHelper.parse(product.oldPrice)
+                                      : null),
                               imageUrl: product.imageUrl,
                               discountBadge: product.discountLabel,
                               reviewCount: product.reviewCount,
@@ -306,6 +372,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+    ),
     );
   }
 

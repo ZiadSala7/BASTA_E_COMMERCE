@@ -1,147 +1,151 @@
-import '../../../../core/api/api_keys.dart';
+import '../../../../core/utils/currency_helper.dart';
 import '../../data/models/product_model.dart';
 import '../../domain/entities/product_entity.dart';
 
 class ProductDetailArgs {
   final String id;
   final String title;
+  final String slug;
   final String price;
+  final double unitPrice;
   final String? oldPrice;
+  final double? compareAtPrice;
+  final String? discountEndDate;
   final String? imageUrl;
   final List<String>? images;
+  final List<ProductImageItem> imagesList;
   final String? discountBadge;
   final double? rating;
   final int? reviewCount;
   final String? description;
   final String? category;
+  final String? categorySlug;
   final String? brand;
+  final String? storeName;
+  final String? storeSlug;
+  final String? weightInKg;
   final int? stockQuantity;
   final List<String>? tags;
   final Map<String, dynamic>? attributes;
   final double? discountPercentage;
+  final String? defaultVariantId;
+  final List<ProductVariantEntity> variants;
 
   const ProductDetailArgs({
     required this.id,
     required this.title,
+    this.slug = '',
     required this.price,
+    this.unitPrice = 0.0,
     this.oldPrice,
+    this.compareAtPrice,
+    this.discountEndDate,
     this.imageUrl,
     this.images,
+    this.imagesList = const <ProductImageItem>[],
     this.discountBadge,
     this.rating,
     this.reviewCount,
     this.description,
     this.category,
+    this.categorySlug,
     this.brand,
+    this.storeName,
+    this.storeSlug,
+    this.weightInKg,
     this.stockQuantity,
     this.tags,
     this.attributes,
     this.discountPercentage,
+    this.defaultVariantId,
+    this.variants = const <ProductVariantEntity>[],
   });
 
-  // Factory constructor from ProductEntity
   factory ProductDetailArgs.fromEntity(ProductEntity entity) {
+    var priceNum = entity.price ?? 0.0;
+    if (priceNum <= 0 && entity.basePrice != null && entity.basePrice! > 0) {
+      priceNum = entity.basePrice!;
+    }
+    if (priceNum <= 0 && entity.variants.isNotEmpty) {
+      for (final v in entity.variants) {
+        if (v.price > 0) {
+          priceNum = v.price;
+          break;
+        }
+      }
+    }
+
+    var compareNum = entity.compareAtPrice;
+    if (compareNum == null && entity.variants.isNotEmpty) {
+      for (final v in entity.variants) {
+        if (v.compareAtPrice != null && v.compareAtPrice! > priceNum) {
+          compareNum = v.compareAtPrice;
+          break;
+        }
+      }
+    }
+
     final discountBadge = _calculateDiscountBadge(
-      entity.price,
-      entity.compareAtPrice,
+      priceNum,
+      compareNum,
       entity.discountPercentage,
     );
 
     return ProductDetailArgs(
       id: entity.id,
       title: entity.name,
-      price: entity.price != null
-          ? 'JD ${entity.price!.toStringAsFixed(2)}'
-          : '',
-      oldPrice: entity.compareAtPrice != null
-          ? 'JD ${entity.compareAtPrice!.toStringAsFixed(2)}'
+      slug: entity.slug,
+      price: priceNum > 0 ? 'JD ${priceNum.toStringAsFixed(2)}' : '',
+      unitPrice: priceNum,
+      oldPrice: compareNum != null && compareNum > priceNum
+          ? 'JD ${compareNum.toStringAsFixed(2)}'
           : null,
+      compareAtPrice: compareNum,
+      discountEndDate: entity.discountEndDate,
       imageUrl: entity.imageUrl,
       images: entity.images,
+      imagesList: entity.imagesList,
       discountBadge: discountBadge,
       rating: entity.rating,
       reviewCount: entity.reviewCount,
       description: entity.description,
       category: entity.category,
+      categorySlug: entity.categorySlug,
       brand: entity.brand,
+      storeName: entity.storeName,
+      storeSlug: entity.storeSlug,
+      weightInKg: entity.weightInKg,
       stockQuantity: entity.stockQuantity,
       tags: entity.tags,
       attributes: entity.attributes,
       discountPercentage: entity.discountPercentage,
+      defaultVariantId: entity.defaultVariantId,
+      variants: entity.variants,
     );
   }
 
-  /// Creates a list of ProductDetailArgs from a list of ProductEntity objects
   static List<ProductDetailArgs> fromEntityList(List<ProductEntity> entities) {
     return entities
         .map((entity) => ProductDetailArgs.fromEntity(entity))
         .toList();
   }
 
-  /// Creates a list of ProductDetailArgs from API response data
-  static List<ProductDetailArgs> fromApiResponse(List<dynamic> apiData) {
-    return apiData
-        .where((item) => item != null)
-        .map((item) {
-          if (item is ProductEntity) {
-            return ProductDetailArgs.fromEntity(item);
-          } else if (item is ProductModel) {
-            return ProductDetailArgs.fromEntity(item);
-          } else if (item is Map<String, dynamic>) {
-            return ProductDetailArgs.fromMap(item);
-          }
-          return null;
-        })
-        .where((args) => args != null)
-        .cast<ProductDetailArgs>()
-        .toList();
-  }
-
   factory ProductDetailArgs.fromMap(Map<String, dynamic> product) {
-    final rating = product['rating'];
-    final price = _numberFromJson(product['price']);
-    final compareAtPrice = _numberFromJson(
-      product['compareAtPrice'] ?? product['oldPrice'] ?? product['old_price'],
-    );
-    final discountPercentage = _numberFromJson(
-      product['discountPercentage'] ?? product['discount_percentage'],
-    );
+    final entity = ProductModel.fromJson(product);
+    final directUnitPrice = (product['unitPrice'] is num)
+        ? (product['unitPrice'] as num).toDouble()
+        : (product['price'] is num
+            ? (product['price'] as num).toDouble()
+            : CurrencyHelper.parse(product['price']));
 
-    // Calculate discount badge using the new helper method
-    final discountBadge = _calculateDiscountBadge(
-      price,
-      compareAtPrice,
-      discountPercentage,
-    );
-
-    return ProductDetailArgs(
-      id: (product['id'] ?? '').toString(),
-      title: (product['title'] ?? product['name'] ?? '').toString(),
-      price: price != null ? 'JD ${price.toStringAsFixed(2)}' : '',
-      oldPrice: compareAtPrice != null
-          ? 'JD ${compareAtPrice.toStringAsFixed(2)}'
-          : null,
-      imageUrl: _imageUrlFromJson(product),
-      images: _extractImages(product),
-      discountBadge: discountBadge,
-      rating: rating is num ? rating.toDouble() : double.tryParse('$rating'),
-      reviewCount: int.tryParse(
-        (product['reviews'] ??
-                product['reviewCount'] ??
-                product['review_count'] ??
-                '')
-            .toString(),
-      ),
-      description: product['description']?.toString(),
-      category: _nameFromJson(product['category']),
-      brand: _nameFromJson(product['brand']),
-      stockQuantity: _numberFromJson(
-        product['stockQuantity'] ?? product['stock_quantity'],
-      )?.toInt(),
-      tags: _extractTags(product),
-      attributes: _extractAttributes(product),
-      discountPercentage: discountPercentage,
-    );
+    final args = ProductDetailArgs.fromEntity(entity);
+    if (args.unitPrice <= 0 && directUnitPrice > 0) {
+      return args.copyWith(
+        unitPrice: directUnitPrice,
+        price: 'JD ${directUnitPrice.toStringAsFixed(2)}',
+      );
+    }
+    return args;
   }
 
   factory ProductDetailArgs.fromProductModel(dynamic product) {
@@ -153,27 +157,18 @@ class ProductDetailArgs {
       );
     }
 
-    // Handle if it's already a ProductDetailArgs
     if (product is ProductDetailArgs) {
       return product;
     }
 
-    // Handle if it's a ProductEntity (from API)
     if (product is ProductEntity) {
       return ProductDetailArgs.fromEntity(product);
     }
 
-    // Handle if it's a ProductModel (from API)
-    if (product is ProductModel) {
-      return ProductDetailArgs.fromEntity(product);
-    }
-
-    // Handle if it's a Map
     if (product is Map<String, dynamic>) {
       return ProductDetailArgs.fromMap(product);
     }
 
-    // Handle if it's a string (product ID)
     if (product is String) {
       return ProductDetailArgs.fallback(product);
     }
@@ -186,7 +181,7 @@ class ProductDetailArgs {
     double? compareAtPrice,
     double? discountPercentage,
   ) {
-    if (discountPercentage != null) {
+    if (discountPercentage != null && discountPercentage > 0) {
       return '-${discountPercentage.round()}%';
     }
 
@@ -207,93 +202,44 @@ class ProductDetailArgs {
     );
   }
 
-  static double? _numberFromJson(Object? value) {
-    if (value == null) return null;
-    if (value is num) return value.toDouble();
-    return double.tryParse(value.toString());
-  }
-
-  static String _imageUrlFromJson(Map<String, dynamic> json) {
-    final directUrl = (json['image_url'] ?? json['imageUrl'] ?? json['image'])
-        ?.toString();
-    if (directUrl != null && directUrl.isNotEmpty) {
-      return _absoluteUrl(directUrl);
-    }
-
-    final images = json['images'];
-    if (images is List && images.isNotEmpty) {
-      final firstImage = images.whereType<Map>().firstOrNull;
-      final imageUrl =
-          firstImage?['url']?.toString() ?? firstImage?['imageUrl']?.toString();
-      if (imageUrl != null && imageUrl.isNotEmpty) {
-        return _absoluteUrl(imageUrl);
+  // Computed properties
+  double get effectiveUnitPrice {
+    if (unitPrice > 0) return unitPrice;
+    final parsed = CurrencyHelper.parse(price);
+    if (parsed > 0) return parsed;
+    if (variants.isNotEmpty) {
+      for (final v in variants) {
+        if (v.price > 0) return v.price;
       }
     }
-
-    return '';
+    return 0.0;
   }
 
-  static List<String>? _extractImages(Map<String, dynamic> json) {
-    final images = json['images'];
-    if (images is List) {
-      return images
-          .map((img) {
-            final url = img is Map
-                ? (img['url'] ?? img['imageUrl'] ?? img['image_url'])
-                      ?.toString()
-                : img.toString();
-            return url != null && url.isNotEmpty ? _absoluteUrl(url) : '';
-          })
-          .where((url) => url.isNotEmpty)
-          .toList();
-    }
-
-    return null;
-  }
-
-  static List<String>? _extractTags(Map<String, dynamic> json) {
-    final tags = json['tags'];
-    if (tags is List) {
-      return tags.whereType<String>().toList();
-    }
-    if (tags is String) {
-      return tags.split(',').map((tag) => tag.trim()).toList();
+  double? get effectiveCompareAtPrice {
+    if (compareAtPrice != null && compareAtPrice! > 0) return compareAtPrice;
+    final parsed = CurrencyHelper.parse(oldPrice);
+    if (parsed > 0) return parsed;
+    if (variants.isNotEmpty) {
+      for (final v in variants) {
+        if (v.compareAtPrice != null && v.compareAtPrice! > 0) {
+          return v.compareAtPrice;
+        }
+      }
     }
     return null;
   }
 
-  static Map<String, dynamic>? _extractAttributes(Map<String, dynamic> json) {
-    final attributes =
-        json['attributes'] ?? json['specs'] ?? json['specifications'];
-    if (attributes is Map) {
-      return Map<String, dynamic>.from(attributes);
-    }
-    return null;
-  }
-
-  static String? _nameFromJson(Object? value) {
-    if (value == null) return null;
-    if (value is Map) {
-      final name = value['name'] ?? value['title'] ?? value['slug'];
-      return name?.toString();
-    }
-    return value.toString();
-  }
-
-  static String _absoluteUrl(String url) {
-    if (url.startsWith('http://') || url.startsWith('https://')) return url;
-
-    // Use the same logic as ProductModel to ensure consistency
-    final baseUrl = ApiKeys.baseUrl.endsWith('/')
-        ? ApiKeys.baseUrl.substring(0, ApiKeys.baseUrl.length - 1)
-        : ApiKeys.baseUrl;
-    final path = url.startsWith('/') ? url : '/$url';
-    return '$baseUrl$path';
-  }
-
-  // Computed properties
   bool get hasDiscount =>
-      price.isNotEmpty && oldPrice != null && oldPrice!.isNotEmpty;
+      effectiveCompareAtPrice != null &&
+      effectiveUnitPrice > 0 &&
+      effectiveCompareAtPrice! > effectiveUnitPrice;
+
+  bool get isOnSale {
+    if (!hasDiscount) return false;
+    if (discountEndDate == null) return true;
+    final endDate = DateTime.tryParse(discountEndDate!);
+    return endDate != null && endDate.isAfter(DateTime.now());
+  }
 
   bool get isOutOfStock => stockQuantity != null && stockQuantity! <= 0;
 
@@ -303,6 +249,7 @@ class ProductDetailArgs {
     final ordered = <String>[
       if (imageUrl != null && imageUrl!.trim().isNotEmpty) imageUrl!,
       ...?images,
+      ...imagesList.map((img) => img.imageUrl),
     ];
 
     return ordered
@@ -316,5 +263,128 @@ class ProductDetailArgs {
     if (isOutOfStock) return 'Out of Stock';
     if (stockQuantity != null && stockQuantity! <= 5) return 'Low Stock';
     return 'In Stock';
+  }
+
+  ProductVariantEntity? get defaultVariant {
+    if (variants.isEmpty) return null;
+    if (defaultVariantId != null && defaultVariantId!.isNotEmpty) {
+      for (final v in variants) {
+        if (v.id == defaultVariantId) return v;
+      }
+    }
+    return variants.first;
+  }
+
+  List<String> get availableSizes {
+    final sizes = <String>{};
+    for (final v in variants) {
+      final s = v.size;
+      if (s != null && s.trim().isNotEmpty) sizes.add(s.trim());
+    }
+    if (sizes.isEmpty && attributes != null) {
+      final s = attributes!['size']?.toString() ?? attributes!['weight']?.toString();
+      if (s != null && s.trim().isNotEmpty) sizes.add(s.trim());
+    }
+    return sizes.toList();
+  }
+
+  List<String> get availableColors {
+    final colors = <String>{};
+    for (final v in variants) {
+      final c = v.color;
+      if (c != null && c.trim().isNotEmpty) colors.add(c.trim());
+    }
+    if (colors.isEmpty && attributes != null) {
+      final c = attributes!['color']?.toString();
+      if (c != null && c.trim().isNotEmpty) colors.add(c.trim());
+    }
+    return colors.toList();
+  }
+
+  ProductVariantEntity? findVariant({String? size, String? color}) {
+    if (variants.isEmpty) return null;
+
+    // Try exact match
+    for (final v in variants) {
+      final matchesSize = size == null || size.isEmpty || v.size == size;
+      final matchesColor = color == null || color.isEmpty || v.color == color;
+      if (matchesSize && matchesColor) return v;
+    }
+
+    // Fallback: match size only
+    if (size != null && size.isNotEmpty) {
+      for (final v in variants) {
+        if (v.size == size) return v;
+      }
+    }
+
+    // Fallback: match color only
+    if (color != null && color.isNotEmpty) {
+      for (final v in variants) {
+        if (v.color == color) return v;
+      }
+    }
+
+    return defaultVariant;
+  }
+
+  ProductDetailArgs copyWith({
+    String? id,
+    String? title,
+    String? slug,
+    String? price,
+    double? unitPrice,
+    String? oldPrice,
+    double? compareAtPrice,
+    String? discountEndDate,
+    String? imageUrl,
+    List<String>? images,
+    List<ProductImageItem>? imagesList,
+    String? discountBadge,
+    double? rating,
+    int? reviewCount,
+    String? description,
+    String? category,
+    String? categorySlug,
+    String? brand,
+    String? storeName,
+    String? storeSlug,
+    String? weightInKg,
+    int? stockQuantity,
+    List<String>? tags,
+    Map<String, dynamic>? attributes,
+    double? discountPercentage,
+    String? defaultVariantId,
+    List<ProductVariantEntity>? variants,
+  }) {
+    return ProductDetailArgs(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      slug: slug ?? this.slug,
+      price: price ?? this.price,
+      unitPrice: unitPrice ?? this.unitPrice,
+      oldPrice: oldPrice ?? this.oldPrice,
+      compareAtPrice: compareAtPrice ?? this.compareAtPrice,
+      discountEndDate: discountEndDate ?? this.discountEndDate,
+      imageUrl: imageUrl ?? this.imageUrl,
+      images: images ?? this.images,
+      imagesList: imagesList ?? this.imagesList,
+      discountBadge: discountBadge ?? this.discountBadge,
+      rating: rating ?? this.rating,
+      reviewCount: reviewCount ?? this.reviewCount,
+      description: description ?? this.description,
+      category: category ?? this.category,
+      categorySlug: categorySlug ?? this.categorySlug,
+      brand: brand ?? this.brand,
+      storeName: storeName ?? this.storeName,
+      storeSlug: storeSlug ?? this.storeSlug,
+      weightInKg: weightInKg ?? this.weightInKg,
+      stockQuantity: stockQuantity ?? this.stockQuantity,
+      tags: tags ?? this.tags,
+      attributes: attributes ?? this.attributes,
+      discountPercentage: discountPercentage ?? this.discountPercentage,
+      defaultVariantId: defaultVariantId ?? this.defaultVariantId,
+      variants: variants ?? this.variants,
+    );
   }
 }

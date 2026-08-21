@@ -9,18 +9,18 @@ class AppTheme {
   static ThemeData light(Locale locale) {
     final textTheme = AppTextStyles.textTheme(locale);
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFF5B6BFF),
+      seedColor: AppColors.primary,
       brightness: Brightness.light,
-      surface: Colors.white,
+      surface: AppColors.surface,
     );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: const Color(0xFFF8F9FC),
-      canvasColor: Colors.white,
-      cardColor: Colors.white,
+      scaffoldBackgroundColor: AppColors.background,
+      canvasColor: AppColors.surface,
+      cardColor: AppColors.surface,
       dividerColor: const Color(0xFFE7E7F0),
       fontFamily: AppTextStyles.fontFamilyFor(locale),
       textTheme: textTheme.apply(
@@ -32,15 +32,13 @@ class AppTheme {
         foregroundColor: Colors.white,
         elevation: 0,
         centerTitle: false,
-        titleTextStyle: textTheme.titleLarge?.copyWith(
-          color: Colors.white,
-        ),
+        titleTextStyle: textTheme.titleLarge?.copyWith(color: Colors.white),
         iconTheme: const IconThemeData(color: Colors.white),
         actionsIconTheme: const IconThemeData(color: Colors.white),
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: Colors.white,
+        fillColor: AppColors.surface,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 18,
@@ -58,7 +56,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFF5B6BFF), width: 1.2),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -71,18 +69,16 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          textStyle: textTheme.labelMedium?.copyWith(
-            color: const Color(0xFF4C81FF),
-          ),
+          textStyle: textTheme.labelMedium?.copyWith(color: AppColors.primary),
         ),
       ),
       cardTheme: CardThemeData(
-        color: Colors.white,
+        color: AppColors.surface,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.surface,
         surfaceTintColor: Colors.transparent,
       ),
       snackBarTheme: SnackBarThemeData(
@@ -95,7 +91,7 @@ class AppTheme {
   static ThemeData dark(Locale locale) {
     final textTheme = AppTextStyles.textTheme(locale);
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: const Color(0xFF5B6BFF),
+      seedColor: AppColors.primary,
       brightness: Brightness.dark,
     );
 
@@ -116,9 +112,7 @@ class AppTheme {
         backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
         elevation: 0,
-        titleTextStyle: textTheme.titleLarge?.copyWith(
-          color: Colors.white,
-        ),
+        titleTextStyle: textTheme.titleLarge?.copyWith(color: Colors.white),
         iconTheme: const IconThemeData(color: Colors.white),
         actionsIconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -142,7 +136,7 @@ class AppTheme {
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFF7C86FF), width: 1.2),
+          borderSide: const BorderSide(color: AppColors.primary, width: 1.2),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -155,7 +149,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: const Color(0xFF9CA3FF),
+          foregroundColor: AppColors.primary,
           textStyle: textTheme.labelMedium,
         ),
       ),

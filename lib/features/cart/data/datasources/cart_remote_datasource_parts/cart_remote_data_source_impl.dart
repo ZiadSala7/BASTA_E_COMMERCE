@@ -7,31 +7,54 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     : _dioConsumer = dioConsumer;
 
   @override
-  Future<List<CartItemModel>> getItems() async {
+  Future<CartDataModel> getCart() async {
     try {
       final response = await _dioConsumer.get(Endpoints.cart);
-      return _dataList(response.data)
-          .whereType<Map>()
-          .map(
-            (item) => CartItemModel.fromJson(Map<String, dynamic>.from(item)),
-          )
-          .toList();
+      return CartDataModel.fromJson(_asMap(response.data));
     } on DioException catch (error, stackTrace) {
       log('Get cart request failed', error: error, stackTrace: stackTrace);
       throw Exception(_messageFromDio(error, fallback: 'Could not load cart.'));
+    } catch (error, stackTrace) {
+      log('Unexpected error getting cart', error: error, stackTrace: stackTrace);
+      throw Exception('Could not load cart: $error');
     }
   }
 
   @override
-  Future<void> addItem({
-    required String productId,
-    required int quantity,
+  Future<List<CartItemModel>> getItems() async {
+    final cart = await getCart();
+    return cart.items.whereType<CartItemModel>().toList();
+  }
+
+  @override
+  Future<dynamic> addItem({
+    String? productId,
+    String? variantId,
+    int quantity = 1,
   }) async {
+    final cleanVariantId = variantId?.trim();
+    final cleanProductId = productId?.trim();
+
+    if ((cleanVariantId == null || cleanVariantId.isEmpty) &&
+        (cleanProductId == null || cleanProductId.isEmpty)) {
+      throw Exception('Either variantId or productId must be provided');
+    }
+
     try {
-      await _dioConsumer.post(
+      final data = <String, dynamic>{
+        if (cleanVariantId != null && cleanVariantId.isNotEmpty)
+          'variantId': cleanVariantId,
+        if (cleanProductId != null && cleanProductId.isNotEmpty)
+          'productId': cleanProductId,
+        'quantity': quantity,
+      };
+
+      final response = await _dioConsumer.post(
         Endpoints.cartItems,
-        data: {'productId': productId, 'quantity': quantity},
+        data: data,
       );
+      final resData = _asMap(response.data);
+      return resData['data'] ?? resData;
     } on DioException catch (error, stackTrace) {
       log('Add cart item request failed', error: error, stackTrace: stackTrace);
       throw Exception(
@@ -41,15 +64,22 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<void> updateQuantity({
-    required String itemId,
+  Future<dynamic> updateQuantity({
+    required String variantId,
     required int quantity,
   }) async {
+    final cleanVariantId = variantId.trim();
+    if (cleanVariantId.isEmpty) {
+      throw Exception('Variant ID is required to update cart quantity.');
+    }
+
     try {
-      await _dioConsumer.patch(
-        Endpoints.cartItem(itemId),
+      final response = await _dioConsumer.patch(
+        Endpoints.cartItem(cleanVariantId),
         data: {'quantity': quantity},
       );
+      final resData = _asMap(response.data);
+      return resData['data'] ?? resData;
     } on DioException catch (error, stackTrace) {
       log(
         'Update cart item request failed',
@@ -63,9 +93,14 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
   }
 
   @override
-  Future<void> removeItem(String productId) async {
+  Future<void> removeItem(String variantId) async {
+    final cleanVariantId = variantId.trim();
+    if (cleanVariantId.isEmpty) {
+      throw Exception('Variant ID is required to remove item from cart.');
+    }
+
     try {
-      await _dioConsumer.delete(Endpoints.cartItem(productId));
+      await _dioConsumer.delete(Endpoints.cartItem(cleanVariantId));
     } on DioException catch (error, stackTrace) {
       log(
         'Remove cart item request failed',
@@ -80,10 +115,15 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
 
   @override
   Future<CartCouponModel> applyCoupon(String code) async {
+    final cleanCode = code.trim();
+    if (cleanCode.isEmpty) {
+      throw Exception('Coupon code cannot be empty.');
+    }
+
     try {
       final response = await _dioConsumer.post(
         Endpoints.applyCoupon,
-        data: {'code': code},
+        data: {'code': cleanCode},
       );
 
       return CartCouponModel.fromJson(_asMap(response.data));
@@ -107,54 +147,6 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     }
   }
 
-  List<dynamic> _dataList(dynamic data) {
-    if (data is Map<String, dynamic>) {
-      final directItems = data['items'] ?? data['cartItems'];
-      if (directItems is List) return directItems;
-
-      final body = data['body'];
-      if (body is List) return body;
-      if (body is Map<String, dynamic>) {
-        final bodyItems =
-            body['items'] ?? body['cartItems'] ?? body['products'];
-        if (bodyItems is List) return bodyItems;
-
-        final cart = body['cart'];
-        if (cart is Map<String, dynamic>) {
-          final cartItems = cart['items'] ?? cart['cartItems'];
-          if (cartItems is List) return cartItems;
-        }
-      }
-
-      final nested = data['data'];
-      if (nested is List) return nested;
-      if (nested is Map<String, dynamic>) {
-        final nestedItems =
-            nested['items'] ?? nested['cartItems'] ?? nested['products'];
-        if (nestedItems is List) return nestedItems;
-
-        final cart = nested['cart'];
-        if (cart is Map<String, dynamic>) {
-          final cartItems = cart['items'] ?? cart['cartItems'];
-          if (cartItems is List) return cartItems;
-        }
-      }
-
-      final cart = data['cart'];
-      if (cart is Map<String, dynamic>) {
-        final cartItems = cart['items'] ?? cart['cartItems'];
-        if (cartItems is List) return cartItems;
-      }
-    }
-
-    if (data is Map) {
-      return _dataList(Map<String, dynamic>.from(data));
-    }
-
-    if (data is List) return data;
-    return const <dynamic>[];
-  }
-
   Map<String, dynamic> _asMap(dynamic data) {
     if (data is Map<String, dynamic>) return data;
     if (data is Map) {
@@ -167,10 +159,12 @@ class CartRemoteDataSourceImpl implements CartRemoteDataSource {
     final data = error.response?.data;
     if (data is Map) {
       final message = data['message']?.toString();
-      if (message != null && message.isNotEmpty) return message;
+      if (message != null && message.trim().isNotEmpty) return message.trim();
 
       final errorValue = data['error']?.toString();
-      if (errorValue != null && errorValue.isNotEmpty) return errorValue;
+      if (errorValue != null && errorValue.trim().isNotEmpty) {
+        return errorValue.trim();
+      }
     }
 
     if (error.response?.statusCode == 401) {

@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../l10n/app_localizations.dart';
 import '../../extensions/app_localizations_x.dart';
+import '../../utils/currency_helper.dart';
 
 class ProductCard extends StatelessWidget {
   final String id;
@@ -181,18 +182,21 @@ class ProductCard extends StatelessWidget {
                         _RatingMeta(rating: rating, reviewCount: reviewCount),
                       const Spacer(),
                       Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.baseline,
+                        textBaseline: TextBaseline.alphabetic,
                         children: [
                           Expanded(
                             child: Text(
-                              price,
+                              (price.isNotEmpty && CurrencyHelper.parse(price) > 0)
+                                  ? (AppLocalizations.of(context)?.formatPrice(CurrencyHelper.parse(price)) ?? price)
+                                  : price,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.cairo(
-                                fontSize: 15.5,
+                                fontSize: 16.5,
                                 fontWeight: FontWeight.w900,
                                 color: colorScheme.primary,
-                                height: 1.08,
+                                height: 1.1,
                               ),
                             ),
                           ),
@@ -200,17 +204,20 @@ class ProductCard extends StatelessWidget {
                             const SizedBox(width: 6),
                             Flexible(
                               child: Text(
-                                oldPrice!,
+                                CurrencyHelper.parse(oldPrice!) > 0
+                                    ? (AppLocalizations.of(context)?.formatPrice(CurrencyHelper.parse(oldPrice!)) ?? oldPrice!)
+                                    : oldPrice!,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                                 style: GoogleFonts.cairo(
-                                  fontSize: 11.5,
-                                  fontWeight: FontWeight.w600,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
                                   color: colorScheme.onSurfaceVariant
-                                      .withValues(alpha: 0.64),
+                                      .withValues(alpha: 0.78),
                                   decoration: TextDecoration.lineThrough,
-                                  decorationColor: colorScheme.onSurfaceVariant
-                                      .withValues(alpha: 0.58),
+                                  decorationColor: const Color(0xFFE23B3B)
+                                      .withValues(alpha: 0.75),
+                                  decorationThickness: 1.6,
                                 ),
                               ),
                             ),

@@ -10,29 +10,51 @@ class CartCouponModel extends CartCouponEntity {
   });
 
   factory CartCouponModel.fromJson(Map<String, dynamic> json) {
-    final data = _asMap(json['data']);
-    final payload = data.isEmpty ? json : data;
+    final rawData = json['data'];
+    final payload = rawData is Map<String, dynamic>
+        ? rawData
+        : (rawData is Map ? Map<String, dynamic>.from(rawData) : json);
 
     return CartCouponModel(
-      cartTotal: _number(payload['cartTotal']),
-      discountAmount: _number(payload['discountAmount']),
-      finalTotal: _number(payload['finalTotal']),
-      appliedCoupon: (payload['appliedCoupon'] ?? '').toString(),
-      message: (payload['message'] ?? json['message'] ?? 'Coupon applied')
-          .toString(),
+      cartTotal: _number(
+        payload['cartTotal'] ?? payload['cart_total'] ?? payload['total'],
+      ),
+      discountAmount: _number(
+        payload['discountAmount'] ??
+            payload['discount_amount'] ??
+            payload['discount'],
+      ),
+      finalTotal: _number(
+        payload['finalTotal'] ??
+            payload['final_total'] ??
+            payload['netTotal'],
+      ),
+      appliedCoupon: (payload['appliedCoupon'] ??
+              payload['applied_coupon'] ??
+              payload['code'] ??
+              '')
+          .toString()
+          .trim(),
+      message: (payload['message'] ??
+              json['message'] ??
+              'Coupon applied successfully!')
+          .toString()
+          .trim(),
     );
   }
 
-  static Map<String, dynamic> _asMap(Object? value) {
-    if (value is Map<String, dynamic>) return value;
-    if (value is Map) {
-      return value.map((key, item) => MapEntry(key.toString(), item));
-    }
-    return <String, dynamic>{};
+  Map<String, dynamic> toJson() {
+    return {
+      'cartTotal': cartTotal,
+      'discountAmount': discountAmount,
+      'finalTotal': finalTotal,
+      'appliedCoupon': appliedCoupon,
+      'message': message,
+    };
   }
 
   static double _number(Object? value) {
     if (value is num) return value.toDouble();
-    return double.tryParse((value ?? '').toString()) ?? 0;
+    return double.tryParse((value ?? '').toString().trim()) ?? 0.0;
   }
 }

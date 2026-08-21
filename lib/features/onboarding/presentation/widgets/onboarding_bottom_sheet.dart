@@ -33,7 +33,7 @@ class OnboardingBottomSheet extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [Color(0xFF5B5BFF), Color(0xFF7C5CFF)],
+          colors: [Color(0xFF1800AD), Color(0xFF1800AD)],
         ),
         borderRadius: BorderRadius.vertical(top: Radius.circular(36)),
       ),

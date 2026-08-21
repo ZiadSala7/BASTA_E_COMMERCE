@@ -11,7 +11,7 @@ import 'l10n/app_localizations.dart';
 class IonbitECommerce extends StatelessWidget {
   const IonbitECommerce({super.key});
 
-  static final AppRouter _appRouter = AppRouter();
+  static final AppRouter _appRouter = AppRouter.instance;
 
   @override
   Widget build(BuildContext context) {

@@ -140,11 +140,14 @@ class _RelatedProductsSectionState extends State<RelatedProductsSection> {
   ProductDetailArgs _detailArgs(HomeProductEntity product) {
     return ProductDetailArgs(
       id: product.id,
+      slug: product.slug,
       title: product.name,
       price: _formatPrice(product.price),
+      unitPrice: product.price ?? 0.0,
       oldPrice: product.compareAtPrice == null
           ? null
           : _formatPrice(product.compareAtPrice),
+      compareAtPrice: product.compareAtPrice,
       imageUrl: product.imageUrl,
       discountBadge: _discountLabel(product),
     );

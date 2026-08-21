@@ -15,18 +15,35 @@ class OrdersRepositoryImpl implements OrdersRepository {
   }
 
   @override
+  Future<OrderEntity?> getOrderById(String orderId) {
+    return _remoteDataSource.getOrderById(orderId);
+  }
+
+  @override
+  Future<String?> getOrderInvoiceUrl(String orderId) {
+    return _remoteDataSource.getOrderInvoiceUrl(orderId);
+  }
+
+  @override
   Future<CheckoutResultEntity> checkout({
     required Map<String, dynamic> address,
     required String paymentMethod,
+    String? couponCode,
   }) {
     return _remoteDataSource.checkout(
       address: address,
       paymentMethod: paymentMethod,
+      couponCode: couponCode,
     );
   }
 
   @override
   Future<OrderEntity> verifyPayment(String orderId) {
     return _remoteDataSource.verifyPayment(orderId);
+  }
+
+  @override
+  Future<void> cancelPayment(String orderId) {
+    return _remoteDataSource.cancelPayment(orderId);
   }
 }

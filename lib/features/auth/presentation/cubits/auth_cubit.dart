@@ -66,8 +66,10 @@ class AuthCubit extends Cubit<AuthState> {
         password: password,
         rememberSession: rememberSession,
       );
+      if (isClosed) return;
       emit(AuthAuthenticated(user));
     } catch (e) {
+      if (isClosed) return;
       final message = _mapErrorMessage(e);
       if (_isEmailConfirmationRequired(message)) {
         emit(AuthEmailConfirmationRequired(email: email, message: message));
@@ -84,8 +86,10 @@ class AuthCubit extends Cubit<AuthState> {
       final user = await _googleSocialLoginUseCase(
         rememberSession: rememberSession,
       );
+      if (isClosed) return;
       emit(AuthAuthenticated(user));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(_mapErrorMessage(e)));
     }
   }
@@ -96,6 +100,8 @@ class AuthCubit extends Cubit<AuthState> {
     String name,
     String phone, {
     String role = 'CUSTOMER',
+    String? couponCode,
+    String? referralCode,
   }) async {
     emit(AuthLoading());
     try {
@@ -105,13 +111,17 @@ class AuthCubit extends Cubit<AuthState> {
         name: name,
         phone: phone,
         role: role,
+        couponCode: couponCode,
+        referralCode: referralCode,
       );
 
       final confirmationMessage = await _requestConfirmationCode(email);
+      if (isClosed) return;
       emit(
         AuthRegistrationPending(registeredUser, message: confirmationMessage),
       );
     } catch (e) {
+      if (isClosed) return;
       final message = _mapErrorMessage(e);
       if (_isEmailConfirmationRequired(message)) {
         emit(AuthEmailConfirmationRequired(email: email, message: message));
@@ -126,8 +136,10 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       final message = await _confirmEmailUseCase(token: token);
+      if (isClosed) return;
       emit(AuthEmailConfirmed(message));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(_mapErrorMessage(e)));
     }
   }
@@ -136,8 +148,10 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       final message = await _resendConfirmationUseCase(email: email);
+      if (isClosed) return;
       emit(AuthConfirmationCodeSent(message));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(_mapErrorMessage(e)));
     }
   }
@@ -146,8 +160,10 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       final message = await _forgotPasswordUseCase(email: email);
+      if (isClosed) return;
       emit(AuthPasswordResetEmailSent(message));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(_mapErrorMessage(e)));
     }
   }
@@ -159,8 +175,10 @@ class AuthCubit extends Cubit<AuthState> {
         token: token,
         newPassword: newPassword,
       );
+      if (isClosed) return;
       emit(AuthPasswordReset(message));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(_mapErrorMessage(e)));
     }
   }
@@ -172,8 +190,10 @@ class AuthCubit extends Cubit<AuthState> {
         oldPassword: oldPassword,
         newPassword: newPassword,
       );
+      if (isClosed) return;
       emit(AuthPasswordChanged(message));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(_mapErrorMessage(e)));
     }
   }
@@ -190,6 +210,7 @@ class AuthCubit extends Cubit<AuthState> {
         phone: phone,
         email: email,
       );
+      if (isClosed) return;
       if (user.emailVerificationRequired) {
         emit(
           AuthProfileEmailVerificationRequired(
@@ -204,6 +225,7 @@ class AuthCubit extends Cubit<AuthState> {
 
       emit(AuthProfileUpdated(user.user));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(_mapErrorMessage(e)));
     }
   }
@@ -212,8 +234,10 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       final user = await _getCurrentUserUseCase();
+      if (isClosed) return;
       emit(AuthAuthenticated(user));
     } catch (e) {
+      if (isClosed) return;
       emit(AuthUnauthenticated(message: _mapErrorMessage(e)));
     }
   }
@@ -222,8 +246,10 @@ class AuthCubit extends Cubit<AuthState> {
     emit(AuthLoading());
     try {
       await _logoutUseCase();
+      if (isClosed) return;
       emit(const AuthUnauthenticated());
     } catch (e) {
+      if (isClosed) return;
       emit(AuthError(_mapErrorMessage(e)));
     }
   }

@@ -18,7 +18,7 @@ class _CheckoutHeader extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          colors: [AppColors.primaryDark, AppColors.primary, Color(0xFF20B7A8)],
+          colors: [AppColors.primaryDark, AppColors.primary],
         ),
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
       ),

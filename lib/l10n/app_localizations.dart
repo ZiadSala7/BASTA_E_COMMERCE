@@ -589,6 +589,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Prime Video'**
   String get primeVideo;
+
+  /// No description provided for @couponHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Coupon code (optional)'**
+  String get couponHint;
+
+  /// No description provided for @referralCodeHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Referral code (optional)'**
+  String get referralCodeHint;
 }
 
 class _AppLocalizationsDelegate

@@ -25,6 +25,8 @@ class SavedAddressModel {
   final double longitude;
   final bool isDefault;
 
+  String get street => streetAddress;
+
   factory SavedAddressModel.fromJson(Map<String, dynamic> json) {
     return SavedAddressModel(
       id: json['id']?.toString() ?? '',

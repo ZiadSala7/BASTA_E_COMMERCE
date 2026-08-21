@@ -1,7 +1,9 @@
 part of '../register_page.dart';
 
 class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+  final String? initialReferralCode;
+
+  const RegisterPage({super.key, this.initialReferralCode});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();

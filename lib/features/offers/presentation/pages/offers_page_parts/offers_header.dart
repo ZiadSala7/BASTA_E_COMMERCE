@@ -47,7 +47,7 @@ class _OffersHeader extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              colors: [Color(0xFF4747C2), Color(0xFF5B5BD6), Color(0xFF20B7A8)],
+              colors: [AppColors.primary, AppColors.primary],
             ),
           ),
           child: Column(
@@ -55,31 +55,19 @@ class _OffersHeader extends StatelessWidget {
               SizedBox(
                 height: 52,
                 child: Row(
-                  textDirection: TextDirection.ltr,
                   children: [
-                    _HeaderIconButton(
-                      icon: Icons.menu_rounded,
-                      onTap: onMenuTap,
-                    ),
-                    const SizedBox(width: 10),
-                    _HeaderIconButton(
-                      icon: Icons.notifications_none_rounded,
-                      onTap: onNotificationTap,
-                      showDot: true,
-                    ),
-                    const SizedBox(width: 12),
                     Expanded(
                       child: Align(
-                        alignment: AlignmentDirectional.centerEnd,
+                        alignment: AlignmentDirectional.centerStart,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              AppLocalizations.of(context)!.offers,
+                              AppLocalizations.of(context)!.coupons,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
+                              textAlign: TextAlign.start,
                               style: GoogleFonts.cairo(
                                 color: Colors.white,
                                 fontSize: 22,
@@ -92,7 +80,7 @@ class _OffersHeader extends StatelessWidget {
                               title,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.end,
+                              textAlign: TextAlign.start,
                               style: GoogleFonts.cairo(
                                 color: Colors.white.withOpacity(0.78),
                                 fontSize: 12,
@@ -104,31 +92,23 @@ class _OffersHeader extends StatelessWidget {
                         ),
                       ),
                     ),
+                    const SizedBox(width: 12),
+                    _HeaderIconButton(
+                      icon: Icons.notifications_none_rounded,
+                      onTap: onNotificationTap,
+                      showDot: true,
+                    ),
+                    const SizedBox(width: 10),
+                    _HeaderIconButton(
+                      icon: Icons.menu_rounded,
+                      onTap: onMenuTap,
+                    ),
                   ],
                 ),
               ),
               const SizedBox(height: 16),
               Row(
-                textDirection: TextDirection.ltr,
                 children: [
-                  Material(
-                    color: Colors.white.withOpacity(0.96),
-                    borderRadius: BorderRadius.circular(14),
-                    child: InkWell(
-                      onTap: onFilterTap,
-                      borderRadius: BorderRadius.circular(14),
-                      child: const SizedBox(
-                        width: 46,
-                        height: 46,
-                        child: Icon(
-                          Icons.tune_rounded,
-                          color: AppColors.primary,
-                          size: 23,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
                   Expanded(
                     child: SizedBox(
                       height: 46,
@@ -166,6 +146,24 @@ class _OffersHeader extends StatelessWidget {
                             ),
                             borderRadius: BorderRadius.circular(14),
                           ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Material(
+                    color: Colors.white.withOpacity(0.96),
+                    borderRadius: BorderRadius.circular(14),
+                    child: InkWell(
+                      onTap: onFilterTap,
+                      borderRadius: BorderRadius.circular(14),
+                      child: const SizedBox(
+                        width: 46,
+                        height: 46,
+                        child: Icon(
+                          Icons.tune_rounded,
+                          color: AppColors.primary,
+                          size: 23,
                         ),
                       ),
                     ),

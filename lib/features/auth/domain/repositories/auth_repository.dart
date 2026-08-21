@@ -13,8 +13,10 @@ abstract class AuthRepository {
     String password,
     String name,
     String phone,
-    String role,
-  );
+    String role, {
+    String? couponCode,
+    String? referralCode,
+  });
   Future<String> confirmEmail(String token);
   Future<String> resendConfirmation(String email);
   Future<String> forgotPassword(String email);

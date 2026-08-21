@@ -86,14 +86,21 @@ extension AppLocalizationsX on AppLocalizations {
       pick(ar: 'رابط شهادة -035', en: 'Certificate link -035');
   String get schoolDesignStudentFile =>
       pick(ar: 'رابط ملف الطالب', en: 'Student file link');
-  String jdPrice(String value) => isArabic ? '$value د.أ' : 'JOD $value';
+  String jdPrice(Object value) => isArabic ? '$value د.أ' : 'JD $value';
 
   String productNumber(int number) =>
       pick(ar: 'منتج رقم $number', en: 'Product $number');
   String featuredProductNumber(int number) =>
       pick(ar: 'منتج مميز $number', en: 'Featured product $number');
   String currencyAmount(Object amount) =>
-      isArabic ? '$amount جنيه' : 'EGP $amount';
+      isArabic ? '$amount د.أ' : 'JD $amount';
+  String formatPrice(num? amount, [int decimalDigits = 2]) {
+    if (amount == null) return '';
+    final formatted = amount % 1 == 0 && decimalDigits == 0
+        ? amount.toInt().toString()
+        : amount.toStringAsFixed(decimalDigits);
+    return isArabic ? '$formatted د.أ' : 'JD $formatted';
+  }
   String get specialOfferTitle => pick(
     ar: 'عرض خاص على المنتجات المميزة',
     en: 'Special offer on featured products',
@@ -164,7 +171,7 @@ extension AppLocalizationsX on AppLocalizations {
   String get cartProductPrime =>
       pick(ar: 'اشتراك برايم امازون', en: 'Amazon Prime subscription');
   String dinarPrice(num value) =>
-      isArabic ? '$value دينار اردني' : 'JOD $value';
+      isArabic ? '$value د.أ' : 'JD $value';
   String get subtotal => pick(ar: 'الإجمالي الفرعي:', en: 'Subtotal:');
   String get discount => pick(ar: 'الخصم :', en: 'Discount:');
   String get grandTotal => pick(ar: 'الإجمالي:', en: 'Total:');

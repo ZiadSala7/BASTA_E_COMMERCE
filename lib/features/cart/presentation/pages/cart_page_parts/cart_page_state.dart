@@ -23,6 +23,7 @@ class _CartPageState extends State<CartPage> {
     _favoritesController.addListener(_onFavoritesChanged);
     _favoritesController.refresh();
     _couponController.addListener(_refreshTotals);
+    _cartBadgeController.addListener(_onCartBadgeChanged);
     _loadCart();
   }
 
@@ -32,6 +33,7 @@ class _CartPageState extends State<CartPage> {
       ..removeListener(_refreshTotals)
       ..dispose();
     _favoritesController.removeListener(_onFavoritesChanged);
+    _cartBadgeController.removeListener(_onCartBadgeChanged);
     super.dispose();
   }
 
@@ -41,7 +43,9 @@ class _CartPageState extends State<CartPage> {
     final localizedItems = _items
         .map(
           (item) => item.copyWith(
-            isFavorite: _favoritesController.isFavorite(item.removeProductId),
+            isFavorite: _favoritesController.isFavorite(
+              item.productId.isNotEmpty ? item.productId : item.id,
+            ),
           ),
         )
         .toList(growable: false);
@@ -61,80 +65,112 @@ class _CartPageState extends State<CartPage> {
             onBack: _handleBack,
           ),
           Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _errorMessage != null
-                ? EmptyState(
-                    icon: Icons.error_outline_rounded,
-                    title: l10n.pick(
-                      ar: 'تعذر تحميل السلة',
-                      en: 'Could not load cart',
-                    ),
-                    message: _errorMessage,
-                    actionLabel: l10n.pick(ar: 'إعادة المحاولة', en: 'Retry'),
-                    onActionTap: _loadCart,
-                  )
-                : localizedItems.isEmpty
-                ? EmptyState(
-                    icon: Icons.shopping_cart_outlined,
-                    title: l10n.cart,
-                    message: l10n.pick(
-                      ar: 'سلة التسوق فارغة الآن. ابدأ بإضافة منتجاتك المفضلة.',
-                      en: 'Your cart is empty right now. Start adding products you love.',
-                    ),
-                    actionLabel: l10n.shopNow,
-                    onActionTap: widget.onStartShopping,
-                  )
-                : ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
-                    children: [
-                      _OrderReadinessPanel(
-                        itemCount: itemCount,
-                        subtotal: _subtotal,
-                      ),
-                      const SizedBox(height: 16),
-                      _SectionTitle(
-                        title: l10n.pick(ar: 'منتجات السلة', en: 'Cart items'),
-                        subtitle: l10n.pick(
-                          ar: '${localizedItems.length} منتجات جاهزة للطلب',
-                          en: '${localizedItems.length} products ready for checkout',
+            child: RefreshIndicator(
+              onRefresh: _loadCart,
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _errorMessage != null
+                  ? ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          child: EmptyState(
+                            icon: Icons.error_outline_rounded,
+                            title: l10n.pick(
+                              ar: 'تعذر تحميل السلة',
+                              en: 'Could not load cart',
+                            ),
+                            message: _errorMessage,
+                            actionLabel: l10n.pick(
+                              ar: 'إعادة المحاولة',
+                              en: 'Retry',
+                            ),
+                            onActionTap: _loadCart,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      for (
-                        var groupIndex = 0;
-                        groupIndex < cartGroups.length;
-                        groupIndex++
-                      ) ...[
-                        _VendorCartSection(
-                          group: cartGroups[groupIndex],
-                          updatingItemIds: _updatingItemIds,
-                          onIncrement: (index) => _changeQuantity(index, 1),
-                          onDecrement: (index) => _changeQuantity(index, -1),
-                          onRemove: _removeItem,
-                          onFavoriteTap: _toggleFavorite,
-                        ),
-                        if (groupIndex != cartGroups.length - 1)
-                          const SizedBox(height: 14),
                       ],
-                      const SizedBox(height: 18),
-                      _BackendCouponCard(
-                        controller: _couponController,
-                        hasDiscount: _discount > 0,
-                        isLoading: _isApplyingCoupon,
-                        onApply: _applyCoupon,
-                      ),
-                      const SizedBox(height: 12),
-                      _DeliveryNote(
-                        message: l10n.deliveryNote,
-                        estimatedDate: l10n.pick(
-                          ar: 'التوصيل المتوقع خلال 2-4 أيام',
-                          en: 'Estimated delivery in 2-4 days',
+                    )
+                  : localizedItems.isEmpty
+                  ? ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      children: [
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.4,
+                          child: EmptyState(
+                            icon: Icons.shopping_cart_outlined,
+                            title: l10n.cart,
+                            message: l10n.pick(
+                              ar:
+                                  'سلة التسوق فارغة الآن. ابدأ بإضافة منتجاتك المفضلة.',
+                              en:
+                                  'Your cart is empty right now. Start adding products you love.',
+                            ),
+                            actionLabel: l10n.shopNow,
+                            onActionTap: widget.onStartShopping,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 144),
-                    ],
-                  ),
+                      ],
+                    )
+                  : ListView(
+                      physics: const AlwaysScrollableScrollPhysics(),
+                      padding: const EdgeInsets.fromLTRB(16, 18, 16, 18),
+                      children: [
+                        _OrderReadinessPanel(
+                          itemCount: itemCount,
+                          subtotal: _subtotal,
+                        ),
+                        const SizedBox(height: 16),
+                        _SectionTitle(
+                          title: l10n.pick(
+                            ar: 'منتجات السلة',
+                            en: 'Cart items',
+                          ),
+                          subtitle: l10n.pick(
+                            ar:
+                                '${localizedItems.length} منتجات جاهزة للطلب',
+                            en:
+                                '${localizedItems.length} products ready for checkout',
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        for (
+                          var groupIndex = 0;
+                          groupIndex < cartGroups.length;
+                          groupIndex++
+                        ) ...[
+                          _VendorCartSection(
+                            group: cartGroups[groupIndex],
+                            updatingItemIds: _updatingItemIds,
+                            onIncrement: (index) =>
+                                _changeQuantity(index, 1),
+                            onDecrement: (index) =>
+                                _changeQuantity(index, -1),
+                            onRemove: _removeItem,
+                            onFavoriteTap: _toggleFavorite,
+                          ),
+                          if (groupIndex != cartGroups.length - 1)
+                            const SizedBox(height: 14),
+                        ],
+                        const SizedBox(height: 18),
+                        _BackendCouponCard(
+                          controller: _couponController,
+                          hasDiscount: _discount > 0,
+                          isLoading: _isApplyingCoupon,
+                          onApply: _applyCoupon,
+                        ),
+                        const SizedBox(height: 12),
+                        _DeliveryNote(
+                          message: l10n.deliveryNote,
+                          estimatedDate: l10n.pick(
+                            ar: 'التوصيل المتوقع خلال 2-4 أيام',
+                            en: 'Estimated delivery in 2-4 days',
+                          ),
+                        ),
+                        const SizedBox(height: 144),
+                      ],
+                    ),
+            ),
           ),
         ],
       ),
@@ -229,12 +265,28 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future<void> _changeQuantity(int index, int change) async {
+    if (index < 0 || index >= _items.length) return;
     final item = _items[index];
     if (_updatingItemIds.contains(item.id)) return;
 
     final previousQuantity = item.quantity;
-    final quantity = (previousQuantity + change).clamp(1, 99).toInt();
-    if (quantity == previousQuantity) return;
+    final quantity = previousQuantity + change;
+
+    if (quantity < 1) {
+      await _removeItem(index);
+      return;
+    }
+
+    if (item.stockQuantity > 0 && quantity > item.stockQuantity) {
+      final l10n = AppLocalizations.of(context)!;
+      _showSnackBar(
+        l10n.pick(
+          ar: 'الكمية المتوفرة في المخزون هي ${item.stockQuantity} فقط',
+          en: 'Only ${item.stockQuantity} items left in stock',
+        ),
+      );
+      return;
+    }
 
     setState(() {
       _updatingItemIds.add(item.id);
@@ -242,7 +294,7 @@ class _CartPageState extends State<CartPage> {
     });
 
     try {
-      await _cartRepository.updateQuantity(item.removeProductId, quantity);
+      await _cartRepository.updateQuantity(item.effectiveVariantId, quantity);
       await _refreshCartSnapshot();
     } catch (error) {
       if (!mounted) return;
@@ -258,8 +310,11 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future<void> _toggleFavorite(int index) async {
+    if (index < 0 || index >= _items.length) return;
+    final item = _items[index];
+    final favId = item.productId.isNotEmpty ? item.productId : item.id;
     try {
-      await _favoritesController.toggle(_items[index].removeProductId);
+      await _favoritesController.toggle(favId);
     } catch (error) {
       if (!mounted) return;
       _showSnackBar(_cleanError(error));
@@ -302,7 +357,35 @@ class _CartPageState extends State<CartPage> {
     if (mounted) setState(() {});
   }
 
+  bool _isSyncingFromBadge = false;
+
+  void _onCartBadgeChanged() {
+    if (!mounted || _isSyncingFromBadge) return;
+    _refreshCartSnapshot();
+  }
+
+  Future<void> _refreshCartSnapshot() async {
+    _isSyncingFromBadge = true;
+    try {
+      final items = await _cartRepository.getCartItems();
+      if (!mounted) return;
+
+      _cartBadgeController.setItems(items);
+      setState(() {
+        _items
+          ..clear()
+          ..addAll(items.map(_CartProduct.fromEntity));
+      });
+    } catch (_) {
+    } finally {
+      if (mounted) {
+        _isSyncingFromBadge = false;
+      }
+    }
+  }
+
   Future<bool> _removeItem(int index) async {
+    if (index < 0 || index >= _items.length) return false;
     final removedItem = _items[index];
     if (_updatingItemIds.contains(removedItem.id)) return false;
 
@@ -312,10 +395,16 @@ class _CartPageState extends State<CartPage> {
     });
 
     try {
-      await _cartRepository.removeFromCart(removedItem.removeProductId);
+      await _cartRepository.removeFromCart(removedItem.effectiveVariantId);
       await _refreshCartSnapshot();
       if (!mounted) return true;
-      _showSnackBar('${removedItem.title} removed');
+      final l10n = AppLocalizations.of(context)!;
+      _showSnackBar(
+        l10n.pick(
+          ar: 'تم حذف ${removedItem.title} من السلة',
+          en: '${removedItem.title} removed from cart',
+        ),
+      );
       return true;
     } catch (error) {
       if (!mounted) return false;
@@ -331,31 +420,25 @@ class _CartPageState extends State<CartPage> {
     }
   }
 
-  Future<void> _refreshCartSnapshot() async {
-    final items = await _cartRepository.getCartItems();
-    if (!mounted) return;
-
-    _cartBadgeController.setItems(items);
-    setState(() {
-      _items
-        ..clear()
-        ..addAll(items.map(_CartProduct.fromEntity));
-    });
-  }
-
   Future<void> _openCheckout() async {
+    final couponCode = _appliedCoupon?.trim();
     final completed = await Navigator.of(context).push<bool>(
-      MaterialPageRoute<bool>(builder: (_) => const CartCheckoutPage()),
+      MaterialPageRoute<bool>(
+        builder: (_) => CartCheckoutPage(
+          couponCode: couponCode?.isEmpty == true ? null : couponCode,
+        ),
+      ),
     );
 
     if (!mounted || completed != true) return;
 
     setState(() {
+      _items.clear();
       _appliedCoupon = null;
       _couponDiscount = 0;
       _couponController.clear();
     });
-    await _refreshCartSnapshot();
+    _cartBadgeController.setItems(const <CartItemEntity>[]);
   }
 
   void _showSnackBar(String message) {

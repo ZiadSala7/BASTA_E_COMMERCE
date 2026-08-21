@@ -299,11 +299,14 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
 
     return ProductDetailArgs(
       id: product.id,
+      slug: product.slug,
       title: product.name,
       price: _formatPrice(product.price, l10n),
+      unitPrice: product.price ?? 0.0,
       oldPrice: product.compareAtPrice == null
           ? null
           : _formatPrice(product.compareAtPrice, l10n),
+      compareAtPrice: product.compareAtPrice,
       imageUrl: product.imageUrl,
       discountBadge: _discountLabel(product),
     );
@@ -311,10 +314,7 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
 
   String _formatPrice(double? value, AppLocalizations l10n) {
     if (value == null) return '';
-    final formatted = value % 1 == 0
-        ? value.toStringAsFixed(0)
-        : value.toStringAsFixed(2);
-    return l10n.pick(ar: '$formatted د.أ', en: 'JOD $formatted');
+    return l10n.formatPrice(value);
   }
 
   String? _discountLabel(HomeProductEntity product) {

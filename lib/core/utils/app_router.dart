@@ -12,6 +12,7 @@ import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/auth/presentation/pages/verification_page.dart';
 import '../../features/account/presentation/pages/addresses_page.dart';
 import '../../features/account/presentation/pages/drawer_info_page.dart';
+import '../../features/account/presentation/pages/invite_friends_page.dart';
 import '../../features/cart/presentation/pages/cart_checkout_page.dart';
 import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
@@ -49,7 +50,11 @@ abstract class AppRoutes {
 }
 
 class AppRouter {
-  AppRouter();
+  static AppRouter? _instance;
+
+  AppRouter._();
+
+  static AppRouter get instance => _instance ??= AppRouter._();
 
   final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
@@ -71,10 +76,13 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.register,
-        builder: (context, state) => BlocProvider(
-          create: (_) => sl<AuthCubit>(),
-          child: const RegisterPage(),
-        ),
+        builder: (context, state) {
+          final referralCode = state.extra is String ? state.extra as String : null;
+          return BlocProvider(
+            create: (_) => sl<AuthCubit>(),
+            child: RegisterPage(initialReferralCode: referralCode),
+          );
+        },
       ),
       GoRoute(
         path: AppRoutes.forgotPassword,
@@ -158,8 +166,7 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.inviteFriends,
-        builder: (context, state) =>
-            const DrawerInfoPage(type: DrawerInfoPageType.inviteFriends),
+        builder: (context, state) => const InviteFriendsPage(),
       ),
       GoRoute(
         path: AppRoutes.privacyPolicy,

@@ -3,11 +3,18 @@ part of '../cart_checkout_page.dart';
 class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
   GoogleMapController? _mapController;
   late LatLng _currentMapCenter;
+  String? _selectedPlaceName;
+  bool _isResolvingPlace = false;
+  int _placeLookupGeneration = 0;
 
   @override
   void initState() {
     super.initState();
     _currentMapCenter = widget.selectedLocation ?? widget.initialLocation;
+    final selectedLocation = widget.selectedLocation;
+    if (selectedLocation != null) {
+      _resolvePlaceName(selectedLocation);
+    }
   }
 
   @override
@@ -16,9 +23,12 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
     if (widget.selectedLocation != oldWidget.selectedLocation) {
       _currentMapCenter = widget.selectedLocation ?? widget.initialLocation;
       if (widget.selectedLocation != null) {
+        _resolvePlaceName(widget.selectedLocation!);
         _mapController?.animateCamera(
           CameraUpdate.newLatLngZoom(widget.selectedLocation!, 15),
         );
+      } else {
+        _clearPlaceName();
       }
     }
   }
@@ -34,9 +44,57 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
     setState(() {
       _currentMapCenter = location;
     });
+    _resolvePlaceName(location);
     await _mapController?.animateCamera(
       CameraUpdate.newLatLngZoom(location, 15),
     );
+  }
+
+  Future<void> _resolvePlaceName(LatLng location) async {
+    final lookupGeneration = ++_placeLookupGeneration;
+    setState(() {
+      _isResolvingPlace = true;
+      _selectedPlaceName = null;
+    });
+
+    try {
+      final placemarks = await placemarkFromCoordinates(
+        location.latitude,
+        location.longitude,
+      );
+      if (!mounted || lookupGeneration != _placeLookupGeneration) return;
+
+      setState(() {
+        _selectedPlaceName = _placeNameFromPlacemarks(placemarks);
+        _isResolvingPlace = false;
+      });
+    } catch (_) {
+      if (!mounted || lookupGeneration != _placeLookupGeneration) return;
+
+      setState(() {
+        _selectedPlaceName = null;
+        _isResolvingPlace = false;
+      });
+    }
+  }
+
+  String? _placeNameFromPlacemarks(List<Placemark> placemarks) {
+    if (placemarks.isEmpty) return null;
+    final p = placemarks.first;
+    final parts = <String>[
+      if (p.street != null && p.street!.isNotEmpty) p.street!,
+      if (p.subLocality != null && p.subLocality!.isNotEmpty) p.subLocality!,
+      if (p.locality != null && p.locality!.isNotEmpty) p.locality!,
+    ];
+    return parts.isEmpty ? null : parts.join(', ');
+  }
+
+  void _clearPlaceName() {
+    _placeLookupGeneration++;
+    setState(() {
+      _selectedPlaceName = null;
+      _isResolvingPlace = false;
+    });
   }
 
   Future<void> _openLargeMap() async {
@@ -164,7 +222,16 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
                             ar: 'لم يتم تحديد موقع بعد',
                             en: 'No location selected yet',
                           )
-                        : '${selectedLocation.latitude.toStringAsFixed(5)}, ${selectedLocation.longitude.toStringAsFixed(5)}',
+                        : _isResolvingPlace
+                        ? l10n.pick(
+                            ar: 'جارٍ تحديد الموقع...',
+                            en: 'Resolving location...',
+                          )
+                        : _selectedPlaceName ??
+                          l10n.pick(
+                            ar: 'الموقع المحدد',
+                            en: 'Selected location',
+                          ),
                     style: GoogleFonts.cairo(
                       color: selectedLocation == null
                           ? colorScheme.onSurfaceVariant

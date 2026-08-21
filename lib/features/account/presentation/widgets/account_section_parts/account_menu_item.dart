@@ -74,7 +74,7 @@ class AccountMenuItem extends StatelessWidget {
                 Switch(
                   value: switchValue,
                   onChanged: onSwitchChanged,
-                  activeColor: AppColors.primary,
+                  activeThumbColor: AppColors.primary,
                 )
               else
                 Icon(

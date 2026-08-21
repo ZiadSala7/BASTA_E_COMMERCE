@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -8,6 +9,7 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/assets.dart';
+import '../../../../core/utils/currency_helper.dart';
 import '../../../../core/widgets/location_picker_page.dart';
 import '../../../../core/widgets/status/empty_state.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -15,7 +17,10 @@ import '../../../account/data/datasources/saved_addresses_local_datasource.dart'
 import '../../../account/data/models/saved_address_model.dart';
 import '../../../account/presentation/pages/addresses_page.dart';
 import '../../domain/entities/cart_item_entity.dart';
+import '../../domain/services/cart_badge_controller.dart';
 import '../../domain/repositories/cart_repository.dart';
+import '../../domain/usecases/calculate_shipping_usecase.dart';
+import '../../../orders/domain/exceptions/checkout_exception.dart';
 import '../../../orders/domain/repositories/orders_repository.dart';
 import '../../../orders/presentation/pages/payment_webview_page.dart';
 

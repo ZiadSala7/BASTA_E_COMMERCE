@@ -3,8 +3,13 @@ part of '../cart_checkout_page.dart';
 class _StoreOrderSection extends StatelessWidget {
   final String storeName;
   final List<CartItemEntity> items;
+  final Set<String> stockIssueProductIds;
 
-  const _StoreOrderSection({required this.storeName, required this.items});
+  const _StoreOrderSection({
+    required this.storeName,
+    required this.items,
+    required this.stockIssueProductIds,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +59,10 @@ class _StoreOrderSection extends StatelessWidget {
             const SizedBox(height: 10),
           ],
           for (var index = 0; index < items.length; index++) ...[
-            _CheckoutItemTile(item: items[index]),
+            _CheckoutItemTile(
+              item: items[index],
+              hasStockIssue: _hasStockIssue(items[index]),
+            ),
             if (index != items.length - 1) const Divider(height: 18),
           ],
         ],
@@ -66,4 +74,10 @@ class _StoreOrderSection extends StatelessWidget {
     0,
     (total, item) => total + (item.activePrice * item.quantity),
   );
+
+  bool _hasStockIssue(CartItemEntity item) {
+    return stockIssueProductIds.contains(item.productId) ||
+        stockIssueProductIds.contains(item.variantId) ||
+        stockIssueProductIds.contains(item.id);
+  }
 }
