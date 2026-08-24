@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/di/service_locator.dart';
 import '../../domain/entities/payment_session_entity.dart';
+import '../../domain/repositories/orders_repository.dart';
 import '../models/payment_webview_result.dart';
 import '../widgets/payment_webview_body.dart';
 import '../widgets/payment_webview_controller.dart';
@@ -23,7 +25,8 @@ class PaymentWebViewPage extends StatefulWidget {
   State<PaymentWebViewPage> createState() => _PaymentWebViewPageState();
 }
 
-class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
+class _PaymentWebViewPageState extends State<PaymentWebViewPage>
+    with WidgetsBindingObserver {
   late final PaymentCheckoutController _checkout;
   bool _isLoading = true;
   bool _hasReturnedResult = false;
@@ -31,6 +34,7 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _checkout = PaymentCheckoutController(
       orderId: widget.orderId,
       session: widget.session,
@@ -42,6 +46,24 @@ class _PaymentWebViewPageState extends State<PaymentWebViewPage> {
       },
       onResult: _finish,
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if ((state == AppLifecycleState.detached ||
+            state == AppLifecycleState.paused) &&
+        !_hasReturnedResult) {
+      // Backend order cancellation on app pause/kill to release reserved inventory
+      try {
+        sl<OrdersRepository>().cancelPayment(widget.orderId);
+      } catch (_) {}
+    }
   }
 
   @override

@@ -4,19 +4,27 @@ import '../models/payment_webview_result.dart';
 
 PaymentWebViewResult? paymentResultFromUrl(String url, String orderId) {
   final uri = Uri.tryParse(url);
-  if (uri == null ||
-      uri.scheme != 'https' ||
-      uri.host != 'bs6a.com' ||
-      uri.path != '/checkout/callback') {
+  if (uri == null) return null;
+
+  final isCallbackPath =
+      uri.path.contains('callback') ||
+      uri.path.contains('checkout') ||
+      uri.path.contains('payment');
+
+  if (!isCallbackPath && uri.host != 'bs6a.com') {
     return null;
   }
-  if (uri.queryParameters['cancelled'] == 'true') {
+
+  if (uri.queryParameters['cancelled'] == 'true' ||
+      uri.queryParameters['cancel'] == 'true') {
     return PaymentWebViewResult(
       outcome: PaymentWebViewOutcome.cancelled,
       orderId: orderId,
     );
   }
-  final error = uri.queryParameters['error'];
+
+  final error =
+      uri.queryParameters['error'] ?? uri.queryParameters['errorMessage'];
   if (error != null && error.isNotEmpty) {
     return PaymentWebViewResult(
       outcome: PaymentWebViewOutcome.failed,
@@ -24,38 +32,49 @@ PaymentWebViewResult? paymentResultFromUrl(String url, String orderId) {
       message: error,
     );
   }
-  return PaymentWebViewResult(
-    outcome: PaymentWebViewOutcome.completed,
-    orderId: orderId,
-    resultIndicator:
-        uri.queryParameters['resultIndicator'] ??
-        uri.queryParameters['successIndicator'],
-  );
+
+  final indicator =
+      uri.queryParameters['resultIndicator'] ??
+      uri.queryParameters['successIndicator'] ??
+      uri.queryParameters['result'];
+
+  if (indicator != null && indicator.isNotEmpty) {
+    return PaymentWebViewResult(
+      outcome: PaymentWebViewOutcome.completed,
+      orderId: orderId,
+      resultIndicator: indicator,
+    );
+  }
+
+  return null;
 }
 
 PaymentWebViewResult paymentResultFromMessage(String message, String orderId) {
   final payload = _bridgePayload(message);
-  final event = payload.$1;
+  final event = payload.$1.toLowerCase().trim();
   final value = payload.$2;
+
   return switch (event) {
-    'cancelled' => PaymentWebViewResult(
+    'cancelled' || 'cancel' => PaymentWebViewResult(
       outcome: PaymentWebViewOutcome.cancelled,
       orderId: orderId,
     ),
-    'completed' => PaymentWebViewResult(
+    'completed' || 'complete' || 'success' => PaymentWebViewResult(
       outcome: PaymentWebViewOutcome.completed,
       orderId: orderId,
       resultIndicator: value,
     ),
-    'failed' => PaymentWebViewResult(
+    'failed' || 'error' || 'timeout' => PaymentWebViewResult(
       outcome: PaymentWebViewOutcome.failed,
       orderId: orderId,
-      message: value ?? 'The payment gateway reported an error.',
+      message: (value != null && value.trim().isNotEmpty)
+          ? value.trim()
+          : 'A payment gateway error occurred.',
     ),
     _ => PaymentWebViewResult(
       outcome: PaymentWebViewOutcome.failed,
       orderId: orderId,
-      message: 'The payment gateway returned an unknown response.',
+      message: 'The payment gateway returned an unexpected response.',
     ),
   };
 }

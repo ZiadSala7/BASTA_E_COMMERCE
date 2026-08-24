@@ -174,8 +174,24 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
 
   Future<void> _updateShippingFee() async {
     final address = _selectedSavedAddress;
-    final city = (address != null && address.city.isNotEmpty) ? address.city : 'Amman';
-    final street = address?.street;
+    String city = (address != null && address.city.isNotEmpty) ? address.city : '';
+    String? street = address?.street;
+
+    if (city.isEmpty && _selectedDeliveryLocation != null) {
+      try {
+        final placemarks = await placemarkFromCoordinates(
+          _selectedDeliveryLocation!.latitude,
+          _selectedDeliveryLocation!.longitude,
+        );
+        if (placemarks.isNotEmpty) {
+          final p = placemarks.first;
+          city = p.locality ?? p.subAdministrativeArea ?? p.administrativeArea ?? '';
+          street ??= p.street;
+        }
+      } catch (_) {}
+    }
+
+    if (city.isEmpty) city = 'Amman';
 
     try {
       final rate = await _calculateShipping(city: city, streetAddress: street);
@@ -222,14 +238,17 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
             !session.isValid ||
             checkout.order.id.trim().isEmpty ||
             checkout.order.total <= 0) {
+          if (checkout.order.id.trim().isNotEmpty) {
+            try {
+              await _ordersRepository.cancelPayment(checkout.order.id);
+            } catch (_) {}
+          }
           setState(() => _isSubmitting = false);
-          await _clearLocalCartState();
           if (!mounted) return;
-          await _showOrderResultDialog(
-            success: true,
-            message: l10n.pick(
-              ar: 'تم إنشاء الطلب بنجاح، لكن لم يتم فتح بوابة الدفع لأن الخادم لم يرسل جلسة دفع. حالة الدفع الآن قيد الانتظار.',
-              en: 'Your order was created, but the payment gateway was not opened because the server did not return a payment session. Payment is pending.',
+          _showSnackBar(
+            l10n.pick(
+              ar: 'حدث خطأ في إنشاء جلسة الدفع، يرجى المحاولة مرة أخرى.',
+              en: 'Failed to create payment session, please try again.',
             ),
           );
           return;
@@ -247,40 +266,49 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
 
         if (!mounted) return;
 
+        // B. Payment Cancelled (cancelCallback)
         if (result == null ||
             result.outcome == PaymentWebViewOutcome.cancelled) {
           try {
             await _ordersRepository.cancelPayment(checkout.order.id);
           } catch (_) {}
           setState(() => _isSubmitting = false);
-          await _clearLocalCartState();
           _showSnackBar(
             l10n.pick(
-              ar: 'تم إلغاء عملية الدفع. راجع حالة الطلب من صفحة الطلبات.',
-              en: 'Payment was cancelled. Check this order from the orders page.',
+              ar: 'تم إلغاء عملية الدفع.',
+              en: 'Payment was cancelled.',
             ),
           );
           return;
         }
 
+        // C. Payment Error (errorCallback)
         if (result.outcome == PaymentWebViewOutcome.failed) {
-          throw Exception(
-            result.message ??
-                l10n.pick(
-                  ar: 'تعذر إتمام الدفع.',
-                  en: 'Payment could not be completed.',
-                ),
+          try {
+            await _ordersRepository.cancelPayment(checkout.order.id);
+          } catch (_) {}
+          setState(() => _isSubmitting = false);
+          _showSnackBar(
+            l10n.pick(
+              ar: 'حدث خطأ في بوابة الدفع، يرجى المحاولة مرة أخرى.',
+              en: 'A payment gateway error occurred, please try again.',
+            ),
+          );
+          return;
+        }
+
+        // A. Payment Success (completeCallback)
+        if (session.successIndicator.trim().isNotEmpty &&
+            result.resultIndicator != null &&
+            result.resultIndicator!.trim().isNotEmpty) {
+          _verifySuccessIndicator(
+            expected: session.successIndicator,
+            actual: result.resultIndicator,
           );
         }
 
-        _verifySuccessIndicator(
-          expected: session.successIndicator,
-          actual: result.resultIndicator,
-        );
-
         try {
-          // Verify only the order created by the backend. Never trust an ID
-          // that has travelled through the JavaScript bridge.
+          // Tell the backend to verify the transaction with Mastercard server-to-server
           final verifiedOrder = await _ordersRepository.verifyPayment(
             checkout.order.id,
           );
@@ -290,7 +318,8 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
           if (paymentStatus.isNotEmpty &&
               paymentStatus != 'PAID' &&
               paymentStatus != 'SUCCESS' &&
-              paymentStatus != 'COMPLETED') {
+              paymentStatus != 'COMPLETED' &&
+              paymentStatus != 'PLACED') {
             throw StateError('Payment is not confirmed yet.');
           }
         } catch (_) {

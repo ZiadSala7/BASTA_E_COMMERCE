@@ -5,12 +5,14 @@ class _CartPageState extends State<CartPage> {
   late final CartRepository _cartRepository;
   late final CartBadgeController _cartBadgeController;
   late final FavoritesController _favoritesController;
+  late final CalculateShippingUseCase _calculateShipping;
 
   final List<_CartProduct> _items = <_CartProduct>[];
   final Set<String> _updatingItemIds = <String>{};
   bool _isLoading = true;
   bool _isApplyingCoupon = false;
   double _couponDiscount = 0;
+  double _liveShippingFee = 0.0;
   String? _appliedCoupon;
   String? _errorMessage;
 
@@ -20,6 +22,7 @@ class _CartPageState extends State<CartPage> {
     _cartRepository = sl<CartRepository>();
     _cartBadgeController = sl<CartBadgeController>();
     _favoritesController = sl<FavoritesController>();
+    _calculateShipping = sl<CalculateShippingUseCase>();
     _favoritesController.addListener(_onFavoritesChanged);
     _favoritesController.refresh();
     _couponController.addListener(_refreshTotals);
@@ -193,9 +196,36 @@ class _CartPageState extends State<CartPage> {
     );
   }
 
-  double get _shipping => _items.isEmpty ? 0 : 5;
+  double get _shipping => _items.isEmpty ? 0 : _liveShippingFee;
 
   double get _discount => _couponDiscount;
+
+  Future<void> _updateShippingFee() async {
+    if (_items.isEmpty) {
+      if (mounted && _liveShippingFee != 0) {
+        setState(() => _liveShippingFee = 0);
+      }
+      return;
+    }
+
+    final addresses = SavedAddressesLocalDataSource.load();
+    final defaultAddress = addresses.cast<SavedAddressModel?>().firstWhere(
+      (a) => a?.isDefault == true,
+      orElse: () => addresses.isNotEmpty ? addresses.first : null,
+    );
+    final city = (defaultAddress != null && defaultAddress.city.isNotEmpty)
+        ? defaultAddress.city
+        : 'Amman';
+    final street = defaultAddress?.street;
+
+    try {
+      final rate = await _calculateShipping(city: city, streetAddress: street);
+      if (!mounted) return;
+      setState(() {
+        _liveShippingFee = rate.shippingFee;
+      });
+    } catch (_) {}
+  }
 
   List<_VendorCartGroup> _cartGroups(List<_CartProduct> items) {
     final groupsByKey = <String, _VendorCartGroup>{};
@@ -247,6 +277,7 @@ class _CartPageState extends State<CartPage> {
           ..addAll(items.map(_CartProduct.fromEntity));
         _isLoading = false;
       });
+      _updateShippingFee();
     } catch (error) {
       if (!mounted) return;
       setState(() {
@@ -376,6 +407,7 @@ class _CartPageState extends State<CartPage> {
           ..clear()
           ..addAll(items.map(_CartProduct.fromEntity));
       });
+      _updateShippingFee();
     } catch (_) {
     } finally {
       if (mounted) {
@@ -436,6 +468,7 @@ class _CartPageState extends State<CartPage> {
       _items.clear();
       _appliedCoupon = null;
       _couponDiscount = 0;
+      _liveShippingFee = 0;
       _couponController.clear();
     });
     _cartBadgeController.setItems(const <CartItemEntity>[]);

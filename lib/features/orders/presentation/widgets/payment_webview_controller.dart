@@ -4,6 +4,7 @@ import '../../domain/entities/payment_session_entity.dart';
 import '../models/payment_webview_result.dart';
 import 'payment_checkout_html.dart';
 import 'payment_result_parser.dart';
+import 'payment_webview_config.dart';
 import 'payment_webview_log.dart';
 
 class PaymentCheckoutController {
@@ -26,6 +27,15 @@ class PaymentCheckoutController {
 
   WebViewController _createController() {
     logPaymentWebView('Opening MPGS checkout', {'orderId': orderId});
+
+    final gatewayUri = Uri.tryParse(PaymentWebViewConfig.scriptUrl);
+    final baseUrl =
+        gatewayUri != null &&
+            gatewayUri.scheme.isNotEmpty &&
+            gatewayUri.host.isNotEmpty
+        ? '${gatewayUri.scheme}://${gatewayUri.host}'
+        : 'https://test-network.mtf.gateway.mastercard.com';
+
     return WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
@@ -46,7 +56,10 @@ class PaymentCheckoutController {
       ..addJavaScriptChannel(
         'PaymentBridge',
         onMessageReceived: (message) {
-          logPaymentWebView('Payment JS callback', {'message': message.message});
+          logPaymentWebView(
+            'Payment JS callback',
+            {'message': message.message},
+          );
           onResult(paymentResultFromMessage(message.message, orderId));
         },
       )
@@ -62,7 +75,7 @@ class PaymentCheckoutController {
           session: session,
           amount: totalAmount,
         ),
-        baseUrl: 'https://bs6a.com',
+        baseUrl: baseUrl,
       );
   }
 
@@ -76,6 +89,7 @@ class PaymentCheckoutController {
       'code': error.errorCode,
       'description': error.description,
       'url': error.url,
+      'isForMainFrame': error.isForMainFrame,
     });
     final scriptFailed = error.url?.contains('checkout.min.js') ?? false;
     if (error.isForMainFrame == true || scriptFailed) {
