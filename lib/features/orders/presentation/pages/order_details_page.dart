@@ -74,7 +74,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final _ = theme.colorScheme;
     final order = _order;
 
     return Directionality(
@@ -211,8 +211,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             );
                           },
                           borderRadius: BorderRadius.circular(8),
-                          child: Padding(
-                            padding: const EdgeInsets.all(4),
+                          child: const Padding(
+                            padding: EdgeInsets.all(4),
                             child: Icon(Icons.copy_rounded, size: 16, color: AppColors.primary),
                           ),
                         ),
@@ -432,7 +432,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         children: [
           Row(
             children: [
-              Icon(Icons.shopping_bag_outlined, size: 18, color: AppColors.primary),
+              const Icon(Icons.shopping_bag_outlined, size: 18, color: AppColors.primary),
               const SizedBox(width: 8),
               Text(
                 items.isNotEmpty
@@ -606,7 +606,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         children: [
           Row(
             children: [
-              Icon(Icons.location_on_outlined, size: 18, color: AppColors.primary),
+              const Icon(Icons.location_on_outlined, size: 18, color: AppColors.primary),
               const SizedBox(width: 8),
               Text(
                 l10n.pick(ar: 'عنوان التوصيل والشحن', en: 'Delivery & Shipping Address'),
@@ -669,7 +669,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         children: [
           Row(
             children: [
-              Icon(Icons.payment_rounded, size: 18, color: AppColors.primary),
+              const Icon(Icons.payment_rounded, size: 18, color: AppColors.primary),
               const SizedBox(width: 8),
               Text(
                 l10n.pick(ar: 'معلومات الدفع', en: 'Payment Information'),
@@ -724,7 +724,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         children: [
           Row(
             children: [
-              Icon(Icons.receipt_outlined, size: 18, color: AppColors.primary),
+              const Icon(Icons.receipt_outlined, size: 18, color: AppColors.primary),
               const SizedBox(width: 8),
               Text(
                 l10n.pick(ar: 'ملخص الحساب والفاتورة', en: 'Payment Summary'),

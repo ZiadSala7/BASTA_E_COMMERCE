@@ -148,7 +148,7 @@ class _EnhancedSplashPageState extends State<EnhancedSplashPage>
             left: 0,
             right: 0,
             child: ResponsiveText(
-              'Version 1.0.0',
+              'Version 1.0.1',
               fontSize: 11,
               color: Colors.white.withOpacity(0.4),
               textAlign: TextAlign.center,
