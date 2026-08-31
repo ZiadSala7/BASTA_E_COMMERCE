@@ -168,28 +168,6 @@ String buildPaymentCheckoutHtml({
           }
         };
 
-        if (mpgsOrderId && mpgsOrderId.length > 0) {
-          config.order = {
-            id: mpgsOrderId,
-            amount: mpgsOrderAmount,
-            currency: mpgsOrderCurrency,
-            description: mpgsOrderDescription
-          };
-        }
-
-        config.interaction = {
-          merchant: {
-            name: mpgsMerchantName,
-            address: {
-              line1: mpgsMerchantAddress
-            }
-          },
-          displayControl: {
-            billingAddress: 'HIDE',
-            shipping: 'HIDE'
-          }
-        };
-
         log('Calling Checkout.configure');
         var configureResult = Checkout.configure(config);
 

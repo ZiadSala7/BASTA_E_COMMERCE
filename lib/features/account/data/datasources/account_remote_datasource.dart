@@ -27,9 +27,14 @@ class AccountRemoteDataSourceImpl implements AccountRemoteDataSource {
       final favoritesResponse = await _dioConsumer.get(Endpoints.favorites);
       final favoritesCount = _countItems(favoritesResponse.data);
 
-      // For coupons, we'll use a placeholder count or fetch from available endpoint
-      // Since there's no specific coupons endpoint, we'll set it to 0 for now
-      const couponsCount = 0;
+      // Fetch coupons count
+      int couponsCount = 0;
+      try {
+        final couponsResponse = await _dioConsumer.get(Endpoints.myCoupons);
+        couponsCount = _countItems(couponsResponse.data);
+      } catch (_) {
+        couponsCount = 0;
+      }
 
       return AccountStatsModel(
         ordersCount: ordersCount,

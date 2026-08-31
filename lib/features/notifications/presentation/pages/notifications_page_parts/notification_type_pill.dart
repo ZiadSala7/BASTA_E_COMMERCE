@@ -30,6 +30,12 @@ class _NotificationTypePill extends StatelessWidget {
 
 Color _accentForType(String type) {
   switch (type.toUpperCase()) {
+    case 'COUPON':
+    case 'COUPONS':
+    case 'REWARD':
+    case 'REWARDS':
+    case 'REFERRAL':
+      return const Color(0xFF10B981);
     case 'ORDER':
       return const Color(0xFF0EA5E9);
     case 'STORE':
@@ -44,6 +50,12 @@ Color _accentForType(String type) {
 
 IconData _iconForType(String type) {
   switch (type.toUpperCase()) {
+    case 'COUPON':
+    case 'COUPONS':
+    case 'REWARD':
+    case 'REWARDS':
+    case 'REFERRAL':
+      return Icons.card_giftcard_rounded;
     case 'ORDER':
       return Icons.inventory_2_outlined;
     case 'STORE':

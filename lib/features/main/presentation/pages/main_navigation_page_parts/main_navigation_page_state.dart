@@ -22,8 +22,9 @@ class _MainNavigationPageState extends State<MainNavigationPage>
       HomePage(
         onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
       ),
-      OffersPage(
+      MyCouponsPage(
         onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
+        isTab: true,
       ),
       OrdersPage(
         onBack: () {

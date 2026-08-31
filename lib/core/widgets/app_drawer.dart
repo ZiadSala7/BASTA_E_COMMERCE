@@ -79,6 +79,11 @@ class AppDrawer extends StatelessWidget {
                               onTap: () => openRoute(AppRoutes.orders),
                             ),
                             _DrawerItem(
+                              label: l10n.coupons,
+                              icon: Icons.card_giftcard_outlined,
+                              onTap: () => openRoute(AppRoutes.coupons),
+                            ),
+                            _DrawerItem(
                               label: l10n.addresses,
                               icon: Icons.location_on_outlined,
                               onTap: () => openRoute(AppRoutes.addresses),
@@ -393,7 +398,7 @@ class _ProfilePhoto extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(3),
       child: ClipOval(
-        child: Image.asset('assets/images/app_logo.png', fit: BoxFit.cover),
+        child: Image.asset('assets/images/play_store_512.png', fit: BoxFit.cover),
       ),
     );
   }

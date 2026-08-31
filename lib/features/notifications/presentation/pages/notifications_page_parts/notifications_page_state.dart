@@ -342,26 +342,10 @@ class _NotificationsPageState extends State<NotificationsPage> {
 
     await _notificationsController.refreshUnreadCount();
     if (!mounted) return;
-    _routeFromNotification(notification);
-  }
-
-  void _routeFromNotification(AppNotificationEntity notification) {
-    final type = notification.type.toUpperCase();
-    final path = notification.link ?? '';
-
-    if (type == 'ORDER') {
-      context.push(AppRoutes.orders);
-      return;
-    }
-
-    if (type == 'PROMOTION') {
-      context.push(AppRoutes.products);
-      return;
-    }
-
-    if (path.contains('/orders')) {
-      context.push(AppRoutes.orders);
-    }
+    context.push(
+      AppRoutes.notificationDetails,
+      extra: notification.copyWith(isRead: true),
+    );
   }
 
   void _onScroll() {

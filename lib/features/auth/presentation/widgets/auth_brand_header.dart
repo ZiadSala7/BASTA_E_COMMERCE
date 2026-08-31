@@ -45,7 +45,10 @@ class AuthBrandHeader extends StatelessWidget {
               color: Colors.white.withValues(alpha: 0.95),
               borderRadius: BorderRadius.circular(22),
             ),
-            child: Image.asset(Assets.imagesBastaAuth, fit: BoxFit.contain),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(16),
+              child: Image.asset(Assets.imagesPlayStore512, fit: BoxFit.contain),
+            ),
           ),
         ),
         const SizedBox(height: 14),

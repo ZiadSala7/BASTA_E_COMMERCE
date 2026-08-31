@@ -42,6 +42,23 @@ class PaymentVerificationApiClient {
       }
 
       final body = responseMap(responseData);
+      
+      // If status is 'pending', wait 2.5s and retry verification (matching website CheckoutCallback)
+      if (body['status']?.toString().toLowerCase().trim() == 'pending') {
+        logPayment('Verify status pending, waiting 2.5s before retry...', {
+          'orderId': orderId,
+        });
+        await Future<void>.delayed(const Duration(milliseconds: 2500));
+        try {
+          final retryResponse = await _dio.get(endpoint);
+          final retryBody = responseMap(retryResponse.data);
+          _throwForFailure(retryBody);
+          return OrderModel.fromJson(orderFromVerification(retryBody));
+        } catch (_) {
+          // If retry fails, continue with original body processing
+        }
+      }
+
       _throwForFailure(body);
       return OrderModel.fromJson(orderFromVerification(body));
     } on DioException catch (error, stackTrace) {

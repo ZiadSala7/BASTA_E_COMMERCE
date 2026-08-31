@@ -40,7 +40,7 @@ class AccountStatsPanel extends StatelessWidget {
               icon: Icons.local_offer_outlined,
               label: l10n.coupons,
               value: '${stats?.couponsCount ?? 0}',
-              onTap: () => _showComingSoon(context, l10n.coupons),
+              onTap: () => context.push(AppRoutes.coupons),
             ),
           ),
           const SizedBox(width: 10),

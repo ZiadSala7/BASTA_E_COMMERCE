@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/extensions/app_localizations_x.dart';
+import '../../../../core/utils/currency_helper.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/order_entity.dart';
 import 'order_date_label.dart';
@@ -19,13 +20,19 @@ class OrderCardDetails extends StatelessWidget {
       runSpacing: 8,
       children: [
         OrderMeta(
-          icon: Icons.shopping_bag_outlined,
-          label: l10n.itemCount(order.itemsCount),
-        ),
-        OrderMeta(
           icon: Icons.calendar_today_outlined,
           label: orderDateLabel(context, order.createdAt),
         ),
+        if (order.itemsCount > 0)
+          OrderMeta(
+            icon: Icons.shopping_bag_outlined,
+            label: l10n.itemCount(order.itemsCount),
+          ),
+        if (order.shippingCost > 0)
+          OrderMeta(
+            icon: Icons.local_shipping_outlined,
+            label: '${l10n.pick(ar: 'الشحن', en: 'Shipping')}: ${CurrencyHelper.format(order.shippingCost)}',
+          ),
       ],
     );
   }

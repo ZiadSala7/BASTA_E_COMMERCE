@@ -18,6 +18,7 @@ import '../widgets/account_stats_panel.dart';
 import '../widgets/edit_profile_sheet.dart';
 import '../widgets/logout_button.dart';
 import '../widgets/profile_header.dart';
+import '../widgets/profile_referral_card.dart';
 
 part 'account_page_parts/account_page.dart';
 part 'account_page_parts/account_content.dart';

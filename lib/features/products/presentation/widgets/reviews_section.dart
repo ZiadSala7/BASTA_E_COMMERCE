@@ -3,7 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/product_review_entity.dart';
 
 part 'reviews_section_parts/reviews_section.dart';

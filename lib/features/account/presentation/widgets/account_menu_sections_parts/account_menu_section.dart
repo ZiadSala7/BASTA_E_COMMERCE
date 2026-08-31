@@ -44,7 +44,7 @@ class AccountMenuSection extends StatelessWidget {
         AccountMenuItem(
           icon: Icons.card_giftcard_outlined,
           title: l10n.coupons,
-          onTap: () => _showComingSoon(context, l10n.coupons),
+          onTap: () => context.push(AppRoutes.coupons),
         ),
       ],
     );

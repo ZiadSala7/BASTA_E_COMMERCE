@@ -37,9 +37,24 @@ class ProductVariantSelector extends StatelessWidget {
       return const SizedBox.shrink();
     }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+    return Container(
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 18),
+      decoration: BoxDecoration(
+        color: colorScheme.surface,
+        borderRadius: BorderRadius.circular(18),
+        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.03),
+            blurRadius: 10,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
         // Color Selection
         if (colors.isNotEmpty) ...[
           Row(
@@ -257,10 +272,10 @@ class ProductVariantSelector extends StatelessWidget {
               );
             }).toList(),
           ),
-          const SizedBox(height: 18),
         ],
       ],
-    );
+    ),
+  );
   }
 
   Color? _tryParseHex(String value) {

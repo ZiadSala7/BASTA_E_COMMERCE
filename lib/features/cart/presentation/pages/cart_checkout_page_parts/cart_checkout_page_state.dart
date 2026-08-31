@@ -7,6 +7,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
   late final OrdersRepository _ordersRepository;
   late final CartBadgeController _cartBadgeController;
   late final CalculateShippingUseCase _calculateShipping;
+  late final TextEditingController _phoneController;
   final List<CartItemEntity> _items = <CartItemEntity>[];
   final List<SavedAddressModel> _savedAddresses = <SavedAddressModel>[];
   final Set<String> _stockIssueProductIds = <String>{};
@@ -22,11 +23,18 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
   @override
   void initState() {
     super.initState();
+    _phoneController = TextEditingController();
     _cartRepository = sl<CartRepository>();
     _ordersRepository = sl<OrdersRepository>();
     _cartBadgeController = sl<CartBadgeController>();
     _calculateShipping = sl<CalculateShippingUseCase>();
     _loadCart();
+  }
+
+  @override
+  void dispose() {
+    _phoneController.dispose();
+    super.dispose();
   }
 
   @override
@@ -114,6 +122,9 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
                 address.latitude,
                 address.longitude,
               );
+              if (address.phone.trim().isNotEmpty) {
+                _phoneController.text = address.phone.trim();
+              }
             }),
             onManageAddresses: _openAddressesManager,
           ),
@@ -127,6 +138,8 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
                   setState(() => _selectedDeliveryLocation = location),
             ),
           ],
+          const SizedBox(height: 12),
+          _PhoneInputPanel(controller: _phoneController),
           const SizedBox(height: 12),
           _TotalsPanel(subtotal: _subtotal, shipping: _shipping, total: _total),
         ],
@@ -144,6 +157,11 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
       final items = await _cartRepository.getCartItems();
       final addresses = SavedAddressesLocalDataSource.load();
       final selectedAddressId = _resolveSelectedAddressId(addresses);
+      UserEntity? currentUser;
+      try {
+        currentUser = await sl<GetCurrentUserUseCase>()();
+      } catch (_) {}
+
       if (!mounted) return;
       setState(() {
         _items
@@ -159,6 +177,14 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
             selectedAddress.latitude,
             selectedAddress.longitude,
           );
+          if (selectedAddress.phone.trim().isNotEmpty && _phoneController.text.trim().isEmpty) {
+            _phoneController.text = selectedAddress.phone.trim();
+          }
+        }
+        if (_phoneController.text.trim().isEmpty &&
+            currentUser?.phone != null &&
+            currentUser!.phone!.trim().isNotEmpty) {
+          _phoneController.text = currentUser.phone!.trim();
         }
         _isLoading = false;
       });
@@ -219,13 +245,29 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
       return;
     }
 
+    final phone = _phoneController.text.trim();
+    if (phone.isEmpty || phone.replaceAll(RegExp(r'\D'), '').length < 8) {
+      _showSnackBar(
+        l10n.pick(
+          ar: 'يرجى إدخال رقم هاتف صالح للتوصيل (8 أرقام على الأقل).',
+          en: 'Please enter a valid mobile number for delivery (at least 8 digits).',
+        ),
+      );
+      return;
+    }
+
+    final addressPayload = selectedAddress != null
+        ? {
+            ...selectedAddress.toCheckoutPayload(),
+            'phone': phone,
+          }
+        : _addressPayload(deliveryLocation!, phone: phone);
+
     setState(() => _isSubmitting = true);
 
     try {
       final checkout = await _ordersRepository.checkout(
-        address:
-            selectedAddress?.toCheckoutPayload() ??
-            _addressPayload(deliveryLocation!),
+        address: addressPayload,
         paymentMethod: _selectedPaymentMethod == 1 ? 'CARD' : 'COD',
         couponCode: widget.couponCode,
       );
@@ -412,7 +454,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
     _updateShippingFee();
   }
 
-  Map<String, dynamic> _addressPayload(LatLng location) {
+  Map<String, dynamic> _addressPayload(LatLng location, {String? phone}) {
     final coordinates =
         '${location.latitude.toStringAsFixed(6)}, ${location.longitude.toStringAsFixed(6)}';
     final saved = _selectedSavedAddress;
@@ -423,6 +465,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
     final state = (saved != null && saved.state.isNotEmpty) ? saved.state : 'Amman';
     final postalCode = (saved != null && saved.postalCode.isNotEmpty) ? saved.postalCode : '11183';
     final country = (saved != null && saved.country.isNotEmpty) ? saved.country : 'Jordan';
+    final resolvedPhone = phone ?? _phoneController.text.trim();
 
     return {
       'streetAddress': street,
@@ -430,6 +473,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
       'state': state,
       'postalCode': postalCode,
       'country': country,
+      'phone': resolvedPhone,
       'latitude': location.latitude,
       'longitude': location.longitude,
     };

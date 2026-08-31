@@ -1,6 +1,7 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../l10n/app_localizations.dart';
@@ -8,10 +9,12 @@ import '../../features/notifications/domain/services/notifications_controller.da
 import '../di/service_locator.dart';
 import '../extensions/app_localizations_x.dart';
 import '../utils/app_colors.dart';
+import '../utils/app_router.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final VoidCallback? onMenuPressed;
   final VoidCallback? onNotificationPressed;
+  final VoidCallback? onBackPressed;
   final VoidCallback? onFilterPressed;
   final TextEditingController? searchController;
   final ValueChanged<String>? onSearchChanged;
@@ -33,6 +36,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
     this.onMenuPressed,
     this.onNotificationPressed,
+    this.onBackPressed,
     this.onFilterPressed,
     this.searchController,
     this.onSearchChanged,
@@ -40,7 +44,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.onSearchTap,
     this.storeName,
     this.storeCode = 'BS6A',
-    this.logoAsset = 'assets/images/app_logo.png',
+    this.logoAsset = 'assets/images/play_store_512.png',
     this.searchHint,
     this.title,
     this.titleWidget,
@@ -108,6 +112,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       textDirection: l10n.inverseAppBarDirection,
                       onMenuPressed: onMenuPressed,
                       onNotificationPressed: onNotificationPressed,
+                      onBackPressed: onBackPressed,
                       showLogo: showLogo,
                       showNotificationButton: showNotificationButton,
                       showMenuButton: showMenuButton,
@@ -147,6 +152,7 @@ class _AppBarTopRow extends StatelessWidget {
   final Widget? titleWidget;
   final VoidCallback? onMenuPressed;
   final VoidCallback? onNotificationPressed;
+  final VoidCallback? onBackPressed;
   final String storeName;
   final String storeCode;
   final String logoAsset;
@@ -169,6 +175,7 @@ class _AppBarTopRow extends StatelessWidget {
     required this.showBackButton,
     this.onMenuPressed,
     this.onNotificationPressed,
+    this.onBackPressed,
   });
 
   @override
@@ -179,23 +186,19 @@ class _AppBarTopRow extends StatelessWidget {
       children: [
         if (showMenuButton) _MenuButton(onTap: onMenuPressed),
         if (showNotificationButton) ...[
-          if (showMenuButton) const SizedBox(width: 10),
+          if (showMenuButton) const SizedBox(width: 8),
           _NotificationButton(onTap: onNotificationPressed),
         ],
-        const Spacer(),
-        if (titleWidget != null) ...[
-          Flexible(child: titleWidget!),
-          if (showBackButton) ...[
-            const SizedBox(width: 10),
-            _BackButton(onTap: onNotificationPressed),
-          ],
-        ] else if (title != null) ...[
-          Flexible(
+        const SizedBox(width: 10),
+        if (titleWidget != null)
+          Expanded(child: titleWidget!)
+        else if (title != null)
+          Expanded(
             child: Text(
               title!,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.right,
+              textAlign: TextAlign.end,
               style: GoogleFonts.cairo(
                 color: Colors.white,
                 fontSize: 17,
@@ -203,13 +206,9 @@ class _AppBarTopRow extends StatelessWidget {
                 height: 1.15,
               ),
             ),
-          ),
-          if (showBackButton) ...[
-            const SizedBox(width: 10),
-            _BackButton(onTap: onNotificationPressed),
-          ],
-        ] else ...[
-          Flexible(
+          )
+        else ...[
+          Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
@@ -255,6 +254,10 @@ class _AppBarTopRow extends StatelessWidget {
             const SizedBox(width: 8),
             _LogoBadge(assetName: logoAsset),
           ],
+        ],
+        if (showBackButton) ...[
+          const SizedBox(width: 8),
+          _BackButton(onTap: onBackPressed),
         ],
       ],
     );
@@ -381,17 +384,25 @@ class _BackButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Material(
       color: Colors.white.withOpacity(0.14),
       shape: const CircleBorder(),
       child: InkWell(
-        onTap: onTap ?? () => Navigator.of(context).maybePop(),
+        onTap: onTap ??
+            () {
+              if (context.canPop()) {
+                context.pop();
+              } else {
+                context.go(AppRoutes.mainNavigation);
+              }
+            },
         customBorder: const CircleBorder(),
-        child: const SizedBox(
+        child: SizedBox(
           width: 42,
           height: 42,
           child: Icon(
-            Icons.arrow_forward_rounded,
+            l10n.isArabic ? Icons.arrow_forward_rounded : Icons.arrow_back_rounded,
             color: Colors.white,
             size: 22,
           ),

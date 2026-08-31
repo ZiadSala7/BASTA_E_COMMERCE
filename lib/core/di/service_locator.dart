@@ -37,6 +37,11 @@ import '../../features/cart/domain/usecases/add_cart_item_usecase.dart';
 import '../../features/cart/domain/usecases/get_cart_items_usecase.dart';
 import '../../features/favorites/data/datasources/favorites_remote_datasource.dart';
 import '../../features/favorites/domain/services/favorites_controller.dart';
+import '../../features/coupons/data/datasources/coupons_remote_datasource.dart';
+import '../../features/coupons/data/repositories/coupons_repository_impl.dart';
+import '../../features/coupons/domain/repositories/coupons_repository.dart';
+import '../../features/coupons/domain/usecases/get_my_coupons_usecase.dart';
+import '../../features/coupons/presentation/cubits/coupons_cubit.dart';
 import '../../features/cart/data/datasources/shipping_remote_datasource.dart';
 import '../../features/cart/data/repositories/shipping_repository_impl.dart';
 import '../../features/cart/domain/repositories/shipping_repository.dart';
@@ -251,6 +256,30 @@ void setupServiceLocator() {
   if (!getIt.isRegistered<FavoritesController>()) {
     getIt.registerLazySingleton<FavoritesController>(
       () => FavoritesController(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<CouponsRemoteDataSource>()) {
+    getIt.registerLazySingleton<CouponsRemoteDataSource>(
+      () => CouponsRemoteDataSourceImpl(dioConsumer: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<CouponsRepository>()) {
+    getIt.registerLazySingleton<CouponsRepository>(
+      () => CouponsRepositoryImpl(remoteDataSource: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<GetMyCouponsUseCase>()) {
+    getIt.registerLazySingleton<GetMyCouponsUseCase>(
+      () => GetMyCouponsUseCase(getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<CouponsCubit>()) {
+    getIt.registerFactory<CouponsCubit>(
+      () => CouponsCubit(getMyCouponsUseCase: getIt()),
     );
   }
 

@@ -41,7 +41,10 @@ class UserModel extends UserEntity {
       status: _nullableString(json['status']),
       token: _nullableString(json['token']),
       referralCode: _nullableString(
-        json['referralCode'] ?? json['referral_code'],
+        json['referralCode'] ??
+            json['referral_code'] ??
+            json['refCode'] ??
+            json['ref_code'],
       ),
     );
   }

@@ -217,9 +217,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         product: displayedProduct,
                         onReviewTap: () {},
                       ),
-                      const SizedBox(height: 18),
-                      const Divider(height: 1),
-                      const SizedBox(height: 18),
+                      const SizedBox(height: 16),
 
                       // Color & Size Variant Selector
                       ProductVariantSelector(
@@ -233,9 +231,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
 
                       // Description & Specifications
                       DescriptionSection(product: displayedProduct),
-                      const SizedBox(height: 22),
-                      const Divider(height: 1),
-                      const SizedBox(height: 22),
+                      const SizedBox(height: 16),
 
                       // Customer Reviews
                       ReviewsSection(
@@ -247,13 +243,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
                         onSubmitReview: (rating, comment) =>
                             _submitReview(displayedProduct, rating, comment),
                       ),
-                      const SizedBox(height: 24),
-                      const Divider(height: 1),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 16),
 
                       // Related Products
                       RelatedProductsSection(currentProduct: displayedProduct),
-                      const SizedBox(height: 24),
+                      const SizedBox(height: 16),
                     ]),
                   ),
                 ),

@@ -1,101 +1,97 @@
 part of '../splash_content.dart';
 
 class _SplashContentState extends State<SplashContent>
-    with TickerProviderStateMixin {
-  // Top-right blob controller
-  late final AnimationController _topBlobCtrl;
-  late final Animation<double> _topBlobOpacity;
-  late final Animation<double> _topBlobScale;
-  late final Animation<Offset> _topBlobSlide;
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _mainCtrl;
 
-  // Bottom-left blob controller
-  late final AnimationController _bottomBlobCtrl;
-  late final Animation<double> _bottomBlobOpacity;
-  late final Animation<double> _bottomBlobScale;
-  late final Animation<Offset> _bottomBlobSlide;
+  // Background Ambience Animation
+  late final Animation<double> _blobOpacity;
+  late final Animation<double> _blobScale;
 
-  // Logo controller
-  late final AnimationController _logoCtrl;
+  // Logo Animations
   late final Animation<double> _logoOpacity;
   late final Animation<double> _logoScale;
+
+  // Text Animations
+  late final Animation<double> _textOpacity;
+  late final Animation<Offset> _textSlide;
+
+  // Bottom Loading / Footer Animation
+  late final Animation<double> _footerOpacity;
 
   @override
   void initState() {
     super.initState();
     _setupAnimations();
-    _startSequence();
+    _mainCtrl.forward();
   }
 
   void _setupAnimations() {
-    const blobDuration = Duration(milliseconds: 900);
-    const logoDuration = Duration(milliseconds: 800);
-    const overshootCurve = ElasticOutCurve(0.8);
+    _mainCtrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1400),
+    );
 
-    // ── Top blob ────────────────────────────────────────────────────────────
-    _topBlobCtrl = AnimationController(vsync: this, duration: blobDuration);
-    _topBlobOpacity = Tween<double>(
-      begin: 0,
-      end: 0.39,
-    ).animate(CurvedAnimation(parent: _topBlobCtrl, curve: Curves.easeOut));
-    _topBlobScale = Tween<double>(
-      begin: 0.4,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _topBlobCtrl, curve: overshootCurve));
-    _topBlobSlide =
-        Tween<Offset>(begin: const Offset(0.3, -0.3), end: Offset.zero).animate(
-          CurvedAnimation(parent: _topBlobCtrl, curve: Curves.easeOutCubic),
-        );
-
-    // ── Bottom blob ─────────────────────────────────────────────────────────
-    _bottomBlobCtrl = AnimationController(vsync: this, duration: blobDuration);
-    _bottomBlobOpacity = Tween<double>(
-      begin: 0,
-      end: 0.39,
-    ).animate(CurvedAnimation(parent: _bottomBlobCtrl, curve: Curves.easeOut));
-    _bottomBlobScale = Tween<double>(
-      begin: 0.4,
-      end: 1.0,
-    ).animate(CurvedAnimation(parent: _bottomBlobCtrl, curve: overshootCurve));
-    _bottomBlobSlide =
-        Tween<Offset>(begin: const Offset(-0.3, 0.3), end: Offset.zero).animate(
-          CurvedAnimation(parent: _bottomBlobCtrl, curve: Curves.easeOutCubic),
-        );
-
-    // ── Logo ────────────────────────────────────────────────────────────────
-    _logoCtrl = AnimationController(vsync: this, duration: logoDuration);
-    _logoOpacity = Tween<double>(begin: 0, end: 1).animate(
+    // ── Ambient Background Glow (0% -> 50%) ──────────────────────────────
+    _blobOpacity = Tween<double>(begin: 0.0, end: 0.55).animate(
       CurvedAnimation(
-        parent: _logoCtrl,
-        curve: const Interval(0, 0.6, curve: Curves.easeOut),
+        parent: _mainCtrl,
+        curve: const Interval(0.0, 0.6, curve: Curves.easeOut),
       ),
     );
-    _logoScale = Tween<double>(begin: 0.6, end: 1.0).animate(
-      CurvedAnimation(parent: _logoCtrl, curve: const ElasticOutCurve(0.75)),
+
+    _blobScale = Tween<double>(begin: 0.5, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _mainCtrl,
+        curve: const Interval(0.0, 0.7, curve: Curves.easeOutCubic),
+      ),
     );
-  }
 
-  Future<void> _startSequence() async {
-    // Step 1 — top-right blob
-    await Future.delayed(const Duration(milliseconds: 300));
-    if (!mounted) return;
-    _topBlobCtrl.forward();
+    // ── Logo Reveal (0% -> 60%) ──────────────────────────────────────────
+    _logoOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _mainCtrl,
+        curve: const Interval(0.05, 0.45, curve: Curves.easeOut),
+      ),
+    );
 
-    // Step 2 — bottom-left blob
-    await Future.delayed(const Duration(milliseconds: 900));
-    if (!mounted) return;
-    _bottomBlobCtrl.forward();
+    _logoScale = Tween<double>(begin: 0.75, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _mainCtrl,
+        curve: const Interval(0.05, 0.65, curve: Curves.easeOutBack),
+      ),
+    );
 
-    // Step 3 — logo
-    await Future.delayed(const Duration(milliseconds: 1200));
-    if (!mounted) return;
-    _logoCtrl.forward();
+    // ── Typography Slide & Fade (35% -> 80%) ─────────────────────────────
+    _textOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _mainCtrl,
+        curve: const Interval(0.35, 0.75, curve: Curves.easeOut),
+      ),
+    );
+
+    _textSlide = Tween<Offset>(
+      begin: const Offset(0, 0.25),
+      end: Offset.zero,
+    ).animate(
+      CurvedAnimation(
+        parent: _mainCtrl,
+        curve: const Interval(0.35, 0.8, curve: Curves.easeOutCubic),
+      ),
+    );
+
+    // ── Footer / Loader Reveal (55% -> 100%) ─────────────────────────────
+    _footerOpacity = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _mainCtrl,
+        curve: const Interval(0.55, 1.0, curve: Curves.easeOut),
+      ),
+    );
   }
 
   @override
   void dispose() {
-    _topBlobCtrl.dispose();
-    _bottomBlobCtrl.dispose();
-    _logoCtrl.dispose();
+    _mainCtrl.dispose();
     super.dispose();
   }
 
@@ -104,36 +100,132 @@ class _SplashContentState extends State<SplashContent>
     final size = MediaQuery.sizeOf(context);
 
     return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Stack(
-        children: [
-          // ── Top-right blob ───────────────────────────────────────────────
-          TopRightBlob(
-            size: size,
-            topBlobSlide: _topBlobSlide,
-            topBlobOpacity: _topBlobOpacity,
-            topBlobScale: _topBlobScale,
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xFFFFFFFF),
+              Color(0xFFF8FAFD),
+              Color(0xFFEFF4FC),
+            ],
+            stops: [0.0, 0.5, 1.0],
           ),
+        ),
+        child: Stack(
+          children: [
+            // ── Top-Right Ambient Blob ──────────────────────────────────
+            TopRightBlob(
+              size: size,
+              topBlobSlide: const AlwaysStoppedAnimation(Offset.zero),
+              topBlobOpacity: _blobOpacity,
+              topBlobScale: _blobScale,
+            ),
 
-          // ── Bottom-left blob ─────────────────────────────────────────────
-          BottomLeftBlob(
-            size: size,
-            bottomBlobSlide: _bottomBlobSlide,
-            bottomBlobOpacity: _bottomBlobOpacity,
-            bottomBlobScale: _bottomBlobScale,
-          ),
+            // ── Bottom-Left Ambient Blob ────────────────────────────────
+            BottomLeftBlob(
+              size: size,
+              bottomBlobSlide: const AlwaysStoppedAnimation(Offset.zero),
+              bottomBlobOpacity: _blobOpacity,
+              bottomBlobScale: _blobScale,
+            ),
 
-          // ── Logo ─────────────────────────────────────────────────────────
-          Center(
-            child: FadeTransition(
-              opacity: _logoOpacity,
-              child: ScaleTransition(
-                scale: _logoScale,
-                child: const LogoWidget(),
+            // ── Center Content (Logo + Brand Text) ──────────────────────
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    // Logo Card with Spring Entrance
+                    FadeTransition(
+                      opacity: _logoOpacity,
+                      child: ScaleTransition(
+                        scale: _logoScale,
+                        child: const LogoWidget(size: 138),
+                      ),
+                    ),
+
+                    const SizedBox(height: 24),
+
+                    // Brand Typography with Smooth Slide & Fade
+                    FadeTransition(
+                      opacity: _textOpacity,
+                      child: SlideTransition(
+                        position: _textSlide,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              'بسطة  |  BASTA',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.cairo(
+                                fontSize: 26,
+                                fontWeight: FontWeight.w900,
+                                color: const Color(0xFF0F172A),
+                                letterSpacing: 0.6,
+                                height: 1.2,
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                            Text(
+                              'تجربة تسوق فريدة وسريعة',
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.cairo(
+                                fontSize: 13.5,
+                                fontWeight: FontWeight.w600,
+                                color: const Color(0xFF64748B),
+                                height: 1.3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+
+            // ── Bottom Loading Indicator & Brand Promise ────────────────
+            Positioned(
+              bottom: 44,
+              left: 0,
+              right: 0,
+              child: FadeTransition(
+                opacity: _footerOpacity,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    SizedBox(
+                      width: 22,
+                      height: 22,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2.4,
+                        valueColor: AlwaysStoppedAnimation<Color>(
+                          AppColors.primary.withValues(alpha: 0.85),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+                    Text(
+                      'تسوق آمن وموثوق • الإصدار 1.0',
+                      style: GoogleFonts.cairo(
+                        fontSize: 11.5,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF94A3B8),
+                        letterSpacing: 0.2,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -42,8 +42,26 @@ class DeepLinkHandler {
   }
 
   static void _handleUri(Uri uri) {
-    final isRegisterLink = uri.path == '/register' || uri.path == '/register/';
-    final refCode = uri.queryParameters['ref']?.trim().toUpperCase();
+    final path = uri.path.toLowerCase();
+
+    // 1. Check for Coupons / Rewards Deep Link
+    if (path.contains('/profileuser/coupons') ||
+        path == '/coupons' ||
+        path == '/coupons/' ||
+        path == '/my-coupons' ||
+        path == '/my-coupons/') {
+      debugPrint('Coupons deep link -> routing to ${AppRoutes.coupons}');
+      sl<GoRouter>().push(AppRoutes.coupons);
+      return;
+    }
+
+    // 2. Check for Referral Registration Deep Link
+    final isRegisterLink = path == '/register' || path == '/register/';
+    final refCode = (uri.queryParameters['ref'] ??
+            uri.queryParameters['refCode'] ??
+            uri.queryParameters['referralCode'])
+        ?.trim()
+        .toUpperCase();
 
     if (!isRegisterLink || refCode == null || refCode.isEmpty) return;
 

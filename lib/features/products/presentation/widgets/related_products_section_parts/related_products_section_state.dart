@@ -28,19 +28,31 @@ class _RelatedProductsSectionState extends State<RelatedProductsSection> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colorScheme = theme.colorScheme;
+    final l10n = AppLocalizations.of(context)!;
+
+    if (_products.isEmpty && !_isLoading && _errorMessage == null) {
+      return const SizedBox.shrink();
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          'You May Also Like',
-          style: GoogleFonts.cairo(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: theme.colorScheme.onSurface,
-          ),
+        Row(
+          children: [
+            const Icon(Icons.auto_awesome_rounded, size: 18, color: AppColors.primary),
+            const SizedBox(width: 8),
+            Text(
+              l10n.pick(ar: 'منتجات مشابهة قد تعجبك', en: 'You May Also Like'),
+              style: GoogleFonts.cairo(
+                fontSize: 16,
+                fontWeight: FontWeight.w900,
+                color: colorScheme.onSurface,
+              ),
+            ),
+          ],
         ),
-        const SizedBox(height: 12),
+        const SizedBox(height: 14),
         if (_isLoading)
           const SizedBox(
             height: 244,
@@ -51,9 +63,12 @@ class _RelatedProductsSectionState extends State<RelatedProductsSection> {
             height: 244,
             child: EmptyState(
               icon: Icons.wifi_off_rounded,
-              title: 'Could not load related products',
+              title: l10n.pick(
+                ar: 'تعذر تحميل المنتجات المشابهة',
+                en: 'Could not load related products',
+              ),
               message: _errorMessage,
-              actionLabel: 'Try Again',
+              actionLabel: l10n.tryAgain,
               onActionTap: _loadRelatedProducts,
             ),
           )

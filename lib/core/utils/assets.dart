@@ -2,17 +2,21 @@
 class Assets {
   Assets._();
   
+  /// Assets for imagesPlayStore512
+  /// assets/images/play_store_512.png
+  static const String imagesPlayStore512 = "assets/images/play_store_512.png";
+
   /// Assets for imagesAppLogo
-  /// assets/images/app_logo.png
-  static const String imagesAppLogo = "assets/images/app_logo.png";
+  /// assets/images/play_store_512.png
+  static const String imagesAppLogo = "assets/images/play_store_512.png";
 
   /// Assets for imagesAuth
-  /// assets/images/auth.png
-  static const String imagesAuth = "assets/images/auth.png";
+  /// assets/images/play_store_512.png
+  static const String imagesAuth = "assets/images/play_store_512.png";
 
   /// Assets for imagesBastaAuth
-  /// assets/images/bastaAuth.png
-  static const String imagesBastaAuth = "assets/images/bastaAuth.png";
+  /// assets/images/play_store_512.png
+  static const String imagesBastaAuth = "assets/images/play_store_512.png";
 
   /// Assets for imagesCart
   /// assets/images/cart.png
@@ -30,4 +34,3 @@ class Assets {
   /// assets/images/onboarding2.png
   static const String imagesOnboarding2 = "assets/images/onboarding2.png";
 }
-

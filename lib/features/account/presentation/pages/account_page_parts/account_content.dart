@@ -37,6 +37,8 @@ class _AccountContent extends StatelessWidget {
                       padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                       child: AccountStatsPanel(stats: stats),
                     ),
+                    ProfileReferralCard(referralCode: user?.referralCode),
+                    const SizedBox(height: 16),
                     AccountMenuSection(
                       onEditProfile: () => _openEditProfileSheet(context, user),
                     ),

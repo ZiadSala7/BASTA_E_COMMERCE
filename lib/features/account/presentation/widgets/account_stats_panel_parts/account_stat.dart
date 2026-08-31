@@ -58,20 +58,3 @@ class _AccountStat extends StatelessWidget {
     );
   }
 }
-
-void _showComingSoon(BuildContext context, String featureName) {
-  final l10n = AppLocalizations.of(context)!;
-
-  ScaffoldMessenger.of(context)
-    ..hideCurrentSnackBar()
-    ..showSnackBar(
-      SnackBar(
-        content: Text(
-          l10n.pick(
-            ar: '$featureName ستكون متاحة قريباً',
-            en: '$featureName will be available soon',
-          ),
-        ),
-      ),
-    );
-}

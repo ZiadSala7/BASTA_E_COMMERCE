@@ -50,8 +50,14 @@ class CheckoutApiClient {
     String? couponCode,
   ) {
     final normalizedCoupon = couponCode?.trim();
+    final phone = (address['phone'] ?? address['phoneNumber'] ?? '').toString().trim();
+    final addressWithPhone = {
+      ...address,
+      if (phone.isNotEmpty) 'phone': phone,
+    };
+
     return {
-      'addressData': address,
+      'addressData': addressWithPhone,
       for (final key in const [
         'streetAddress',
         'city',
@@ -61,6 +67,7 @@ class CheckoutApiClient {
       ])
         key: address[key]?.toString() ?? '',
       'paymentMethod': paymentMethod,
+      if (phone.isNotEmpty) 'phone': phone,
       if (normalizedCoupon != null && normalizedCoupon.isNotEmpty)
         'couponCode': normalizedCoupon,
     };

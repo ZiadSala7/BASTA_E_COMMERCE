@@ -168,9 +168,9 @@ class _InviteContent extends StatelessWidget {
           Text(
             l10n.pick(
               ar:
-                  'شارك رمز الدعوة مع أصدقائك. عند تسجيلهم، ستحصل أنت وصديقك على قسيمة خصم بقيمة 5 د.أ فوراً!',
+                  'شارك رمز الدعوة مع أصدقائك. يحصل صديقك على قسيمة خصم فور التسجيل، وتحصل أنت على مكافأتك تلقائياً عند إتمام طلبه الأول!',
               en:
-                  'Share your invite code with friends. When they sign up, you both instantly get a JOD 5 discount coupon!',
+                  'Share your invite code with friends. Your friend gets a discount coupon upon sign-up, and you automatically receive your reward when their first order is delivered!',
             ),
             textAlign: TextAlign.center,
             style: GoogleFonts.cairo(
@@ -309,11 +309,12 @@ class _InviteContent extends StatelessWidget {
           ),
           _StepTile(
             stepNumber: '3',
-            title: l10n.pick(ar: 'كلاكما يربح!', en: 'You both win!'),
+            title: l10n.pick(ar: 'اربح مكافأتك!', en: 'Earn your reward!'),
             description: l10n.pick(
               ar:
-                  'تحصل فوراً على إشعار وقسيمة خصم بقيمة 5 د.أ ويحصل صديقك على قسيمة مماثلة.',
-              en: 'You instantly get a notification and a JOD 5 coupon, and so does your friend.',
+                  'يحصل صديقك فوراً على قسيمة ترحيبية، وعند تسليم طلبه الأول، ستصلك قسيمة الخصم الخاصة بك مع إشعار فوري!',
+              en:
+                  'Your friend gets an instant welcome coupon, and once their first order is delivered, you receive your reward coupon and a push notification!',
             ),
             icon: Icons.celebration_rounded,
             isLast: true,

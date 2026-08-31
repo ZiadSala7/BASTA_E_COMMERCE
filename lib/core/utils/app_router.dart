@@ -13,12 +13,17 @@ import '../../features/auth/presentation/pages/verification_page.dart';
 import '../../features/account/presentation/pages/addresses_page.dart';
 import '../../features/account/presentation/pages/drawer_info_page.dart';
 import '../../features/account/presentation/pages/invite_friends_page.dart';
+import '../../features/coupons/presentation/pages/my_coupons_page.dart';
 import '../../features/cart/presentation/pages/cart_checkout_page.dart';
 import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/home/presentation/pages/stores_listing_page.dart';
+import '../../features/notifications/domain/entities/app_notification_entity.dart';
+import '../../features/notifications/presentation/pages/notification_details_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/orders/domain/entities/order_entity.dart';
+import '../../features/orders/presentation/pages/order_details_page.dart';
 import '../../features/orders/presentation/pages/orders_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/products_listing_page.dart';
@@ -35,13 +40,16 @@ abstract class AppRoutes {
   static const String home = '/home';
   static const String mainNavigation = '/mainNavigation';
   static const String notifications = '/notifications';
+  static const String notificationDetails = '/notification-details';
   static const String products = '/products';
   static const String stores = '/stores';
   static const String productDetail = '/product-detail';
   static const String checkout = '/checkout';
   static const String favorites = '/favorites';
   static const String orders = '/orders';
+  static const String orderDetails = '/order-details';
   static const String addresses = '/addresses';
+  static const String coupons = '/coupons';
   static const String inviteFriends = '/invite-friends';
   static const String privacyPolicy = '/privacy-policy';
   static const String aboutUs = '/about-us';
@@ -124,6 +132,13 @@ class AppRouter {
         builder: (context, state) => const NotificationsPage(),
       ),
       GoRoute(
+        path: AppRoutes.notificationDetails,
+        builder: (context, state) {
+          final notification = state.extra as AppNotificationEntity;
+          return NotificationDetailsPage(notification: notification);
+        },
+      ),
+      GoRoute(
         path: AppRoutes.products,
         builder: (context, state) {
           final extra = state.extra;
@@ -161,8 +176,28 @@ class AppRouter {
         builder: (context, state) => const OrdersPage(),
       ),
       GoRoute(
+        path: AppRoutes.orderDetails,
+        builder: (context, state) {
+          final extra = state.extra;
+          if (extra is OrderEntity) {
+            return OrderDetailsPage(orderId: extra.id, initialOrder: extra);
+          } else if (extra is String) {
+            return OrderDetailsPage(orderId: extra);
+          }
+          return const OrdersPage();
+        },
+      ),
+      GoRoute(
         path: AppRoutes.addresses,
         builder: (context, state) => const AddressesPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.coupons,
+        builder: (context, state) => const MyCouponsPage(),
+      ),
+      GoRoute(
+        path: '/profileUser/coupons',
+        redirect: (context, state) => AppRoutes.coupons,
       ),
       GoRoute(
         path: AppRoutes.inviteFriends,

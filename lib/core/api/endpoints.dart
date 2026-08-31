@@ -40,6 +40,10 @@ class Endpoints {
   static String cartItem(String variantId) => '$cartItems/$variantId';
   static const String applyCoupon = '$cart/apply-coupon';
 
+  // User Coupons & Rewards
+  static const String coupons = 'api/coupons';
+  static const String myCoupons = '$coupons/my-coupons';
+
   // Shipping
   static const String shipping = 'api/shipping';
   static const String calculateShipping = '$shipping/calculate';

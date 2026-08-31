@@ -26,8 +26,10 @@ class RegisterRequest {
       'role': role,
       if (couponCode != null && couponCode!.trim().isNotEmpty)
         'coupon_code': couponCode!.trim(),
-      if (referralCode != null && referralCode!.trim().isNotEmpty)
+      if (referralCode != null && referralCode!.trim().isNotEmpty) ...{
+        'refCode': referralCode!.trim().toUpperCase(),
         'referralCode': referralCode!.trim().toUpperCase(),
+      },
     };
   }
 }
