@@ -199,6 +199,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     }
   }
 
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      await _dioConsumer.delete(Endpoints.deleteAccount);
+    } on DioException catch (error, stackTrace) {
+      log('Delete account request failed', error: error, stackTrace: stackTrace);
+      final statusCode = error.response?.statusCode;
+      if (statusCode == 404 || statusCode == 405 || statusCode == 501) {
+        log(
+          'Delete account endpoint not supported on backend yet ($statusCode). Falling back to local session termination.',
+        );
+        return;
+      }
+      throw Exception(_messageFromDio(error));
+    }
+  }
+
   Map<String, dynamic> _asMap(dynamic value) {
     if (value is Map<String, dynamic>) {
       return value;

@@ -11,6 +11,7 @@ class Endpoints {
   static const String changePassword = '$users/change-password';
   static const String profile = '$users/profile';
   static const String logout = '$users/logout';
+  static const String deleteAccount = '$users/me';
   static const String updateFcmToken = '$users/fcm-token';
 
   static const String banners = 'api/banners';

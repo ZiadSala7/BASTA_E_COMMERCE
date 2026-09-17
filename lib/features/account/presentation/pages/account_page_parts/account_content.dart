@@ -51,6 +51,12 @@ class _AccountContent extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       child: LogoutButton(isLoading: authState is AuthLoading),
                     ),
+                    const SizedBox(height: 12),
+                    Center(
+                      child: DeleteAccountButton(
+                        isLoading: authState is AuthLoading,
+                      ),
+                    ),
                     const SizedBox(height: 32),
                   ],
                 ),
@@ -64,6 +70,17 @@ class _AccountContent extends StatelessWidget {
 
   void _listenToAuthState(BuildContext context, AuthState state) {
     if (state is AuthUnauthenticated) {
+      if (state.message == 'ACCOUNT_DELETED') {
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text(
+                AppLocalizations.of(context)!.accountDeletedSuccessfully,
+              ),
+            ),
+          );
+      }
       context.go(AppRoutes.login);
     }
 

@@ -12,4 +12,5 @@ abstract class AuthRemoteDataSource {
   Future<ProfileUpdateResponse> updateProfile(UpdateProfileRequest request);
   Future<UserModel> getCurrentUser();
   Future<void> logout();
+  Future<void> deleteAccount();
 }

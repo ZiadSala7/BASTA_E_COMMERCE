@@ -29,6 +29,17 @@ extension AppLocalizationsX on AppLocalizations {
   String get privacyPolicy => pick(ar: 'سياسة الخصوصية', en: 'Privacy policy');
   String get aboutUs => pick(ar: 'من نحن', en: 'About us');
   String get logout => pick(ar: 'تسجيل الخروج', en: 'Log out');
+  String get deleteAccount => pick(ar: 'حذف الحساب', en: 'Delete account');
+  String get deleteAccountConfirmTitle =>
+      pick(ar: 'تأكيد حذف الحساب', en: 'Delete Account');
+  String get deleteAccountConfirmMessage => pick(
+    ar: 'هل أنت متأكد من رغبتك في حذف حسابك؟ سيؤدي هذا الإجراء إلى حذف جميع بياناتك وطلباتك وعناوينك نهائياً ولا يمكن التراجع عنه.',
+    en: 'Are you sure you want to delete your account? This action will permanently remove all your data, orders, and addresses, and cannot be undone.',
+  );
+  String get confirmDelete => pick(ar: 'نعم، حذف الحساب', en: 'Yes, delete account');
+  String get cancel => pick(ar: 'إلغاء', en: 'Cancel');
+  String get accountDeletedSuccessfully =>
+      pick(ar: 'تم حذف حسابك بنجاح', en: 'Your account has been deleted successfully');
   String get supportAndHelp =>
       pick(ar: 'الدعم والمساعدة', en: 'Support and help');
   String get faq => pick(ar: 'الأسئلة الشائعة', en: 'FAQ');

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/user_entity.dart';
 import '../../domain/usecases/change_password_usecase.dart';
 import '../../domain/usecases/confirm_email_usecase.dart';
+import '../../domain/usecases/delete_account_usecase.dart';
 import '../../domain/usecases/forgot_password_usecase.dart';
 import '../../domain/usecases/get_current_user_usecase.dart';
 import '../../domain/usecases/google_social_login_usecase.dart';
@@ -28,6 +29,7 @@ class AuthCubit extends Cubit<AuthState> {
   final UpdateProfileUseCase _updateProfileUseCase;
   final GetCurrentUserUseCase _getCurrentUserUseCase;
   final LogoutUseCase _logoutUseCase;
+  final DeleteAccountUseCase _deleteAccountUseCase;
 
   AuthCubit({
     required LoginUseCase loginUseCase,
@@ -41,6 +43,7 @@ class AuthCubit extends Cubit<AuthState> {
     required UpdateProfileUseCase updateProfileUseCase,
     required GetCurrentUserUseCase getCurrentUserUseCase,
     required LogoutUseCase logoutUseCase,
+    required DeleteAccountUseCase deleteAccountUseCase,
   }) : _loginUseCase = loginUseCase,
        _googleSocialLoginUseCase = googleSocialLoginUseCase,
        _registerUseCase = registerUseCase,
@@ -52,6 +55,7 @@ class AuthCubit extends Cubit<AuthState> {
        _updateProfileUseCase = updateProfileUseCase,
        _getCurrentUserUseCase = getCurrentUserUseCase,
        _logoutUseCase = logoutUseCase,
+       _deleteAccountUseCase = deleteAccountUseCase,
        super(AuthInitial());
 
   Future<void> login(
@@ -248,6 +252,18 @@ class AuthCubit extends Cubit<AuthState> {
       await _logoutUseCase();
       if (isClosed) return;
       emit(const AuthUnauthenticated());
+    } catch (e) {
+      if (isClosed) return;
+      emit(AuthError(_mapErrorMessage(e)));
+    }
+  }
+
+  Future<void> deleteAccount() async {
+    emit(AuthLoading());
+    try {
+      await _deleteAccountUseCase();
+      if (isClosed) return;
+      emit(const AuthUnauthenticated(message: 'ACCOUNT_DELETED'));
     } catch (e) {
       if (isClosed) return;
       emit(AuthError(_mapErrorMessage(e)));

@@ -256,6 +256,21 @@ class AuthRepositoryImpl implements AuthRepository {
     }
   }
 
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      await _remoteDataSource.deleteAccount();
+    } finally {
+      try {
+        await _firebaseSocialAuthDataSource.signOut();
+      } catch (_) {
+        // Local session clearing must still complete if Firebase sign-out fails.
+      }
+      await _localDataSource.clearToken();
+      await _localDataSource.clearUser();
+    }
+  }
+
   UserEntity? _userFromToken(String token) {
     final parts = token.split('.');
     if (parts.length != 3) return null;

@@ -19,6 +19,7 @@ import '../../features/auth/data/repositories/auth_repository_impl.dart';
 import '../../features/auth/domain/repositories/auth_repository.dart';
 import '../../features/auth/domain/usecases/change_password_usecase.dart';
 import '../../features/auth/domain/usecases/confirm_email_usecase.dart';
+import '../../features/auth/domain/usecases/delete_account_usecase.dart';
 import '../../features/auth/domain/usecases/forgot_password_usecase.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../features/auth/domain/usecases/google_social_login_usecase.dart';
@@ -199,6 +200,12 @@ void setupServiceLocator() {
     getIt.registerLazySingleton<LogoutUseCase>(() => LogoutUseCase(getIt()));
   }
 
+  if (!getIt.isRegistered<DeleteAccountUseCase>()) {
+    getIt.registerLazySingleton<DeleteAccountUseCase>(
+      () => DeleteAccountUseCase(getIt()),
+    );
+  }
+
   if (!getIt.isRegistered<AuthCubit>()) {
     getIt.registerFactory<AuthCubit>(
       () => AuthCubit(
@@ -213,6 +220,7 @@ void setupServiceLocator() {
         updateProfileUseCase: getIt(),
         getCurrentUserUseCase: getIt(),
         logoutUseCase: getIt(),
+        deleteAccountUseCase: getIt(),
       ),
     );
   }
