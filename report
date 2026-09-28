@@ -1,0 +1,1090 @@
+-------------------------------------
+Translated Report (Full Report Below)
+-------------------------------------
+Process:             Runner [20107]
+Path:                /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Runner
+Identifier:          com.example.ionbitECommerce
+Version:             1.0.1 (2)
+Code Type:           ARM-64 (Native)
+Role:                Foreground
+Parent Process:      launchd_sim [18542]
+Coalition:           com.apple.CoreSimulator.SimDevice.A8831FB0-3028-4B42-86E9-A30F4B2FF7A6 [10278]
+Responsible Process: SimulatorTrampoline [4748]
+User ID:             501
+
+Date/Time:           2026-09-28 14:46:23.1737 +0300
+Launch Time:         2026-09-28 14:45:31.1402 +0300
+Hardware Model:      Mac15,6
+OS Version:          macOS 27.2 (26B5091g)
+Release Type:        User
+
+Crash Reporter Key:  513A41EF-21F5-9E2F-561C-D72EE4787AFC
+Incident Identifier: AB5742CA-EFB9-48BD-8B3C-AFF885F27292
+
+Sleep/Wake UUID:       62151500-DEAD-44C4-90CB-AD7040961329
+
+Time Awake Since Boot: 54000 seconds
+Time Since Wake:       660 seconds
+
+System Integrity Protection: enabled
+
+Triggered by Thread: 0, Dispatch Queue: com.apple.main-thread
+
+Exception Type:    EXC_CRASH (SIGABRT)
+Exception Codes:   0x0000000000000000, 0x0000000000000000
+
+Termination Reason:  Namespace SIGNAL, Code 6, Abort trap: 6
+Terminating Process: Runner [20107]
+
+
+Last Exception Backtrace:
+0   CoreFoundation                	       0x1c0287f18 __exceptionPreprocess + 160
+1   libobjc.A.dylib               	       0x1c008194c objc_exception_throw + 72
+2   CoreFoundation                	       0x1c0287e34 -[NSException initWithCoder:] + 0
+3   Runner.debug.dylib            	       0x104595ab0 +[GMSServices checkServicePreconditions] + 260
+4   Runner.debug.dylib            	       0x10459391c +[GMSServices preLaunchServicesWithCompletion:] + 152
+5   Runner.debug.dylib            	       0x104c909f8 -[FGMGoogleMapFactory sharedMapServices] + 52
+6   Runner.debug.dylib            	       0x104c90928 -[FGMGoogleMapFactory createWithFrame:viewIdentifier:arguments:] + 84
+7   Flutter                       	       0x108210884 -[FlutterPlatformViewsController onCreate:result:] + 828
+8   Flutter                       	       0x1082104c8 -[FlutterPlatformViewsController onMethodCall:result:] + 356
+9   Flutter                       	       0x1081fbab0 __47-[FlutterEngine maybeSetupPlatformViewChannels]_block_invoke_2 + 120
+10  Flutter                       	       0x108768dfc __45-[FlutterMethodChannel setMethodCallHandler:]_block_invoke + 164
+11  Flutter                       	       0x108256634 invocation function for block in flutter::PlatformMessageHandlerIos::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>) + 108
+12  libdispatch.dylib             	       0x1e641b6a0 _dispatch_call_block_and_release + 24
+13  libdispatch.dylib             	       0x1e6435fb8 _dispatch_client_callout + 12
+14  libdispatch.dylib             	       0x1e6452890 <deduplicated_symbol> + 24
+15  libdispatch.dylib             	       0x1e642ae44 _dispatch_main_queue_drain + 1172
+16  libdispatch.dylib             	       0x1e642a9a0 _dispatch_main_queue_callback_4CF + 40
+17  CoreFoundation                	       0x1c01e42e4 __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__ + 12
+18  CoreFoundation                	       0x1c01e34fc __CFRunLoopRun + 1896
+19  CoreFoundation                	       0x1c01de040 _CFRunLoopRunSpecificWithOptions + 496
+20  GraphicsServices              	       0x2219199ac GSEventRunModal + 116
+21  UIKitCore                     	       0x1c5535e30 UIApplicationMain + 124
+22  UIKitCore                     	       0x1c53d7c94 0x1c3bff000 + 25005204
+23  Runner.debug.dylib            	       0x104567b04 static UIApplicationDelegate.main() + 128
+24  Runner.debug.dylib            	       0x104567a74 static AppDelegate.$main() + 44
+25  Runner.debug.dylib            	       0x104567b80 __debug_main_executable_dylib_entry_point + 28
+26  dyld_sim                      	       0x102f28350 start_sim + 20
+27  dyld                          	       0x1030d5ef0 start + 6688
+
+Thread 0 Crashed::  Dispatch queue: com.apple.main-thread
+0   libsystem_kernel.dylib        	       0x103aec8a0 __pthread_kill + 8
+1   libsystem_pthread.dylib       	       0x103c06378 pthread_kill + 264
+2   libsystem_c.dylib             	       0x1c8299a00 abort + 116
+3   libc++abi.dylib               	       0x25d25e0fc __abort_message + 128
+4   libc++abi.dylib               	       0x25d24b184 demangling_terminate_handler() + 268
+5   libobjc.A.dylib               	       0x1c005cf10 _objc_terminate() + 124
+6   libc++abi.dylib               	       0x25d25a014 std::__terminate(void (*)()) + 12
+7   libc++abi.dylib               	       0x25d25d030 __cxxabiv1::failed_throw(__cxxabiv1::__cxa_exception*) + 32
+8   libc++abi.dylib               	       0x25d25d010 __cxa_throw + 88
+9   libobjc.A.dylib               	       0x1c0081a84 objc_exception_throw + 384
+10  CoreFoundation                	       0x1c0287e34 +[NSException raise:format:] + 124
+11  Runner.debug.dylib            	       0x104595ab0 +[GMSServices checkServicePreconditions] + 260
+12  Runner.debug.dylib            	       0x10459391c +[GMSServices preLaunchServicesWithCompletion:] + 152
+13  Runner.debug.dylib            	       0x104c909f8 -[FGMGoogleMapFactory sharedMapServices] + 52
+14  Runner.debug.dylib            	       0x104c90928 -[FGMGoogleMapFactory createWithFrame:viewIdentifier:arguments:] + 84
+15  Flutter                       	       0x108210884 -[FlutterPlatformViewsController onCreate:result:] + 828
+16  Flutter                       	       0x1082104c8 -[FlutterPlatformViewsController onMethodCall:result:] + 356
+17  Flutter                       	       0x1081fbab0 __47-[FlutterEngine maybeSetupPlatformViewChannels]_block_invoke_2 + 120
+18  Flutter                       	       0x108768dfc __45-[FlutterMethodChannel setMethodCallHandler:]_block_invoke + 164
+19  Flutter                       	       0x108256634 invocation function for block in flutter::PlatformMessageHandlerIos::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>) + 108
+20  libdispatch.dylib             	       0x1e641b6a0 _dispatch_call_block_and_release + 24
+21  libdispatch.dylib             	       0x1e6435fb8 _dispatch_client_callout + 12
+22  libdispatch.dylib             	       0x1e6452890 <deduplicated_symbol> + 24
+23  libdispatch.dylib             	       0x1e642ae44 _dispatch_main_queue_drain + 1172
+24  libdispatch.dylib             	       0x1e642a9a0 _dispatch_main_queue_callback_4CF + 40
+25  CoreFoundation                	       0x1c01e42e4 __CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__ + 12
+26  CoreFoundation                	       0x1c01e34fc __CFRunLoopRun + 1896
+27  CoreFoundation                	       0x1c01de040 _CFRunLoopRunSpecificWithOptions + 496
+28  GraphicsServices              	       0x2219199ac GSEventRunModal + 116
+29  UIKitCore                     	       0x1c5535e30 UIApplicationMain + 124
+30  UIKitCore                     	       0x1c53d7c94 0x1c3bff000 + 25005204
+31  Runner.debug.dylib            	       0x104567b04 static UIApplicationDelegate.main() + 128
+32  Runner.debug.dylib            	       0x104567a74 static AppDelegate.$main() + 44
+33  Runner.debug.dylib            	       0x104567b80 __debug_main_executable_dylib_entry_point + 28
+34  dyld_sim                      	       0x102f28350 start_sim + 20
+35  dyld                          	       0x1030d5ef0 start + 6688
+
+Thread 1:: io.flutter.1.raster
+0   libsystem_kernel.dylib        	       0x103ae4b5c mach_msg2_trap + 8
+1   libsystem_kernel.dylib        	       0x103af60e4 mach_msg2_internal + 72
+2   libsystem_kernel.dylib        	       0x103aecc58 mach_msg_overwrite + 484
+3   libsystem_kernel.dylib        	       0x103ae4edc mach_msg + 20
+4   CoreFoundation                	       0x1c01e4010 __CFRunLoopServiceMachPort + 156
+5   CoreFoundation                	       0x1c01e31e0 __CFRunLoopRun + 1100
+6   CoreFoundation                	       0x1c01de040 _CFRunLoopRunSpecificWithOptions + 496
+7   Flutter                       	       0x108294e50 fml::MessageLoopDarwin::Run() + 92
+8   Flutter                       	       0x10828d78c fml::MessageLoopImpl::DoRun() + 44
+9   Flutter                       	       0x108293510 std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()() + 184
+10  Flutter                       	       0x1082931d4 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*) + 36
+11  libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+12  libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 2:: io.flutter.1.io
+0   libsystem_kernel.dylib        	       0x103ae4b5c mach_msg2_trap + 8
+1   libsystem_kernel.dylib        	       0x103af60e4 mach_msg2_internal + 72
+2   libsystem_kernel.dylib        	       0x103aecc58 mach_msg_overwrite + 484
+3   libsystem_kernel.dylib        	       0x103ae4edc mach_msg + 20
+4   CoreFoundation                	       0x1c01e4010 __CFRunLoopServiceMachPort + 156
+5   CoreFoundation                	       0x1c01e31e0 __CFRunLoopRun + 1100
+6   CoreFoundation                	       0x1c01de040 _CFRunLoopRunSpecificWithOptions + 496
+7   Flutter                       	       0x108294e50 fml::MessageLoopDarwin::Run() + 92
+8   Flutter                       	       0x10828d78c fml::MessageLoopImpl::DoRun() + 44
+9   Flutter                       	       0x108293510 std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()() + 184
+10  Flutter                       	       0x1082931d4 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*) + 36
+11  libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+12  libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 3:: io.flutter.1.profiler
+0   libsystem_kernel.dylib        	       0x103ae4b5c mach_msg2_trap + 8
+1   libsystem_kernel.dylib        	       0x103af60e4 mach_msg2_internal + 72
+2   IOKit                         	       0x1d02a94b8 io_service_get_matching_services_bin + 260
+3   IOKit                         	       0x1d0236bec IOServiceGetMatchingServices + 220
+4   Flutter                       	       0x108253b50 flutter::ProfilerMetricsIOS::GenerateSample() + 88
+5   Flutter                       	       0x10820390c std::__fl::__function::__func<-[FlutterEngine startProfiler]::$_5, std::__fl::allocator<-[FlutterEngine startProfiler]::$_5>, flutter::ProfileSample ()>::operator()() + 20
+6   Flutter                       	       0x108766084 std::__fl::__function::__func<flutter::SamplingProfiler::SampleRepeatedly(fml::TimeDelta) const::$_0, std::__fl::allocator<flutter::SamplingProfiler::SampleRepeatedly(fml::TimeDelta) const::$_0>, void ()>::operator()() + 48
+7   Flutter                       	       0x10828d864 fml::MessageLoopImpl::FlushTasks(fml::FlushType) + 152
+8   Flutter                       	       0x108294d28 fml::MessageLoopDarwin::OnTimerFire(__CFRunLoopTimer*, fml::MessageLoopDarwin*) + 32
+9   CoreFoundation                	       0x1c01e4e38 __CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__ + 28
+10  CoreFoundation                	       0x1c01e4b48 __CFRunLoopDoTimer + 916
+11  CoreFoundation                	       0x1c01e4224 __CFRunLoopDoTimers + 276
+12  CoreFoundation                	       0x1c01e347c __CFRunLoopRun + 1768
+13  CoreFoundation                	       0x1c01de040 _CFRunLoopRunSpecificWithOptions + 496
+14  Flutter                       	       0x108294e50 fml::MessageLoopDarwin::Run() + 92
+15  Flutter                       	       0x10828d78c fml::MessageLoopImpl::DoRun() + 44
+16  Flutter                       	       0x108293510 std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()() + 184
+17  Flutter                       	       0x1082931d4 fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*) + 36
+18  libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+19  libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 4:: io.worker.1
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b44 _pthread_cond_wait + 972
+2   Flutter                       	       0x10825bddc std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 24
+3   Flutter                       	       0x108289e3c fml::ConcurrentMessageLoop::WorkerMain() + 152
+4   Flutter                       	       0x10828a47c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 192
+5   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+6   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 5:: io.worker.2
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b44 _pthread_cond_wait + 972
+2   Flutter                       	       0x10825bddc std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 24
+3   Flutter                       	       0x108289e3c fml::ConcurrentMessageLoop::WorkerMain() + 152
+4   Flutter                       	       0x10828a47c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 192
+5   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+6   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 6:: io.worker.3
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b44 _pthread_cond_wait + 972
+2   Flutter                       	       0x10825bddc std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 24
+3   Flutter                       	       0x108289e3c fml::ConcurrentMessageLoop::WorkerMain() + 152
+4   Flutter                       	       0x10828a47c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 192
+5   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+6   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 7:: io.worker.4
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b44 _pthread_cond_wait + 972
+2   Flutter                       	       0x10825bddc std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&) + 24
+3   Flutter                       	       0x108289e3c fml::ConcurrentMessageLoop::WorkerMain() + 152
+4   Flutter                       	       0x10828a47c void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*) + 192
+5   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+6   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 8:: dart:io EventHandler
+0   libsystem_kernel.dylib        	       0x103aea6a0 kevent + 8
+1   Flutter                       	       0x108721310 dart::bin::EventHandlerImplementation::EventHandlerEntry(unsigned long) + 304
+2   Flutter                       	       0x10873dfb4 dart::bin::ThreadStart(void*) + 92
+3   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+4   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 9:: Dart Profiler ThreadInterrupter
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b44 _pthread_cond_wait + 972
+2   Flutter                       	       0x1087942d0 dart::ConditionVariable::WaitMicros(dart::Mutex*, long long) + 128
+3   Flutter                       	       0x108910e64 dart::ThreadInterrupter::ThreadMain(unsigned long) + 332
+4   Flutter                       	       0x1088be694 dart::ThreadStart(void*) + 208
+5   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+6   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 10:: DartWorker
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b70 _pthread_cond_wait + 1016
+2   Flutter                       	       0x1087942c0 dart::ConditionVariable::WaitMicros(dart::Mutex*, long long) + 112
+3   Flutter                       	       0x1087f9ff8 dart::MutatorThreadPool::OnEnterIdleLocked(dart::MutexLocker*, dart::ThreadPool::Worker*) + 156
+4   Flutter                       	       0x108911984 dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*) + 124
+5   Flutter                       	       0x108911c54 dart::ThreadPool::Worker::Main(unsigned long) + 120
+6   Flutter                       	       0x1088be694 dart::ThreadStart(void*) + 208
+7   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+8   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 11:: com.apple.NSURLConnectionLoader
+0   libsystem_kernel.dylib        	       0x103ae4b5c mach_msg2_trap + 8
+1   libsystem_kernel.dylib        	       0x103af60e4 mach_msg2_internal + 72
+2   libsystem_kernel.dylib        	       0x103aecc58 mach_msg_overwrite + 484
+3   libsystem_kernel.dylib        	       0x103ae4edc mach_msg + 20
+4   CoreFoundation                	       0x1c01e4010 __CFRunLoopServiceMachPort + 156
+5   CoreFoundation                	       0x1c01e31e0 __CFRunLoopRun + 1100
+6   CoreFoundation                	       0x1c01de040 _CFRunLoopRunSpecificWithOptions + 496
+7   CFNetwork                     	       0x1cb62a6c0 +[__CFN_CoreSchedulingSetRunnable _run:] + 344
+8   Foundation                    	       0x1c05e452c __NSThread__start__ + 716
+9   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+10  libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 12:: DartWorker
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b70 _pthread_cond_wait + 1016
+2   Flutter                       	       0x1087942c0 dart::ConditionVariable::WaitMicros(dart::Mutex*, long long) + 112
+3   Flutter                       	       0x108911b04 dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*) + 508
+4   Flutter                       	       0x108911c54 dart::ThreadPool::Worker::Main(unsigned long) + 120
+5   Flutter                       	       0x1088be694 dart::ThreadStart(void*) + 208
+6   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+7   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 13:: DartWorker
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b70 _pthread_cond_wait + 1016
+2   Flutter                       	       0x1087942c0 dart::ConditionVariable::WaitMicros(dart::Mutex*, long long) + 112
+3   Flutter                       	       0x108911b04 dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*) + 508
+4   Flutter                       	       0x108911c54 dart::ThreadPool::Worker::Main(unsigned long) + 120
+5   Flutter                       	       0x1088be694 dart::ThreadStart(void*) + 208
+6   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+7   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 14:
+
+Thread 15:
+
+Thread 16:: DartWorker
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b70 _pthread_cond_wait + 1016
+2   Flutter                       	       0x1087942c0 dart::ConditionVariable::WaitMicros(dart::Mutex*, long long) + 112
+3   Flutter                       	       0x108911b04 dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*) + 508
+4   Flutter                       	       0x108911c54 dart::ThreadPool::Worker::Main(unsigned long) + 120
+5   Flutter                       	       0x1088be694 dart::ThreadStart(void*) + 208
+6   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+7   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 17:
+
+Thread 18:: DartWorker
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b70 _pthread_cond_wait + 1016
+2   Flutter                       	       0x1087942c0 dart::ConditionVariable::WaitMicros(dart::Mutex*, long long) + 112
+3   Flutter                       	       0x108911b04 dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*) + 508
+4   Flutter                       	       0x108911c54 dart::ThreadPool::Worker::Main(unsigned long) + 120
+5   Flutter                       	       0x1088be694 dart::ThreadStart(void*) + 208
+6   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+7   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+Thread 19:
+
+Thread 20:: DartWorker
+0   libsystem_kernel.dylib        	       0x103ae8024 __psynch_cvwait + 8
+1   libsystem_pthread.dylib       	       0x103c06b70 _pthread_cond_wait + 1016
+2   Flutter                       	       0x1087942c0 dart::ConditionVariable::WaitMicros(dart::Mutex*, long long) + 112
+3   Flutter                       	       0x108911b04 dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*) + 508
+4   Flutter                       	       0x108911c54 dart::ThreadPool::Worker::Main(unsigned long) + 120
+5   Flutter                       	       0x1088be694 dart::ThreadStart(void*) + 208
+6   libsystem_pthread.dylib       	       0x103c06680 _pthread_start + 104
+7   libsystem_pthread.dylib       	       0x103c01a88 thread_start + 8
+
+
+Thread 0 crashed with ARM Thread State (64-bit):
+    x0: 0x0000000000000000   x1: 0x0000000000000000   x2: 0x0000000000000000   x3: 0x0000000000000000
+    x4: 0x000000025d25e2a3   x5: 0x000000016cfa38c0   x6: 0x000000000000006e   x7: 0x012910000043b820
+    x8: 0x0000000103175e40   x9: 0x68664cfd4e4eed1a  x10: 0x0000000000000002  x11: 0x00000000fffffffd
+   x12: 0x0000000000000000  x13: 0x0000000000000000  x14: 0x0000000000000000  x15: 0x0000000000000000
+   x16: 0x0000000000000148  x17: 0x0000000000000001  x18: 0x0000000000000000  x19: 0x0000000000000006
+   x20: 0x0000000000000103  x21: 0x0000000103175f20  x22: 0x000000022e6b7000  x23: 0x0000000106e544e0
+   x24: 0x00000001064f67c0  x25: 0x0000000106702840  x26: 0x000000012a1ccc60  x27: 0x00000002387b106a
+   x28: 0x0000000108bb99b9   fp: 0x000000016cfa3830   lr: 0x0000000103c06378
+    sp: 0x000000016cfa3810   pc: 0x0000000103aec8a0 cpsr: 0x40001000
+   far: 0x0000000000000000  esr: 0x56000080 (Syscall)
+
+Binary Images:
+       0x102e58000 -        0x102e5bfff com.example.ionbitECommerce (1.0.1) <73edb1a4-74df-3145-b094-7466d1de87a8> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Runner
+       0x102f18000 -        0x102f73fff dyld_sim (*) <6fae6738-0877-3f55-80b9-6ae42fcb8606> /Volumes/VOLUME/*/dyld_sim
+       0x104564000 -        0x104f73fff Runner.debug.dylib (*) <35cc4482-10a2-3803-bc2e-c37b1ad5c4d5> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Runner.debug.dylib
+       0x102fe4000 -        0x10300bfff org.cocoapods.AppAuth (2.1.0) <0e9c2d4f-cb7c-35b1-9fa1-2b233dd7c73b> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/AppAuth.framework/AppAuth
+       0x103210000 -        0x10323ffff org.cocoapods.AppCheckCore (11.3.2) <70adcf49-0b6d-3822-b7e0-9335f0e289d3> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/AppCheckCore.framework/AppCheckCore
+       0x102ea4000 -        0x102eb7fff org.cocoapods.FBLPromises (2.4.1) <5ffa60c3-53bc-3353-b483-511bbcd2af42> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/FBLPromises.framework/FBLPromises
+       0x102e84000 -        0x102e87fff org.cocoapods.FirebaseAppCheckInterop (12.15.0) <4b5fd3a1-041b-3ef5-b5c9-7de3098b78ba> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/FirebaseAppCheckInterop.framework/FirebaseAppCheckInterop
+       0x103648000 -        0x1037d7fff org.cocoapods.FirebaseAuth (12.15.0) <d3c69dc4-3301-378a-b3bb-5374c63fd516> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/FirebaseAuth.framework/FirebaseAuth
+       0x102e94000 -        0x102e97fff org.cocoapods.FirebaseAuthInterop (12.15.0) <a93a0f50-6080-3e0f-b318-cc8e5eb5960f> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/FirebaseAuthInterop.framework/FirebaseAuthInterop
+       0x103038000 -        0x10304bfff org.cocoapods.FirebaseCore (12.15.0) <3f0b7c7f-eacc-35c9-8c6c-737855d72b2c> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/FirebaseCore.framework/FirebaseCore
+       0x102ed4000 -        0x102ed7fff org.cocoapods.FirebaseCoreExtension (12.15.0) <73be9537-484d-3215-9794-f194f159deea> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/FirebaseCoreExtension.framework/FirebaseCoreExtension
+       0x103300000 -        0x10332bfff org.cocoapods.FirebaseCoreInternal (12.15.0) <e1e21dd4-94d4-3cef-853c-1d77773769e0> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/FirebaseCoreInternal.framework/FirebaseCoreInternal
+       0x103378000 -        0x103393fff org.cocoapods.FirebaseInstallations (12.15.0) <01cff088-b098-380c-a8d2-819504996398> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/FirebaseInstallations.framework/FirebaseInstallations
+       0x103444000 -        0x103487fff org.cocoapods.FirebaseMessaging (12.15.0) <35a328b7-97ec-3d37-9db1-eab0fe62c57f> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/FirebaseMessaging.framework/FirebaseMessaging
+       0x1033b8000 -        0x1033dbfff org.cocoapods.GTMAppAuth (5.0.0) <8573949e-fbfb-3b14-a36a-60e321672d4a> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/GTMAppAuth.framework/GTMAppAuth
+       0x103564000 -        0x1035b7fff org.cocoapods.GTMSessionFetcher (3.5.0) <f6a2f3fa-3024-34e8-b4d6-4b07b335b8b8> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/GTMSessionFetcher.framework/GTMSessionFetcher
+       0x1034cc000 -        0x1034fbfff org.cocoapods.GoogleDataTransport (10.1.1) <739be2b8-1949-3672-b4aa-94771fb4e5cc> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/GoogleDataTransport.framework/GoogleDataTransport
+       0x103a10000 -        0x103a37fff org.cocoapods.GoogleSignIn (9.2.0) <bc7e242d-565b-39bf-8a2c-86f2044fa224> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/GoogleSignIn.framework/GoogleSignIn
+       0x1035f8000 -        0x103617fff org.cocoapods.GoogleUtilities (8.1.3) <39ad8106-64f0-3fe0-a047-0dd0585bb049> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/GoogleUtilities.framework/GoogleUtilities
+       0x103284000 -        0x10329bfff org.cocoapods.Promises (2.4.1) <70b9d6d7-dcc5-3a97-b371-d918a7b1014e> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/Promises.framework/Promises
+       0x102ee4000 -        0x102ee7fff org.cocoapods.RecaptchaInterop (101.0.0) <48a3ab86-723e-3936-b75c-20be30debe79> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/RecaptchaInterop.framework/RecaptchaInterop
+       0x102ef4000 -        0x102efffff org.cocoapods.app-links (6.4.1) <cfcc624e-90bc-3b7d-bbb8-12836a4a37ea> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/app_links.framework/app_links
+       0x1032bc000 -        0x1032cbfff org.cocoapods.flutter-local-notifications (0.0.1) <0f0c65a5-bdf1-3c2b-af58-68375d82e076> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/flutter_local_notifications.framework/flutter_local_notifications
+       0x103410000 -        0x10341ffff org.cocoapods.flutter-secure-storage (6.0.0) <927f7cb1-dad3-39ce-a2a0-a6953c2fc4dd> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/flutter_secure_storage.framework/flutter_secure_storage
+       0x102e70000 -        0x102e77fff org.cocoapods.geocoding-ios (1.0.5) <25269f67-ab07-3d97-ad4a-20c0783d7a7d> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/geocoding_ios.framework/geocoding_ios
+       0x1032e0000 -        0x1032ebfff org.cocoapods.geolocator-apple (1.2.0) <520b4d24-2025-3814-b575-2d3997057547> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/geolocator_apple.framework/geolocator_apple
+       0x103080000 -        0x103087fff org.cocoapods.nanopb (3.30910.0) <7b2fd857-f79c-33d1-8601-15c072829328> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/nanopb.framework/nanopb
+       0x103094000 -        0x103097fff org.cocoapods.package-info-plus (0.4.5) <0d61d23e-f6de-3c95-ac59-f301c7e3f2d2> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/package_info_plus.framework/package_info_plus
+       0x103068000 -        0x10306ffff org.cocoapods.share-plus (0.0.1) <87685b56-5a9e-3b2d-be6e-f1b62d6a1fe8> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/share_plus.framework/share_plus
+       0x103aa8000 -        0x103abffff org.cocoapods.shared-preferences-foundation (0.0.1) <95501668-b12f-3576-bfd3-32e9bbb719b9> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/shared_preferences_foundation.framework/shared_preferences_foundation
+       0x103c9c000 -        0x103d4bfff org.cocoapods.webview-flutter-wkwebview (0.0.1) <27bbfcff-5750-35a0-af2f-3f0a29207ca8> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/webview_flutter_wkwebview.framework/webview_flutter_wkwebview
+       0x1081ec000 -        0x10a23bfff io.flutter.flutter (1.0) <4c4c44bf-5555-3144-a1c5-c89341c68b58> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/Flutter.framework/Flutter
+       0x10353c000 -        0x10353ffff libswiftUIKit.dylib (*) <bac5e730-1188-3390-ab3b-997516fcd57c> /Volumes/VOLUME/*/libswiftUIKit.dylib
+       0x103a68000 -        0x103a73fff libsystem_platform.dylib (*) <5819381d-d754-345a-9380-da58aa7beb8a> /usr/lib/system/libsystem_platform.dylib
+       0x103ae4000 -        0x103b23fff libsystem_kernel.dylib (*) <403579b4-ce2e-3243-a679-1ac949127c2e> /usr/lib/system/libsystem_kernel.dylib
+       0x103c00000 -        0x103c0ffff libsystem_pthread.dylib (*) <e2e34381-f506-3e44-8eb8-29805118c3dc> /usr/lib/system/libsystem_pthread.dylib
+       0x103a94000 -        0x103a9ffff libobjc-trampolines.dylib (*) <12c7ec97-b630-3c56-b481-4edb0606935e> /Volumes/VOLUME/*/libobjc-trampolines.dylib
+       0x105cdc000 -        0x105d13fff com.apple.MTLSimDriver (382.5.3) <85a81f07-9e63-379d-8907-1bbeca30922e> /Volumes/VOLUME/*/MTLSimDriver.framework/MTLSimDriver
+       0x105d6c000 -        0x105d9bfff com.apple.gpusw.MetalSerializer (1.0) <4719323b-fb04-3fea-8d65-fa7b607660a6> /Volumes/VOLUME/*/MetalSerializer.framework/MetalSerializer
+       0x107db4000 -        0x107dc7fff io.flutter.flutter.native-assets.objective-c (1.0) <fbbf111d-af61-3da1-b0f0-eb0ac601a43d> /Users/USER/Library/Developer/CoreSimulator/Devices/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6/data/Containers/Bundle/Application/925DBD02-9951-4101-BE17-A58CAE69F35B/Runner.app/Frameworks/objective_c.framework/objective_c
+       0x1030a4000 -        0x103163fff dyld (*) <197124e5-db6e-3d5f-a621-1206166a17f3> /usr/lib/dyld
+       0x1c8224000 -        0x1c82a245f libsystem_c.dylib (*) <80e2962c-3a3d-3a25-b5ef-a179bb2754a3> /Volumes/VOLUME/*/libsystem_c.dylib
+       0x25d24a000 -        0x25d261f6f libc++abi.dylib (*) <f634f4e7-1fd9-3f13-ab1a-23c78b1a51d4> /Volumes/VOLUME/*/libc++abi.dylib
+       0x1c0058000 -        0x1c0092b0b libobjc.A.dylib (*) <be39d4b4-e739-3435-a06f-6ba0855c8458> /Volumes/VOLUME/*/libobjc.A.dylib
+       0x1c014a000 -        0x1c04b620f CoreFoundation (*) <d2c8aa56-482c-35ea-b4d3-54c2b5f58adc> /Volumes/VOLUME/*/CoreFoundation.framework/CoreFoundation
+       0x1e641a000 -        0x1e645ec57 libdispatch.dylib (*) <a0ea2486-b842-3ba5-aedf-210e821d01f7> /Volumes/VOLUME/*/libdispatch.dylib
+       0x221917000 -        0x22191ecfb GraphicsServices (*) <b5c0c276-a8c5-3e18-895f-2e4dbda804a8> /Volumes/VOLUME/*/GraphicsServices.framework/GraphicsServices
+       0x1c3bff000 -        0x1c5f7226c UIKitCore (*) <e9cbebe9-bfee-3385-af52-d32c606e46be> /Volumes/VOLUME/*/UIKitCore.framework/UIKitCore
+               0x0 - 0xffffffffffffffff ??? (*) <00000000-0000-0000-0000-000000000000> ???
+       0x1fff96000 -        0x20005eaa3 ProofReader (*) <3894ea66-775c-315f-863e-ca07a0f1f8a5> /Volumes/VOLUME/*/ProofReader.framework/ProofReader
+       0x1d0230000 -        0x1d02d055f IOKit (*) <3d9a40ab-acdf-3ec9-a223-5a041fbfffcf> /Volumes/VOLUME/*/IOKit.framework/Versions/A/IOKit
+       0x1cb431000 -        0x1cb77ebcb CFNetwork (*) <dea675c8-69ec-3f33-8c59-4ae8f4acfa2e> /Volumes/VOLUME/*/CFNetwork.framework/CFNetwork
+       0x1c04b7000 -        0x1c15598cc Foundation (*) <49fcda5f-a93e-3259-857c-fc75ac2c7b03> /Volumes/VOLUME/*/Foundation.framework/Foundation
+
+External Modification Summary:
+  Calls made by other processes targeting this process:
+    task_for_pid: 0
+    thread_create: 0
+    thread_set_state: 0
+  Calls made by this process:
+    task_for_pid: 0
+    thread_create: 0
+    thread_set_state: 0
+  Calls made by all processes on this machine:
+    task_for_pid: 0
+    thread_create: 0
+    thread_set_state: 0
+
+VM Region Summary:
+ReadOnly portion of Libraries: Total=2.5G resident=0K(0%) swapped_out_or_unallocated=2.5G(100%)
+Writable regions: Total=403.9M written=2067K(0%) resident=2035K(0%) swapped_out=32K(0%) unallocated=401.8M(100%)
+
+                                VIRTUAL   REGION 
+REGION TYPE                        SIZE    COUNT (non-coalesced) 
+===========                     =======  ======= 
+Activity Tracing                   256K        1 
+Dyld Private Memory               53.4G       15 
+Foundation                          16K        1 
+Guard                            385.0G        1 
+IOSurface                         36.5M        4 
+Malloc                           117.4M       36 
+Malloc Guard Page                 3312K        4 
+OS Alloc Once                       32K        1 
+SQLite Page Cache                  384K        3 
+Stack                             27.2M       24 
+Stack Guard                       56.3M       21 
+Untagged                         237.6M      560 
+__AUTH_CONST                        32K        1 
+__DATA                            81.4M     1193 
+__DATA_CONST                     154.5M     1201 
+__DATA_DIRTY                       139K       14 
+__FONT_DATA                        2352        1 
+__LINKEDIT                         1.0G       42 
+__TEXT                             1.5G     1234 
+__TPRO_CONST                       184K        5 
+mapped file                      284.9M       18 
+page table in kernel              2035K        1 
+shared memory                       48K        2 
+===========                     =======  ======= 
+TOTAL                            441.9G     4383 
+
+
+-----------
+Full Report
+-----------
+
+{"app_name":"Runner","timestamp":"2026-09-28 14:46:26.00 +0300","app_version":"1.0.1","slice_uuid":"73edb1a4-74df-3145-b094-7466d1de87a8","build_version":"2","platform":7,"bundleID":"com.example.ionbitECommerce","share_with_app_devs":0,"is_first_party":0,"bug_type":"309","os_version":"macOS 27.2 (26B5091g)","roots_installed":0,"name":"Runner","incident_id":"AB5742CA-EFB9-48BD-8B3C-AFF885F27292"}
+{
+  "uptime" : 54000,
+  "procRole" : "Foreground",
+  "version" : 2,
+  "userID" : 501,
+  "deployVersion" : 210,
+  "modelCode" : "Mac15,6",
+  "coalitionID" : 10278,
+  "osVersion" : {
+    "train" : "macOS 27.2",
+    "build" : "26B5091g",
+    "releaseType" : "User"
+  },
+  "captureTime" : "2026-09-28 14:46:23.1737 +0300",
+  "codeSigningMonitor" : 2,
+  "incident" : "AB5742CA-EFB9-48BD-8B3C-AFF885F27292",
+  "pid" : 20107,
+  "translated" : false,
+  "cpuType" : "ARM-64",
+  "procLaunch" : "2026-09-28 14:45:31.1402 +0300",
+  "procStartAbsTime" : 1300798275207,
+  "procExitAbsTime" : 1302045021341,
+  "procName" : "Runner",
+  "procPath" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Runner",
+  "bundleInfo" : {"CFBundleShortVersionString":"1.0.1","CFBundleVersion":"2","CFBundleIdentifier":"com.example.ionbitECommerce"},
+  "storeInfo" : {"deviceIdentifierForVendor":"AC3369B3-7F3A-5D23-9C0D-0A191883886E","thirdParty":true},
+  "parentProc" : "launchd_sim",
+  "parentPid" : 18542,
+  "coalitionName" : "com.apple.CoreSimulator.SimDevice.A8831FB0-3028-4B42-86E9-A30F4B2FF7A6",
+  "crashReporterKey" : "513A41EF-21F5-9E2F-561C-D72EE4787AFC",
+  "chargingStatus" : {"chargeMode":"chargingWired","externalSourceConnected":true},
+  "developerMode" : 1,
+  "responsiblePid" : 4748,
+  "responsibleProc" : "SimulatorTrampoline",
+  "codeSigningID" : "com.example.ionbitECommerce",
+  "codeSigningTeamID" : "",
+  "codeSigningFlags" : 570425857,
+  "codeSigningValidationCategory" : 10,
+  "codeSigningTrustLevel" : 4294967295,
+  "codeSigningAuxiliaryInfo" : 0,
+  "instructionByteStream" : {"beforePC":"4wAAVP17v6n9AwCRFuP\/l78DAJH9e8GowANf1sADX9YQKYDSARAA1A==","atPC":"4wAAVP17v6n9AwCRDOP\/l78DAJH9e8GowANf1sADX9ZwCoDSARAA1A=="},
+  "bootSessionUUID" : "412E0BCB-DC16-49A3-B00E-21A913393306",
+  "wakeTime" : 660,
+  "sleepWakeUUID" : "62151500-DEAD-44C4-90CB-AD7040961329",
+  "sip" : "enabled",
+  "exception" : {"codes":"0x0000000000000000, 0x0000000000000000","rawCodes":[0,0],"type":"EXC_CRASH","signal":"SIGABRT"},
+  "termination" : {"flags":0,"code":6,"namespace":"SIGNAL","indicator":"Abort trap: 6","byProc":"Runner","byPid":20107},
+  "extMods" : {"caller":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"system":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"targeted":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"warnings":0},
+  "lastExceptionBacktrace" : [{"imageOffset":1302296,"symbol":"__exceptionPreprocess","symbolLocation":160,"imageIndex":44},{"imageOffset":170316,"symbol":"objc_exception_throw","symbolLocation":72,"imageIndex":43},{"imageOffset":1302068,"symbol":"-[NSException initWithCoder:]","symbolLocation":0,"imageIndex":44},{"imageOffset":203440,"symbol":"+[GMSServices checkServicePreconditions]","symbolLocation":260,"imageIndex":2},{"imageOffset":194844,"symbol":"+[GMSServices preLaunchServicesWithCompletion:]","symbolLocation":152,"imageIndex":2},{"imageOffset":7522808,"symbol":"-[FGMGoogleMapFactory sharedMapServices]","symbolLocation":52,"imageIndex":2},{"imageOffset":7522600,"symbol":"-[FGMGoogleMapFactory createWithFrame:viewIdentifier:arguments:]","symbolLocation":84,"imageIndex":2},{"imageOffset":149636,"symbol":"-[FlutterPlatformViewsController onCreate:result:]","symbolLocation":828,"imageIndex":31},{"imageOffset":148680,"symbol":"-[FlutterPlatformViewsController onMethodCall:result:]","symbolLocation":356,"imageIndex":31},{"imageOffset":64176,"symbol":"__47-[FlutterEngine maybeSetupPlatformViewChannels]_block_invoke_2","symbolLocation":120,"imageIndex":31},{"imageOffset":5754364,"symbol":"__45-[FlutterMethodChannel setMethodCallHandler:]_block_invoke","symbolLocation":164,"imageIndex":31},{"imageOffset":435764,"symbol":"invocation function for block in flutter::PlatformMessageHandlerIos::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)","symbolLocation":108,"imageIndex":31},{"imageOffset":5792,"symbol":"_dispatch_call_block_and_release","symbolLocation":24,"imageIndex":45},{"imageOffset":114616,"symbol":"_dispatch_client_callout","symbolLocation":12,"imageIndex":45},{"imageOffset":231568,"symbol":"<deduplicated_symbol>","symbolLocation":24,"imageIndex":45},{"imageOffset":69188,"symbol":"_dispatch_main_queue_drain","symbolLocation":1172,"imageIndex":45},{"imageOffset":68000,"symbol":"_dispatch_main_queue_callback_4CF","symbolLocation":40,"imageIndex":45},{"imageOffset":631524,"symbol":"__CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__","symbolLocation":12,"imageIndex":44},{"imageOffset":627964,"symbol":"__CFRunLoopRun","symbolLocation":1896,"imageIndex":44},{"imageOffset":606272,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":44},{"imageOffset":10668,"symbol":"GSEventRunModal","symbolLocation":116,"imageIndex":46},{"imageOffset":26439216,"symbol":"UIApplicationMain","symbolLocation":124,"imageIndex":47},{"imageOffset":25005204,"imageIndex":47},{"imageOffset":15108,"sourceFile":"\/<compiler-generated>","symbol":"static UIApplicationDelegate.main()","symbolLocation":128,"imageIndex":2},{"imageOffset":14964,"sourceFile":"\/<compiler-generated>","symbol":"static AppDelegate.$main()","symbolLocation":44,"imageIndex":2},{"imageOffset":15232,"sourceFile":"\/<compiler-generated>","symbol":"__debug_main_executable_dylib_entry_point","symbolLocation":28,"imageIndex":2},{"imageOffset":66384,"symbol":"start_sim","symbolLocation":20,"imageIndex":1},{"imageOffset":204528,"symbol":"start","symbolLocation":6688,"imageIndex":40}],
+  "faultingThread" : 0,
+  "threads" : [{"triggered":true,"id":2186317,"threadState":{"x":[{"value":0},{"value":0},{"value":0},{"value":0},{"value":10152698531},{"value":6123305152},{"value":110},{"value":83615660273547296},{"value":4346830400,"symbolLocation":0,"symbol":"_main_thread"},{"value":7522784878393224474},{"value":2},{"value":4294967293},{"value":0},{"value":0},{"value":0},{"value":0},{"value":328},{"value":1},{"value":0},{"value":6},{"value":259},{"value":4346830624,"symbolLocation":224,"symbol":"_main_thread"},{"value":9368727552,"symbolLocation":0,"symbol":"realizeClassWithoutSwift(objc_class*, objc_class*)::hackedDispatch"},{"value":4410655968},{"value":4400834496},{"value":4402980928},{"value":5001497696},{"value":9537523818},{"value":4441479609}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357907320},"cpsr":{"value":1073745920},"fp":{"value":6123305008},"sp":{"value":6123304976},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356753568,"matchesCrashFrame":1},"far":{"value":0}},"queue":"com.apple.main-thread","frames":[{"imageOffset":34976,"symbol":"__pthread_kill","symbolLocation":8,"imageIndex":34},{"imageOffset":25464,"symbol":"pthread_kill","symbolLocation":264,"imageIndex":35},{"imageOffset":481792,"symbol":"abort","symbolLocation":116,"imageIndex":41},{"imageOffset":82172,"symbol":"__abort_message","symbolLocation":128,"imageIndex":42},{"imageOffset":4484,"symbol":"demangling_terminate_handler()","symbolLocation":268,"imageIndex":42},{"imageOffset":20240,"symbol":"_objc_terminate()","symbolLocation":124,"imageIndex":43},{"imageOffset":65556,"symbol":"std::__terminate(void (*)())","symbolLocation":12,"imageIndex":42},{"imageOffset":77872,"symbol":"__cxxabiv1::failed_throw(__cxxabiv1::__cxa_exception*)","symbolLocation":32,"imageIndex":42},{"imageOffset":77840,"symbol":"__cxa_throw","symbolLocation":88,"imageIndex":42},{"imageOffset":170628,"symbol":"objc_exception_throw","symbolLocation":384,"imageIndex":43},{"imageOffset":1302068,"symbol":"+[NSException raise:format:]","symbolLocation":124,"imageIndex":44},{"imageOffset":203440,"symbol":"+[GMSServices checkServicePreconditions]","symbolLocation":260,"imageIndex":2},{"imageOffset":194844,"symbol":"+[GMSServices preLaunchServicesWithCompletion:]","symbolLocation":152,"imageIndex":2},{"imageOffset":7522808,"symbol":"-[FGMGoogleMapFactory sharedMapServices]","symbolLocation":52,"imageIndex":2},{"imageOffset":7522600,"symbol":"-[FGMGoogleMapFactory createWithFrame:viewIdentifier:arguments:]","symbolLocation":84,"imageIndex":2},{"imageOffset":149636,"symbol":"-[FlutterPlatformViewsController onCreate:result:]","symbolLocation":828,"imageIndex":31},{"imageOffset":148680,"symbol":"-[FlutterPlatformViewsController onMethodCall:result:]","symbolLocation":356,"imageIndex":31},{"imageOffset":64176,"symbol":"__47-[FlutterEngine maybeSetupPlatformViewChannels]_block_invoke_2","symbolLocation":120,"imageIndex":31},{"imageOffset":5754364,"symbol":"__45-[FlutterMethodChannel setMethodCallHandler:]_block_invoke","symbolLocation":164,"imageIndex":31},{"imageOffset":435764,"symbol":"invocation function for block in flutter::PlatformMessageHandlerIos::HandlePlatformMessage(std::__fl::unique_ptr<flutter::PlatformMessage, std::__fl::default_delete<flutter::PlatformMessage>>)","symbolLocation":108,"imageIndex":31},{"imageOffset":5792,"symbol":"_dispatch_call_block_and_release","symbolLocation":24,"imageIndex":45},{"imageOffset":114616,"symbol":"_dispatch_client_callout","symbolLocation":12,"imageIndex":45},{"imageOffset":231568,"symbol":"<deduplicated_symbol>","symbolLocation":24,"imageIndex":45},{"imageOffset":69188,"symbol":"_dispatch_main_queue_drain","symbolLocation":1172,"imageIndex":45},{"imageOffset":68000,"symbol":"_dispatch_main_queue_callback_4CF","symbolLocation":40,"imageIndex":45},{"imageOffset":631524,"symbol":"__CFRUNLOOP_IS_SERVICING_THE_MAIN_DISPATCH_QUEUE__","symbolLocation":12,"imageIndex":44},{"imageOffset":627964,"symbol":"__CFRunLoopRun","symbolLocation":1896,"imageIndex":44},{"imageOffset":606272,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":44},{"imageOffset":10668,"symbol":"GSEventRunModal","symbolLocation":116,"imageIndex":46},{"imageOffset":26439216,"symbol":"UIApplicationMain","symbolLocation":124,"imageIndex":47},{"imageOffset":25005204,"imageIndex":47},{"imageOffset":15108,"sourceFile":"\/<compiler-generated>","symbol":"static UIApplicationDelegate.main()","symbolLocation":128,"imageIndex":2},{"imageOffset":14964,"sourceFile":"\/<compiler-generated>","symbol":"static AppDelegate.$main()","symbolLocation":44,"imageIndex":2},{"imageOffset":15232,"sourceFile":"\/<compiler-generated>","symbol":"__debug_main_executable_dylib_entry_point","symbolLocation":28,"imageIndex":2},{"imageOffset":66384,"symbol":"start_sim","symbolLocation":20,"imageIndex":1},{"imageOffset":204528,"symbol":"start","symbolLocation":6688,"imageIndex":40}]},{"id":2186891,"name":"io.flutter.1.raster","threadState":{"x":[{"value":268451845},{"value":21592279046},{"value":8589934592,"symbolLocation":96,"symbol":"is_pol_digraph"},{"value":126456722096128},{"value":0},{"value":126456722096128},{"value":2},{"value":4294967295},{"value":0},{"value":17179869184},{"value":0},{"value":2},{"value":0},{"value":0},{"value":29443},{"value":3072},{"value":18446744073709551569},{"value":7516717748,"symbolLocation":0,"symbol":"-[NSObject dealloc]"},{"value":0},{"value":4294967295},{"value":2},{"value":126456722096128},{"value":0},{"value":126456722096128},{"value":21592279046},{"value":6128312344},{"value":8589934592,"symbolLocation":96,"symbol":"is_pol_digraph"},{"value":18446744073709550527},{"value":4357013504,"symbolLocation":0,"symbol":"_libkernel_string_functions"}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4356792548},"cpsr":{"value":4096},"fp":{"value":6128312192},"sp":{"value":6128312112},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356721500},"far":{"value":0}},"frames":[{"imageOffset":2908,"symbol":"mach_msg2_trap","symbolLocation":8,"imageIndex":34},{"imageOffset":73956,"symbol":"mach_msg2_internal","symbolLocation":72,"imageIndex":34},{"imageOffset":35928,"symbol":"mach_msg_overwrite","symbolLocation":484,"imageIndex":34},{"imageOffset":3804,"symbol":"mach_msg","symbolLocation":20,"imageIndex":34},{"imageOffset":630800,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":156,"imageIndex":44},{"imageOffset":627168,"symbol":"__CFRunLoopRun","symbolLocation":1100,"imageIndex":44},{"imageOffset":606272,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":44},{"imageOffset":691792,"symbol":"fml::MessageLoopDarwin::Run()","symbolLocation":92,"imageIndex":31},{"imageOffset":661388,"symbol":"fml::MessageLoopImpl::DoRun()","symbolLocation":44,"imageIndex":31},{"imageOffset":685328,"symbol":"std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()()","symbolLocation":184,"imageIndex":31},{"imageOffset":684500,"symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*)","symbolLocation":36,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2186892,"name":"io.flutter.1.io","threadState":{"x":[{"value":268451845},{"value":21592279046},{"value":8589934592,"symbolLocation":96,"symbol":"is_pol_digraph"},{"value":118760140701696},{"value":0},{"value":118760140701696},{"value":2},{"value":4294967295},{"value":0},{"value":17179869184},{"value":0},{"value":2},{"value":0},{"value":0},{"value":27651},{"value":3072},{"value":18446744073709551569},{"value":7516717748,"symbolLocation":0,"symbol":"-[NSObject dealloc]"},{"value":0},{"value":4294967295},{"value":2},{"value":118760140701696},{"value":0},{"value":118760140701696},{"value":21592279046},{"value":6130458648},{"value":8589934592,"symbolLocation":96,"symbol":"is_pol_digraph"},{"value":18446744073709550527},{"value":4357013504,"symbolLocation":0,"symbol":"_libkernel_string_functions"}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4356792548},"cpsr":{"value":4096},"fp":{"value":6130458496},"sp":{"value":6130458416},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356721500},"far":{"value":0}},"frames":[{"imageOffset":2908,"symbol":"mach_msg2_trap","symbolLocation":8,"imageIndex":34},{"imageOffset":73956,"symbol":"mach_msg2_internal","symbolLocation":72,"imageIndex":34},{"imageOffset":35928,"symbol":"mach_msg_overwrite","symbolLocation":484,"imageIndex":34},{"imageOffset":3804,"symbol":"mach_msg","symbolLocation":20,"imageIndex":34},{"imageOffset":630800,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":156,"imageIndex":44},{"imageOffset":627168,"symbol":"__CFRunLoopRun","symbolLocation":1100,"imageIndex":44},{"imageOffset":606272,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":44},{"imageOffset":691792,"symbol":"fml::MessageLoopDarwin::Run()","symbolLocation":92,"imageIndex":31},{"imageOffset":661388,"symbol":"fml::MessageLoopImpl::DoRun()","symbolLocation":44,"imageIndex":31},{"imageOffset":685328,"symbol":"std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()()","symbolLocation":184,"imageIndex":31},{"imageOffset":684500,"symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*)","symbolLocation":36,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2186893,"name":"io.flutter.1.profiler","threadState":{"x":[{"value":0},{"value":8589934595,"symbolLocation":99,"symbol":"is_pol_digraph"},{"value":343597389075},{"value":114362094209563},{"value":12373800779776},{"value":114362094190592},{"value":48},{"value":0},{"value":20},{"value":9368817968,"symbolLocation":0,"symbol":"OBJC_CLASS_$___NSCFData"},{"value":140737488355320},{"value":262563376717507290},{"value":405504},{"value":0},{"value":6},{"value":4363534336},{"value":18446744073709551569},{"value":7516717748,"symbolLocation":0,"symbol":"-[NSObject dealloc]"},{"value":0},{"value":0},{"value":48},{"value":114362094190592},{"value":12373800779776},{"value":114362094209563},{"value":8589934595,"symbolLocation":99,"symbol":"is_pol_digraph"},{"value":6132600192},{"value":343597389075},{"value":18446744073709550527},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4356792548},"cpsr":{"value":1610616832},"fp":{"value":6132600176},"sp":{"value":6132600096},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356721500},"far":{"value":0}},"frames":[{"imageOffset":2908,"symbol":"mach_msg2_trap","symbolLocation":8,"imageIndex":34},{"imageOffset":73956,"symbol":"mach_msg2_internal","symbolLocation":72,"imageIndex":34},{"imageOffset":496824,"symbol":"io_service_get_matching_services_bin","symbolLocation":260,"imageIndex":50},{"imageOffset":27628,"symbol":"IOServiceGetMatchingServices","symbolLocation":220,"imageIndex":50},{"imageOffset":424784,"symbol":"flutter::ProfilerMetricsIOS::GenerateSample()","symbolLocation":88,"imageIndex":31},{"imageOffset":96524,"symbol":"std::__fl::__function::__func<-[FlutterEngine startProfiler]::$_5, std::__fl::allocator<-[FlutterEngine startProfiler]::$_5>, flutter::ProfileSample ()>::operator()()","symbolLocation":20,"imageIndex":31},{"imageOffset":5742724,"symbol":"std::__fl::__function::__func<flutter::SamplingProfiler::SampleRepeatedly(fml::TimeDelta) const::$_0, std::__fl::allocator<flutter::SamplingProfiler::SampleRepeatedly(fml::TimeDelta) const::$_0>, void ()>::operator()()","symbolLocation":48,"imageIndex":31},{"imageOffset":661604,"symbol":"fml::MessageLoopImpl::FlushTasks(fml::FlushType)","symbolLocation":152,"imageIndex":31},{"imageOffset":691496,"symbol":"fml::MessageLoopDarwin::OnTimerFire(__CFRunLoopTimer*, fml::MessageLoopDarwin*)","symbolLocation":32,"imageIndex":31},{"imageOffset":634424,"symbol":"__CFRUNLOOP_IS_CALLING_OUT_TO_A_TIMER_CALLBACK_FUNCTION__","symbolLocation":28,"imageIndex":44},{"imageOffset":633672,"symbol":"__CFRunLoopDoTimer","symbolLocation":916,"imageIndex":44},{"imageOffset":631332,"symbol":"__CFRunLoopDoTimers","symbolLocation":276,"imageIndex":44},{"imageOffset":627836,"symbol":"__CFRunLoopRun","symbolLocation":1768,"imageIndex":44},{"imageOffset":606272,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":44},{"imageOffset":691792,"symbol":"fml::MessageLoopDarwin::Run()","symbolLocation":92,"imageIndex":31},{"imageOffset":661388,"symbol":"fml::MessageLoopImpl::DoRun()","symbolLocation":44,"imageIndex":31},{"imageOffset":685328,"symbol":"std::__fl::__function::__func<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0, std::__fl::allocator<fml::Thread::Thread(std::__fl::function<void (fml::Thread::ThreadConfig const&)> const&, fml::Thread::ThreadConfig const&)::$_0>, void ()>::operator()()","symbolLocation":184,"imageIndex":31},{"imageOffset":684500,"symbol":"fml::ThreadHandle::ThreadHandle(std::__fl::function<void ()>&&)::$_0::__invoke(void*)","symbolLocation":36,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2186894,"name":"io.worker.1","threadState":{"x":[{"value":4},{"value":0},{"value":3840},{"value":0},{"value":0},{"value":160},{"value":0},{"value":0},{"value":6133181928},{"value":0},{"value":512},{"value":2199023256066},{"value":2199023256066},{"value":512},{"value":0},{"value":2199023256064},{"value":305},{"value":4400804416},{"value":0},{"value":4400517240},{"value":4400517304},{"value":6133182688},{"value":0},{"value":0},{"value":3840},{"value":4864},{"value":3840},{"value":6133182168},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909316},"cpsr":{"value":1610616832},"fp":{"value":6133182048},"sp":{"value":6133181904},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27460,"symbol":"_pthread_cond_wait","symbolLocation":972,"imageIndex":35},{"imageOffset":458204,"symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","symbolLocation":24,"imageIndex":31},{"imageOffset":646716,"symbol":"fml::ConcurrentMessageLoop::WorkerMain()","symbolLocation":152,"imageIndex":31},{"imageOffset":648316,"symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","symbolLocation":192,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2186895,"name":"io.worker.2","threadState":{"x":[{"value":260},{"value":0},{"value":3328},{"value":0},{"value":0},{"value":160},{"value":0},{"value":0},{"value":6133755368},{"value":0},{"value":512},{"value":2199023256066},{"value":2199023256066},{"value":512},{"value":0},{"value":2199023256064},{"value":305},{"value":4400804992},{"value":0},{"value":4400517240},{"value":4400517304},{"value":6133756128},{"value":0},{"value":0},{"value":3328},{"value":4352},{"value":3328},{"value":6133755608},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909316},"cpsr":{"value":1610616832},"fp":{"value":6133755488},"sp":{"value":6133755344},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27460,"symbol":"_pthread_cond_wait","symbolLocation":972,"imageIndex":35},{"imageOffset":458204,"symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","symbolLocation":24,"imageIndex":31},{"imageOffset":646716,"symbol":"fml::ConcurrentMessageLoop::WorkerMain()","symbolLocation":152,"imageIndex":31},{"imageOffset":648316,"symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","symbolLocation":192,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2186896,"name":"io.worker.3","threadState":{"x":[{"value":4},{"value":0},{"value":3584},{"value":0},{"value":0},{"value":160},{"value":0},{"value":0},{"value":6134328808},{"value":0},{"value":512},{"value":2199023256066},{"value":2199023256066},{"value":512},{"value":0},{"value":2199023256064},{"value":305},{"value":4400804800},{"value":0},{"value":4400517240},{"value":4400517304},{"value":6134329568},{"value":0},{"value":0},{"value":3584},{"value":4608},{"value":3584},{"value":6134329048},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909316},"cpsr":{"value":1610616832},"fp":{"value":6134328928},"sp":{"value":6134328784},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27460,"symbol":"_pthread_cond_wait","symbolLocation":972,"imageIndex":35},{"imageOffset":458204,"symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","symbolLocation":24,"imageIndex":31},{"imageOffset":646716,"symbol":"fml::ConcurrentMessageLoop::WorkerMain()","symbolLocation":152,"imageIndex":31},{"imageOffset":648316,"symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","symbolLocation":192,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2186897,"name":"io.worker.4","threadState":{"x":[{"value":4},{"value":0},{"value":3072},{"value":0},{"value":0},{"value":160},{"value":0},{"value":0},{"value":6134902248},{"value":0},{"value":512},{"value":2199023256066},{"value":2199023256066},{"value":512},{"value":0},{"value":2199023256064},{"value":305},{"value":4400804608},{"value":0},{"value":4400517240},{"value":4400517304},{"value":6134903008},{"value":0},{"value":0},{"value":3072},{"value":4096},{"value":3072},{"value":6134902488},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909316},"cpsr":{"value":1610616832},"fp":{"value":6134902368},"sp":{"value":6134902224},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27460,"symbol":"_pthread_cond_wait","symbolLocation":972,"imageIndex":35},{"imageOffset":458204,"symbol":"std::__fl::condition_variable::wait(std::__fl::unique_lock<std::__fl::mutex>&)","symbolLocation":24,"imageIndex":31},{"imageOffset":646716,"symbol":"fml::ConcurrentMessageLoop::WorkerMain()","symbolLocation":152,"imageIndex":31},{"imageOffset":648316,"symbol":"void* std::__fl::__thread_proxy[abi:nn210000]<std::__fl::tuple<std::__fl::unique_ptr<std::__fl::__thread_struct, std::__fl::default_delete<std::__fl::__thread_struct>>, fml::ConcurrentMessageLoop::ConcurrentMessageLoop(unsigned long)::$_0>>(void*)","symbolLocation":192,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2186898,"name":"dart:io EventHandler","threadState":{"x":[{"value":4},{"value":0},{"value":0},{"value":6135999768},{"value":16},{"value":6135998728},{"value":0},{"value":0},{"value":238000000},{"value":2},{"value":130841883735808},{"value":130841883735810},{"value":256},{"value":1},{"value":148480},{"value":148224},{"value":363},{"value":636617232630784},{"value":0},{"value":4401179520},{"value":6135998728},{"value":67108864},{"value":2147483647},{"value":274877907},{"value":4294966296},{"value":1000000},{"value":155084249},{"value":0},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4436661008},"cpsr":{"value":536875008},"fp":{"value":6136000368},"sp":{"value":6135998704},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356744864},"far":{"value":0}},"frames":[{"imageOffset":26272,"symbol":"kevent","symbolLocation":8,"imageIndex":34},{"imageOffset":5460752,"symbol":"dart::bin::EventHandlerImplementation::EventHandlerEntry(unsigned long)","symbolLocation":304,"imageIndex":31},{"imageOffset":5578676,"symbol":"dart::bin::ThreadStart(void*)","symbolLocation":92,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2186899,"name":"Dart Profiler ThreadInterrupter","threadState":{"x":[{"value":260},{"value":0},{"value":1992192},{"value":0},{"value":0},{"value":160},{"value":0},{"value":0},{"value":6137096728},{"value":0},{"value":256},{"value":1099511628034},{"value":1099511628034},{"value":256},{"value":0},{"value":1099511628032},{"value":305},{"value":8646559442843904},{"value":0},{"value":4401548672},{"value":4401548744},{"value":6137098464},{"value":0},{"value":0},{"value":1992192},{"value":2013696},{"value":2013441},{"value":4465909760,"symbolLocation":16,"symbol":"dart::kDeoptimizeCopyFrameRuntimeEntry"},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909316},"cpsr":{"value":1610616832},"fp":{"value":6137096848},"sp":{"value":6137096704},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27460,"symbol":"_pthread_cond_wait","symbolLocation":972,"imageIndex":35},{"imageOffset":5931728,"symbol":"dart::ConditionVariable::WaitMicros(dart::Mutex*, long long)","symbolLocation":128,"imageIndex":31},{"imageOffset":7491172,"symbol":"dart::ThreadInterrupter::ThreadMain(unsigned long)","symbolLocation":332,"imageIndex":31},{"imageOffset":7153300,"symbol":"dart::ThreadStart(void*)","symbolLocation":208,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2186902,"name":"DartWorker","threadState":{"x":[{"value":260},{"value":0},{"value":148480},{"value":0},{"value":0},{"value":160},{"value":61},{"value":0},{"value":148481},{"value":0},{"value":768},{"value":3298534884098},{"value":3298534884098},{"value":768},{"value":0},{"value":3298534884096},{"value":305},{"value":4400805952},{"value":0},{"value":4402582792},{"value":4401180528},{"value":1},{"value":0},{"value":61},{"value":148480},{"value":148736},{"value":148481},{"value":4465909760,"symbolLocation":16,"symbol":"dart::kDeoptimizeCopyFrameRuntimeEntry"},{"value":1000}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909360},"cpsr":{"value":2684358656},"fp":{"value":6139292144},"sp":{"value":6139292000},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27504,"symbol":"_pthread_cond_wait","symbolLocation":1016,"imageIndex":35},{"imageOffset":5931712,"symbol":"dart::ConditionVariable::WaitMicros(dart::Mutex*, long long)","symbolLocation":112,"imageIndex":31},{"imageOffset":6348792,"symbol":"dart::MutatorThreadPool::OnEnterIdleLocked(dart::MutexLocker*, dart::ThreadPool::Worker*)","symbolLocation":156,"imageIndex":31},{"imageOffset":7494020,"symbol":"dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*)","symbolLocation":124,"imageIndex":31},{"imageOffset":7494740,"symbol":"dart::ThreadPool::Worker::Main(unsigned long)","symbolLocation":120,"imageIndex":31},{"imageOffset":7153300,"symbol":"dart::ThreadStart(void*)","symbolLocation":208,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2187108,"name":"com.apple.NSURLConnectionLoader","threadState":{"x":[{"value":268451845},{"value":21592279046},{"value":8589934592,"symbolLocation":96,"symbol":"is_pol_digraph"},{"value":268328081817600},{"value":0},{"value":268328081817600},{"value":2},{"value":4294967295},{"value":0},{"value":17179869184},{"value":0},{"value":2},{"value":0},{"value":0},{"value":62475},{"value":3072},{"value":18446744073709551569},{"value":2},{"value":0},{"value":4294967295},{"value":2},{"value":268328081817600},{"value":0},{"value":268328081817600},{"value":21592279046},{"value":6145350984},{"value":8589934592,"symbolLocation":96,"symbol":"is_pol_digraph"},{"value":18446744073709550527},{"value":4357013504,"symbolLocation":0,"symbol":"_libkernel_string_functions"}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4356792548},"cpsr":{"value":4096},"fp":{"value":6145350832},"sp":{"value":6145350752},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356721500},"far":{"value":0}},"frames":[{"imageOffset":2908,"symbol":"mach_msg2_trap","symbolLocation":8,"imageIndex":34},{"imageOffset":73956,"symbol":"mach_msg2_internal","symbolLocation":72,"imageIndex":34},{"imageOffset":35928,"symbol":"mach_msg_overwrite","symbolLocation":484,"imageIndex":34},{"imageOffset":3804,"symbol":"mach_msg","symbolLocation":20,"imageIndex":34},{"imageOffset":630800,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":156,"imageIndex":44},{"imageOffset":627168,"symbol":"__CFRunLoopRun","symbolLocation":1100,"imageIndex":44},{"imageOffset":606272,"symbol":"_CFRunLoopRunSpecificWithOptions","symbolLocation":496,"imageIndex":44},{"imageOffset":2070208,"symbol":"+[__CFN_CoreSchedulingSetRunnable _run:]","symbolLocation":344,"imageIndex":51},{"imageOffset":1234220,"symbol":"__NSThread__start__","symbolLocation":716,"imageIndex":52},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2187908,"name":"DartWorker","threadState":{"x":[{"value":260},{"value":0},{"value":87808},{"value":0},{"value":0},{"value":160},{"value":3},{"value":659281000},{"value":87809},{"value":0},{"value":1536},{"value":6597069768194},{"value":6597069768194},{"value":1536},{"value":0},{"value":6597069768192},{"value":305},{"value":7518080304,"symbolLocation":0,"symbol":"-[__NSCFArray objectAtIndex:]"},{"value":0},{"value":4402582408},{"value":5176057392},{"value":1},{"value":659281000},{"value":3},{"value":87808},{"value":88064},{"value":87809},{"value":4465909760,"symbolLocation":16,"symbol":"dart::kDeoptimizeCopyFrameRuntimeEntry"},{"value":1000}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909360},"cpsr":{"value":2684358656},"fp":{"value":6138194496},"sp":{"value":6138194352},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27504,"symbol":"_pthread_cond_wait","symbolLocation":1016,"imageIndex":35},{"imageOffset":5931712,"symbol":"dart::ConditionVariable::WaitMicros(dart::Mutex*, long long)","symbolLocation":112,"imageIndex":31},{"imageOffset":7494404,"symbol":"dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*)","symbolLocation":508,"imageIndex":31},{"imageOffset":7494740,"symbol":"dart::ThreadPool::Worker::Main(unsigned long)","symbolLocation":120,"imageIndex":31},{"imageOffset":7153300,"symbol":"dart::ThreadStart(void*)","symbolLocation":208,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2188267,"name":"DartWorker","threadState":{"x":[{"value":260},{"value":0},{"value":27136},{"value":0},{"value":0},{"value":160},{"value":5},{"value":0},{"value":27137},{"value":0},{"value":1536},{"value":6597069768194},{"value":6597069768194},{"value":1536},{"value":0},{"value":6597069768192},{"value":305},{"value":5177793856},{"value":0},{"value":4402582408},{"value":5164201904},{"value":1},{"value":0},{"value":5},{"value":27136},{"value":27392},{"value":27137},{"value":4465909760,"symbolLocation":16,"symbol":"dart::kDeoptimizeCopyFrameRuntimeEntry"},{"value":1000}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909360},"cpsr":{"value":2684358656},"fp":{"value":6141487680},"sp":{"value":6141487536},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27504,"symbol":"_pthread_cond_wait","symbolLocation":1016,"imageIndex":35},{"imageOffset":5931712,"symbol":"dart::ConditionVariable::WaitMicros(dart::Mutex*, long long)","symbolLocation":112,"imageIndex":31},{"imageOffset":7494404,"symbol":"dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*)","symbolLocation":508,"imageIndex":31},{"imageOffset":7494740,"symbol":"dart::ThreadPool::Worker::Main(unsigned long)","symbolLocation":120,"imageIndex":31},{"imageOffset":7153300,"symbol":"dart::ThreadStart(void*)","symbolLocation":208,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2188390,"frames":[],"threadState":{"x":[{"value":6124449792},{"value":13607},{"value":6123913216},{"value":0},{"value":409604},{"value":18446744073709551615},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":0},"cpsr":{"value":4096},"fp":{"value":0},"sp":{"value":6124449792},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4357888628},"far":{"value":0}}},{"id":2188400,"frames":[],"threadState":{"x":[{"value":6125023232},{"value":15331},{"value":6124486656},{"value":0},{"value":409604},{"value":18446744073709551615},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":0},"cpsr":{"value":4096},"fp":{"value":0},"sp":{"value":6125023232},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4357888628},"far":{"value":0}}},{"id":2188527,"name":"DartWorker","threadState":{"x":[{"value":260},{"value":0},{"value":512},{"value":0},{"value":0},{"value":160},{"value":5},{"value":0},{"value":513},{"value":0},{"value":1280},{"value":5497558140162},{"value":5497558140162},{"value":1280},{"value":0},{"value":5497558140160},{"value":305},{"value":5177786752},{"value":0},{"value":4402582408},{"value":4927594128},{"value":1},{"value":0},{"value":5},{"value":512},{"value":768},{"value":513},{"value":4465909760,"symbolLocation":16,"symbol":"dart::kDeoptimizeCopyFrameRuntimeEntry"},{"value":1000}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909360},"cpsr":{"value":2684358656},"fp":{"value":6126119488},"sp":{"value":6126119344},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27504,"symbol":"_pthread_cond_wait","symbolLocation":1016,"imageIndex":35},{"imageOffset":5931712,"symbol":"dart::ConditionVariable::WaitMicros(dart::Mutex*, long long)","symbolLocation":112,"imageIndex":31},{"imageOffset":7494404,"symbol":"dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*)","symbolLocation":508,"imageIndex":31},{"imageOffset":7494740,"symbol":"dart::ThreadPool::Worker::Main(unsigned long)","symbolLocation":120,"imageIndex":31},{"imageOffset":7153300,"symbol":"dart::ThreadStart(void*)","symbolLocation":208,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2188528,"frames":[],"threadState":{"x":[{"value":6123876352},{"value":9991},{"value":6123339776},{"value":0},{"value":409604},{"value":18446744073709551615},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":0},"cpsr":{"value":4096},"fp":{"value":0},"sp":{"value":6123876352},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4357888628},"far":{"value":0}}},{"id":2188599,"name":"DartWorker","threadState":{"x":[{"value":260},{"value":0},{"value":5376},{"value":0},{"value":0},{"value":160},{"value":5},{"value":0},{"value":5377},{"value":0},{"value":3840},{"value":16492674420482},{"value":16492674420482},{"value":3840},{"value":0},{"value":16492674420480},{"value":305},{"value":7518080304,"symbolLocation":0,"symbol":"-[__NSCFArray objectAtIndex:]"},{"value":0},{"value":4402585128},{"value":5197725840},{"value":1},{"value":0},{"value":5},{"value":5376},{"value":5632},{"value":5377},{"value":4465909760,"symbolLocation":16,"symbol":"dart::kDeoptimizeCopyFrameRuntimeEntry"},{"value":1000}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909360},"cpsr":{"value":2684358656},"fp":{"value":6143683136},"sp":{"value":6143682992},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27504,"symbol":"_pthread_cond_wait","symbolLocation":1016,"imageIndex":35},{"imageOffset":5931712,"symbol":"dart::ConditionVariable::WaitMicros(dart::Mutex*, long long)","symbolLocation":112,"imageIndex":31},{"imageOffset":7494404,"symbol":"dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*)","symbolLocation":508,"imageIndex":31},{"imageOffset":7494740,"symbol":"dart::ThreadPool::Worker::Main(unsigned long)","symbolLocation":120,"imageIndex":31},{"imageOffset":7153300,"symbol":"dart::ThreadStart(void*)","symbolLocation":208,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]},{"id":2188600,"frames":[],"threadState":{"x":[{"value":6139867136},{"value":48835},{"value":6139330560},{"value":0},{"value":409604},{"value":18446744073709551615},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0},{"value":0}],"flavor":"ARM_THREAD_STATE64","lr":{"value":0},"cpsr":{"value":4096},"fp":{"value":0},"sp":{"value":6139867136},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4357888628},"far":{"value":0}}},{"id":2188604,"name":"DartWorker","threadState":{"x":[{"value":260},{"value":0},{"value":0},{"value":0},{"value":0},{"value":160},{"value":5},{"value":0},{"value":1},{"value":0},{"value":0},{"value":2},{"value":2},{"value":0},{"value":0},{"value":0},{"value":305},{"value":3},{"value":0},{"value":5003601704},{"value":5197739760},{"value":1},{"value":0},{"value":5},{"value":0},{"value":256},{"value":1},{"value":4465909760,"symbolLocation":16,"symbol":"dart::kDeoptimizeCopyFrameRuntimeEntry"},{"value":1000}],"flavor":"ARM_THREAD_STATE64","lr":{"value":4357909360},"cpsr":{"value":2684358656},"fp":{"value":6144780864},"sp":{"value":6144780720},"esr":{"value":1442840704,"description":"(Syscall)"},"pc":{"value":4356735012},"far":{"value":0}},"frames":[{"imageOffset":16420,"symbol":"__psynch_cvwait","symbolLocation":8,"imageIndex":34},{"imageOffset":27504,"symbol":"_pthread_cond_wait","symbolLocation":1016,"imageIndex":35},{"imageOffset":5931712,"symbol":"dart::ConditionVariable::WaitMicros(dart::Mutex*, long long)","symbolLocation":112,"imageIndex":31},{"imageOffset":7494404,"symbol":"dart::ThreadPool::WorkerLoop(dart::ThreadPool::Worker*)","symbolLocation":508,"imageIndex":31},{"imageOffset":7494740,"symbol":"dart::ThreadPool::Worker::Main(unsigned long)","symbolLocation":120,"imageIndex":31},{"imageOffset":7153300,"symbol":"dart::ThreadStart(void*)","symbolLocation":208,"imageIndex":31},{"imageOffset":26240,"symbol":"_pthread_start","symbolLocation":104,"imageIndex":35},{"imageOffset":6792,"symbol":"thread_start","symbolLocation":8,"imageIndex":35}]}],
+  "usedImages" : [
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4343562240,
+    "CFBundleShortVersionString" : "1.0.1",
+    "CFBundleIdentifier" : "com.example.ionbitECommerce",
+    "size" : 16384,
+    "uuid" : "73edb1a4-74df-3145-b094-7466d1de87a8",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Runner",
+    "name" : "Runner",
+    "CFBundleVersion" : "2"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4344348672,
+    "size" : 376832,
+    "uuid" : "6fae6738-0877-3f55-80b9-6ae42fcb8606",
+    "path" : "\/Volumes\/VOLUME\/*\/dyld_sim",
+    "name" : "dyld_sim"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4367728640,
+    "size" : 10551296,
+    "uuid" : "35cc4482-10a2-3803-bc2e-c37b1ad5c4d5",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Runner.debug.dylib",
+    "name" : "Runner.debug.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4345184256,
+    "CFBundleShortVersionString" : "2.1.0",
+    "CFBundleIdentifier" : "org.cocoapods.AppAuth",
+    "size" : 163840,
+    "uuid" : "0e9c2d4f-cb7c-35b1-9fa1-2b233dd7c73b",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/AppAuth.framework\/AppAuth",
+    "name" : "AppAuth",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4347461632,
+    "CFBundleShortVersionString" : "11.3.2",
+    "CFBundleIdentifier" : "org.cocoapods.AppCheckCore",
+    "size" : 196608,
+    "uuid" : "70adcf49-0b6d-3822-b7e0-9335f0e289d3",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/AppCheckCore.framework\/AppCheckCore",
+    "name" : "AppCheckCore",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4343873536,
+    "CFBundleShortVersionString" : "2.4.1",
+    "CFBundleIdentifier" : "org.cocoapods.FBLPromises",
+    "size" : 81920,
+    "uuid" : "5ffa60c3-53bc-3353-b483-511bbcd2af42",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/FBLPromises.framework\/FBLPromises",
+    "name" : "FBLPromises",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4343742464,
+    "CFBundleShortVersionString" : "12.15.0",
+    "CFBundleIdentifier" : "org.cocoapods.FirebaseAppCheckInterop",
+    "size" : 16384,
+    "uuid" : "4b5fd3a1-041b-3ef5-b5c9-7de3098b78ba",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/FirebaseAppCheckInterop.framework\/FirebaseAppCheckInterop",
+    "name" : "FirebaseAppCheckInterop",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4351885312,
+    "CFBundleShortVersionString" : "12.15.0",
+    "CFBundleIdentifier" : "org.cocoapods.FirebaseAuth",
+    "size" : 1638400,
+    "uuid" : "d3c69dc4-3301-378a-b3bb-5374c63fd516",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/FirebaseAuth.framework\/FirebaseAuth",
+    "name" : "FirebaseAuth",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4343808000,
+    "CFBundleShortVersionString" : "12.15.0",
+    "CFBundleIdentifier" : "org.cocoapods.FirebaseAuthInterop",
+    "size" : 16384,
+    "uuid" : "a93a0f50-6080-3e0f-b318-cc8e5eb5960f",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/FirebaseAuthInterop.framework\/FirebaseAuthInterop",
+    "name" : "FirebaseAuthInterop",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4345528320,
+    "CFBundleShortVersionString" : "12.15.0",
+    "CFBundleIdentifier" : "org.cocoapods.FirebaseCore",
+    "size" : 81920,
+    "uuid" : "3f0b7c7f-eacc-35c9-8c6c-737855d72b2c",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/FirebaseCore.framework\/FirebaseCore",
+    "name" : "FirebaseCore",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4344070144,
+    "CFBundleShortVersionString" : "12.15.0",
+    "CFBundleIdentifier" : "org.cocoapods.FirebaseCoreExtension",
+    "size" : 16384,
+    "uuid" : "73be9537-484d-3215-9794-f194f159deea",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/FirebaseCoreExtension.framework\/FirebaseCoreExtension",
+    "name" : "FirebaseCoreExtension",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4348444672,
+    "CFBundleShortVersionString" : "12.15.0",
+    "CFBundleIdentifier" : "org.cocoapods.FirebaseCoreInternal",
+    "size" : 180224,
+    "uuid" : "e1e21dd4-94d4-3cef-853c-1d77773769e0",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/FirebaseCoreInternal.framework\/FirebaseCoreInternal",
+    "name" : "FirebaseCoreInternal",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4348936192,
+    "CFBundleShortVersionString" : "12.15.0",
+    "CFBundleIdentifier" : "org.cocoapods.FirebaseInstallations",
+    "size" : 114688,
+    "uuid" : "01cff088-b098-380c-a8d2-819504996398",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/FirebaseInstallations.framework\/FirebaseInstallations",
+    "name" : "FirebaseInstallations",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4349771776,
+    "CFBundleShortVersionString" : "12.15.0",
+    "CFBundleIdentifier" : "org.cocoapods.FirebaseMessaging",
+    "size" : 278528,
+    "uuid" : "35a328b7-97ec-3d37-9db1-eab0fe62c57f",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/FirebaseMessaging.framework\/FirebaseMessaging",
+    "name" : "FirebaseMessaging",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4349198336,
+    "CFBundleShortVersionString" : "5.0.0",
+    "CFBundleIdentifier" : "org.cocoapods.GTMAppAuth",
+    "size" : 147456,
+    "uuid" : "8573949e-fbfb-3b14-a36a-60e321672d4a",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/GTMAppAuth.framework\/GTMAppAuth",
+    "name" : "GTMAppAuth",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4350951424,
+    "CFBundleShortVersionString" : "3.5.0",
+    "CFBundleIdentifier" : "org.cocoapods.GTMSessionFetcher",
+    "size" : 344064,
+    "uuid" : "f6a2f3fa-3024-34e8-b4d6-4b07b335b8b8",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/GTMSessionFetcher.framework\/GTMSessionFetcher",
+    "name" : "GTMSessionFetcher",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4350328832,
+    "CFBundleShortVersionString" : "10.1.1",
+    "CFBundleIdentifier" : "org.cocoapods.GoogleDataTransport",
+    "size" : 196608,
+    "uuid" : "739be2b8-1949-3672-b4aa-94771fb4e5cc",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/GoogleDataTransport.framework\/GoogleDataTransport",
+    "name" : "GoogleDataTransport",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4355850240,
+    "CFBundleShortVersionString" : "9.2.0",
+    "CFBundleIdentifier" : "org.cocoapods.GoogleSignIn",
+    "size" : 163840,
+    "uuid" : "bc7e242d-565b-39bf-8a2c-86f2044fa224",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/GoogleSignIn.framework\/GoogleSignIn",
+    "name" : "GoogleSignIn",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4351557632,
+    "CFBundleShortVersionString" : "8.1.3",
+    "CFBundleIdentifier" : "org.cocoapods.GoogleUtilities",
+    "size" : 131072,
+    "uuid" : "39ad8106-64f0-3fe0-a047-0dd0585bb049",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/GoogleUtilities.framework\/GoogleUtilities",
+    "name" : "GoogleUtilities",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4347936768,
+    "CFBundleShortVersionString" : "2.4.1",
+    "CFBundleIdentifier" : "org.cocoapods.Promises",
+    "size" : 98304,
+    "uuid" : "70b9d6d7-dcc5-3a97-b371-d918a7b1014e",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/Promises.framework\/Promises",
+    "name" : "Promises",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4344135680,
+    "CFBundleShortVersionString" : "101.0.0",
+    "CFBundleIdentifier" : "org.cocoapods.RecaptchaInterop",
+    "size" : 16384,
+    "uuid" : "48a3ab86-723e-3936-b75c-20be30debe79",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/RecaptchaInterop.framework\/RecaptchaInterop",
+    "name" : "RecaptchaInterop",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4344201216,
+    "CFBundleShortVersionString" : "6.4.1",
+    "CFBundleIdentifier" : "org.cocoapods.app-links",
+    "size" : 49152,
+    "uuid" : "cfcc624e-90bc-3b7d-bbb8-12836a4a37ea",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/app_links.framework\/app_links",
+    "name" : "app_links",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4348166144,
+    "CFBundleShortVersionString" : "0.0.1",
+    "CFBundleIdentifier" : "org.cocoapods.flutter-local-notifications",
+    "size" : 65536,
+    "uuid" : "0f0c65a5-bdf1-3c2b-af58-68375d82e076",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/flutter_local_notifications.framework\/flutter_local_notifications",
+    "name" : "flutter_local_notifications",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4349558784,
+    "CFBundleShortVersionString" : "6.0.0",
+    "CFBundleIdentifier" : "org.cocoapods.flutter-secure-storage",
+    "size" : 65536,
+    "uuid" : "927f7cb1-dad3-39ce-a2a0-a6953c2fc4dd",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/flutter_secure_storage.framework\/flutter_secure_storage",
+    "name" : "flutter_secure_storage",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4343660544,
+    "CFBundleShortVersionString" : "1.0.5",
+    "CFBundleIdentifier" : "org.cocoapods.geocoding-ios",
+    "size" : 32768,
+    "uuid" : "25269f67-ab07-3d97-ad4a-20c0783d7a7d",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/geocoding_ios.framework\/geocoding_ios",
+    "name" : "geocoding_ios",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4348313600,
+    "CFBundleShortVersionString" : "1.2.0",
+    "CFBundleIdentifier" : "org.cocoapods.geolocator-apple",
+    "size" : 49152,
+    "uuid" : "520b4d24-2025-3814-b575-2d3997057547",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/geolocator_apple.framework\/geolocator_apple",
+    "name" : "geolocator_apple",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4345823232,
+    "CFBundleShortVersionString" : "3.30910.0",
+    "CFBundleIdentifier" : "org.cocoapods.nanopb",
+    "size" : 32768,
+    "uuid" : "7b2fd857-f79c-33d1-8601-15c072829328",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/nanopb.framework\/nanopb",
+    "name" : "nanopb",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4345905152,
+    "CFBundleShortVersionString" : "0.4.5",
+    "CFBundleIdentifier" : "org.cocoapods.package-info-plus",
+    "size" : 16384,
+    "uuid" : "0d61d23e-f6de-3c95-ac59-f301c7e3f2d2",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/package_info_plus.framework\/package_info_plus",
+    "name" : "package_info_plus",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4345724928,
+    "CFBundleShortVersionString" : "0.0.1",
+    "CFBundleIdentifier" : "org.cocoapods.share-plus",
+    "size" : 32768,
+    "uuid" : "87685b56-5a9e-3b2d-be6e-f1b62d6a1fe8",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/share_plus.framework\/share_plus",
+    "name" : "share_plus",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4356472832,
+    "CFBundleShortVersionString" : "0.0.1",
+    "CFBundleIdentifier" : "org.cocoapods.shared-preferences-foundation",
+    "size" : 98304,
+    "uuid" : "95501668-b12f-3576-bfd3-32e9bbb719b9",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/shared_preferences_foundation.framework\/shared_preferences_foundation",
+    "name" : "shared_preferences_foundation",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4358520832,
+    "CFBundleShortVersionString" : "0.0.1",
+    "CFBundleIdentifier" : "org.cocoapods.webview-flutter-wkwebview",
+    "size" : 720896,
+    "uuid" : "27bbfcff-5750-35a0-af2f-3f0a29207ca8",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/webview_flutter_wkwebview.framework\/webview_flutter_wkwebview",
+    "name" : "webview_flutter_wkwebview",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4431200256,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "io.flutter.flutter",
+    "size" : 33882112,
+    "uuid" : "4c4c44bf-5555-3144-a1c5-c89341c68b58",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/Flutter.framework\/Flutter",
+    "name" : "Flutter",
+    "CFBundleVersion" : "1.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4350787584,
+    "size" : 16384,
+    "uuid" : "bac5e730-1188-3390-ab3b-997516fcd57c",
+    "path" : "\/Volumes\/VOLUME\/*\/libswiftUIKit.dylib",
+    "name" : "libswiftUIKit.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4356210688,
+    "size" : 49152,
+    "uuid" : "5819381d-d754-345a-9380-da58aa7beb8a",
+    "path" : "\/usr\/lib\/system\/libsystem_platform.dylib",
+    "name" : "libsystem_platform.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4356718592,
+    "size" : 262144,
+    "uuid" : "403579b4-ce2e-3243-a679-1ac949127c2e",
+    "path" : "\/usr\/lib\/system\/libsystem_kernel.dylib",
+    "name" : "libsystem_kernel.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4357881856,
+    "size" : 65536,
+    "uuid" : "e2e34381-f506-3e44-8eb8-29805118c3dc",
+    "path" : "\/usr\/lib\/system\/libsystem_pthread.dylib",
+    "name" : "libsystem_pthread.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4356390912,
+    "size" : 49152,
+    "uuid" : "12c7ec97-b630-3c56-b481-4edb0606935e",
+    "path" : "\/Volumes\/VOLUME\/*\/libobjc-trampolines.dylib",
+    "name" : "libobjc-trampolines.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4392337408,
+    "CFBundleShortVersionString" : "382.5.3",
+    "CFBundleIdentifier" : "com.apple.MTLSimDriver",
+    "size" : 229376,
+    "uuid" : "85a81f07-9e63-379d-8907-1bbeca30922e",
+    "path" : "\/Volumes\/VOLUME\/*\/MTLSimDriver.framework\/MTLSimDriver",
+    "name" : "MTLSimDriver",
+    "CFBundleVersion" : "382.5.3"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4392927232,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "com.apple.gpusw.MetalSerializer",
+    "size" : 196608,
+    "uuid" : "4719323b-fb04-3fea-8d65-fa7b607660a6",
+    "path" : "\/Volumes\/VOLUME\/*\/MetalSerializer.framework\/MetalSerializer",
+    "name" : "MetalSerializer",
+    "CFBundleVersion" : "1"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 4426776576,
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleIdentifier" : "io.flutter.flutter.native-assets.objective-c",
+    "size" : 81920,
+    "uuid" : "fbbf111d-af61-3da1-b0f0-eb0ac601a43d",
+    "path" : "\/Users\/USER\/Library\/Developer\/CoreSimulator\/Devices\/A8831FB0-3028-4B42-86E9-A30F4B2FF7A6\/data\/Containers\/Bundle\/Application\/925DBD02-9951-4101-BE17-A58CAE69F35B\/Runner.app\/Frameworks\/objective_c.framework\/objective_c",
+    "name" : "objective_c",
+    "CFBundleVersion" : "1.0"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64e",
+    "base" : 4345970688,
+    "size" : 786432,
+    "uuid" : "197124e5-db6e-3d5f-a621-1206166a17f3",
+    "path" : "\/usr\/lib\/dyld",
+    "name" : "dyld"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 7652655104,
+    "size" : 517216,
+    "uuid" : "80e2962c-3a3d-3a25-b5ef-a179bb2754a3",
+    "path" : "\/Volumes\/VOLUME\/*\/libsystem_c.dylib",
+    "name" : "libsystem_c.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 10152615936,
+    "size" : 98160,
+    "uuid" : "f634f4e7-1fd9-3f13-ab1a-23c78b1a51d4",
+    "path" : "\/Volumes\/VOLUME\/*\/libc++abi.dylib",
+    "name" : "libc++abi.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 7516553216,
+    "size" : 240396,
+    "uuid" : "be39d4b4-e739-3435-a06f-6ba0855c8458",
+    "path" : "\/Volumes\/VOLUME\/*\/libobjc.A.dylib",
+    "name" : "libobjc.A.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 7517544448,
+    "size" : 3588624,
+    "uuid" : "d2c8aa56-482c-35ea-b4d3-54c2b5f58adc",
+    "path" : "\/Volumes\/VOLUME\/*\/CoreFoundation.framework\/CoreFoundation",
+    "name" : "CoreFoundation"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 8158027776,
+    "size" : 281688,
+    "uuid" : "a0ea2486-b842-3ba5-aedf-210e821d01f7",
+    "path" : "\/Volumes\/VOLUME\/*\/libdispatch.dylib",
+    "name" : "libdispatch.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 9153114112,
+    "size" : 31996,
+    "uuid" : "b5c0c276-a8c5-3e18-895f-2e4dbda804a8",
+    "path" : "\/Volumes\/VOLUME\/*\/GraphicsServices.framework\/GraphicsServices",
+    "name" : "GraphicsServices"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 7579103232,
+    "size" : 37171821,
+    "uuid" : "e9cbebe9-bfee-3385-af52-d32c606e46be",
+    "path" : "\/Volumes\/VOLUME\/*\/UIKitCore.framework\/UIKitCore",
+    "name" : "UIKitCore"
+  },
+  {
+    "size" : 0,
+    "source" : "A",
+    "base" : 0,
+    "uuid" : "00000000-0000-0000-0000-000000000000"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 8589500416,
+    "size" : 821924,
+    "uuid" : "3894ea66-775c-315f-863e-ca07a0f1f8a5",
+    "path" : "\/Volumes\/VOLUME\/*\/ProofReader.framework\/ProofReader",
+    "name" : "ProofReader"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 7786921984,
+    "size" : 656736,
+    "uuid" : "3d9a40ab-acdf-3ec9-a223-5a041fbfffcf",
+    "path" : "\/Volumes\/VOLUME\/*\/IOKit.framework\/Versions\/A\/IOKit",
+    "name" : "IOKit"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 7705137152,
+    "size" : 3464140,
+    "uuid" : "dea675c8-69ec-3f33-8c59-4ae8f4acfa2e",
+    "path" : "\/Volumes\/VOLUME\/*\/CFNetwork.framework\/CFNetwork",
+    "name" : "CFNetwork"
+  },
+  {
+    "source" : "P",
+    "arch" : "arm64",
+    "base" : 7521136640,
+    "size" : 17443021,
+    "uuid" : "49fcda5f-a93e-3259-857c-fc75ac2c7b03",
+    "path" : "\/Volumes\/VOLUME\/*\/Foundation.framework\/Foundation",
+    "name" : "Foundation"
+  }
+],
+  "sharedCache" : {
+  "base" : 7516192768,
+  "size" : 3956064256,
+  "uuid" : "5827bb56-52e1-3d0b-ac02-7a3201246563"
+},
+  "vmSummary" : "ReadOnly portion of Libraries: Total=2.5G resident=0K(0%) swapped_out_or_unallocated=2.5G(100%)\nWritable regions: Total=403.9M written=2067K(0%) resident=2035K(0%) swapped_out=32K(0%) unallocated=401.8M(100%)\n\n                                VIRTUAL   REGION \nREGION TYPE                        SIZE    COUNT (non-coalesced) \n===========                     =======  ======= \nActivity Tracing                   256K        1 \nDyld Private Memory               53.4G       15 \nFoundation                          16K        1 \nGuard                            385.0G        1 \nIOSurface                         36.5M        4 \nMalloc                           117.4M       36 \nMalloc Guard Page                 3312K        4 \nOS Alloc Once                       32K        1 \nSQLite Page Cache                  384K        3 \nStack                             27.2M       24 \nStack Guard                       56.3M       21 \nUntagged                         237.6M      560 \n__AUTH_CONST                        32K        1 \n__DATA                            81.4M     1193 \n__DATA_CONST                     154.5M     1201 \n__DATA_DIRTY                       139K       14 \n__FONT_DATA                        2352        1 \n__LINKEDIT                         1.0G       42 \n__TEXT                             1.5G     1234 \n__TPRO_CONST                       184K        5 \nmapped file                      284.9M       18 \npage table in kernel              2035K        1 \nshared memory                       48K        2 \n===========                     =======  ======= \nTOTAL                            441.9G     4383 \n",
+  "legacyInfo" : {
+  "threadTriggered" : {
+    "queue" : "com.apple.main-thread"
+  }
+},
+  "logWritingSignature" : "52a3657047208ad370599502400a017084ae61a9",
+  "roots_installed" : 0,
+  "bug_type" : "309",
+  "trmStatus" : 1,
+  "trialInfo" : {
+  "rollouts" : [
+    {
+      "rolloutId" : "6813dc6e1e50e5344eb573e9",
+      "factorPackIds" : [
+
+      ],
+      "deploymentId" : 250000006
+    },
+    {
+      "rolloutId" : "6410af69ed1e1e7ab93ed169",
+      "factorPackIds" : [
+
+      ],
+      "deploymentId" : 250000013
+    }
+  ],
+  "experiments" : [
+
+  ]
+}
+}
+
+Model: Mac15,6, BootROM 20457.40.150.0.1, proc 11:0:5:6 processors, 18 GB, SMC 
+Graphics: Apple M3 Pro, Apple M3 Pro, Built-In
+Display: Color LCD, 3024 x 1964 Retina, Main, MirrorOff, Online
+Memory Module: LPDDR5, Hynix
+AirPort: spairport_wireless_card_type_wifi (0x14E4, 0x4388), wl0: Aug 26 2026 05:28:02 version 23.10.1042.0.41.51.242 FWID 01-7dd10c90
+IO80211_driverkit-1587.6 "IO80211_driverkit-1587.6" Sep 13 2026 19:08:37
+AirPort: 
+Bluetooth: Version (null), 0 services, 0 devices, 0 incoming serial ports
+Network Service: Wi-Fi, AirPort, en0
+Thunderbolt Bus: MacBook Pro, Apple Inc.
+Thunderbolt Bus: MacBook Pro, Apple Inc.
+Thunderbolt Bus: MacBook Pro, Apple Inc.

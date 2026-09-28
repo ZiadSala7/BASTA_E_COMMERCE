@@ -47,6 +47,10 @@ import '../../features/cart/data/datasources/shipping_remote_datasource.dart';
 import '../../features/cart/data/repositories/shipping_repository_impl.dart';
 import '../../features/cart/domain/repositories/shipping_repository.dart';
 import '../../features/cart/domain/usecases/calculate_shipping_usecase.dart';
+import '../../features/cart/data/datasources/payment_settings_remote_datasource.dart';
+import '../../features/cart/data/repositories/payment_settings_repository_impl.dart';
+import '../../features/cart/domain/repositories/payment_settings_repository.dart';
+import '../../features/cart/domain/usecases/is_card_payment_enabled_usecase.dart';
 import '../../features/home/data/datasources/home_catalog_remote_datasource.dart';
 import '../../features/home/data/repositories/home_catalog_repository_impl.dart';
 import '../../features/home/domain/repositories/home_catalog_repository.dart';
@@ -342,6 +346,24 @@ void setupServiceLocator() {
   if (!getIt.isRegistered<CalculateShippingUseCase>()) {
     getIt.registerLazySingleton<CalculateShippingUseCase>(
       () => CalculateShippingUseCase(repository: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<PaymentSettingsRemoteDataSource>()) {
+    getIt.registerLazySingleton<PaymentSettingsRemoteDataSource>(
+      () => PaymentSettingsRemoteDataSourceImpl(dioConsumer: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<PaymentSettingsRepository>()) {
+    getIt.registerLazySingleton<PaymentSettingsRepository>(
+      () => PaymentSettingsRepositoryImpl(remoteDataSource: getIt()),
+    );
+  }
+
+  if (!getIt.isRegistered<IsCardPaymentEnabledUseCase>()) {
+    getIt.registerLazySingleton<IsCardPaymentEnabledUseCase>(
+      () => IsCardPaymentEnabledUseCase(repository: getIt()),
     );
   }
 

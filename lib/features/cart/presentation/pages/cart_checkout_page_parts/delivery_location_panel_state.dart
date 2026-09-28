@@ -6,6 +6,7 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
   String? _selectedPlaceName;
   bool _isResolvingPlace = false;
   int _placeLookupGeneration = 0;
+  bool _myLocationEnabled = false;
 
   @override
   void initState() {
@@ -15,6 +16,21 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
     if (selectedLocation != null) {
       _resolvePlaceName(selectedLocation);
     }
+    _requestLocationPermission();
+  }
+
+  Future<void> _requestLocationPermission() async {
+    try {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      final granted = permission == LocationPermission.always ||
+          permission == LocationPermission.whileInUse;
+      if (mounted && granted) {
+        setState(() => _myLocationEnabled = true);
+      }
+    } catch (_) {}
   }
 
   @override
@@ -148,6 +164,7 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
                       zoom: 13,
                     ),
                     zoomControlsEnabled: false,
+                    myLocationEnabled: _myLocationEnabled,
                     myLocationButtonEnabled: false,
                     onMapCreated: (controller) => _mapController = controller,
                     onTap: _selectLocation,
@@ -163,10 +180,10 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
                             ),
                           },
                   ),
-                  const Icon(
+                  Icon(
                     Icons.location_pin,
                     size: 42,
-                    color: Color(0xFFE53935),
+                    color: AppColors.primary.withValues(alpha: 0.9),
                   ),
                 ],
               ),

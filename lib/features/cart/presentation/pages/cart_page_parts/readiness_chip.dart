@@ -18,16 +18,17 @@ class _ReadinessChip extends StatelessWidget {
     return SizedBox(
       height: 68,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
         decoration: BoxDecoration(
           color: colorScheme.surfaceContainerHighest.withOpacity(0.42),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Icon(icon, size: 17, color: AppColors.primary),
-            const SizedBox(height: 7),
+            const SizedBox(height: 5),
             Text(
               label,
               maxLines: 1,

@@ -1,3 +1,4 @@
+import '../../../../core/api/api_keys.dart';
 import '../../domain/entities/home_banner_entity.dart';
 
 class HomeBannerModel extends HomeBannerEntity {
@@ -13,10 +14,27 @@ class HomeBannerModel extends HomeBannerEntity {
     return HomeBannerModel(
       id: (json['id'] ?? '').toString(),
       title: (json['title'] ?? json['name'] ?? '').toString(),
-      imageUrl: (json['imageUrl'] ?? json['image_url'] ?? '').toString(),
-      targetUrl: (json['targetUrl'] ?? json['target_url'])?.toString(),
+      imageUrl: _absoluteUrl(
+        (json['imageUrl'] ?? json['image_url'] ?? '').toString(),
+      ),
+      targetUrl: (json['targetUrl'] ?? json['target_url'] ?? json['linkUrl'])
+          ?.toString(),
       buttonText: (json['buttonText'] ?? json['button_text'] ?? 'تسوق الآن')
           .toString(),
     );
+  }
+
+  static String _absoluteUrl(String url) {
+    final cleanUrl = url.trim();
+    if (cleanUrl.isEmpty) return '';
+    if (cleanUrl.startsWith('http://') || cleanUrl.startsWith('https://')) {
+      return cleanUrl;
+    }
+
+    final baseUrl = ApiKeys.baseUrl.endsWith('/')
+        ? ApiKeys.baseUrl.substring(0, ApiKeys.baseUrl.length - 1)
+        : ApiKeys.baseUrl;
+    final path = cleanUrl.startsWith('/') ? cleanUrl : '/$cleanUrl';
+    return '$baseUrl$path';
   }
 }
