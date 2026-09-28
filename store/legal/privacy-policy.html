@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سياسة الخصوصية | بسطة</title>
+<style>
+  :root{
+    --bg:#faf9f7; --card:#ffffff; --text:#1c1c1e; --muted:#6b6b70;
+    --accent:#0a7d3f; --border:#e7e5e1;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#121212; --card:#1b1b1d; --text:#f2f2f3; --muted:#a0a0a5; --border:#2c2c2e; }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;
+    line-height:1.8;
+  }
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; background:var(--bg); z-index:10;
+  }
+  .brand{font-weight:700; font-size:18px;}
+  .lang-switch{
+    display:flex; gap:6px; background:var(--card); border:1px solid var(--border);
+    border-radius:999px; padding:4px;
+  }
+  .lang-switch button{
+    border:none; background:transparent; padding:6px 14px; border-radius:999px;
+    font-size:14px; cursor:pointer; color:var(--muted);
+  }
+  .lang-switch button.active{background:var(--accent); color:#fff;}
+  main{max-width:760px; margin:0 auto; padding:32px 20px 80px;}
+  h1{font-size:26px; margin-bottom:4px;}
+  .updated{color:var(--muted); font-size:13px; margin-bottom:28px;}
+  h2{font-size:18px; margin-top:32px; margin-bottom:8px; color:var(--accent);}
+  p, li{color:var(--text); font-size:15px;}
+  ul{padding-inline-start:20px; margin:8px 0;}
+  a{color:var(--accent);}
+  [data-lang]{display:none;}
+  [data-lang].active{display:block;}
+  [dir="ltr"] main{font-family:-apple-system,"Segoe UI",Arial,sans-serif;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">بسطة · Basta</div>
+    <div class="lang-switch">
+      <button id="btn-ar" class="active" onclick="setLang('ar')">العربية</button>
+      <button id="btn-en" onclick="setLang('en')">English</button>
+    </div>
+  </div>
+
+  <main>
+    <div data-lang="ar" class="active">
+      <h1>سياسة الخصوصية</h1>
+      <div class="updated">آخر تحديث: 28 سبتمبر 2026</div>
+
+      <p>تطبيق "بسطة" (Basta) يحترم خصوصيتك. توضح هذه السياسة البيانات التي نجمعها عند استخدامك للتطبيق، وكيف نستخدمها، ومع من قد نشاركها.</p>
+
+      <h2>البيانات التي نجمعها</h2>
+      <ul>
+        <li><strong>بيانات الحساب:</strong> الاسم، البريد الإلكتروني، رقم الهاتف عند إنشاء حساب أو تسجيل الدخول (بما في ذلك تسجيل الدخول عبر Google).</li>
+        <li><strong>الموقع الجغرافي:</strong> عنوان التوصيل الذي تحدده أو موقعك الحالي، لاستخدامه فقط في تحديد عنوان الشحن وحساب التوصيل.</li>
+        <li><strong>بيانات الطلبات:</strong> سجل المشتريات، عربة التسوق، المفضلة، الكوبونات المستخدمة.</li>
+        <li><strong>إشعارات الدفع (Push Notifications):</strong> رمز جهاز (FCM Token) لإرسال إشعارات حول حالة الطلب والعروض.</li>
+        <li><strong>بيانات الدفع:</strong> عمليات الدفع تتم عبر بوابة دفع خارجية موثوقة؛ التطبيق لا يخزّن بيانات بطاقتك البنكية على خوادمه.</li>
+      </ul>
+
+      <h2>كيف نستخدم بياناتك</h2>
+      <ul>
+        <li>تنفيذ وتتبع طلباتك وتوصيلها.</li>
+        <li>التواصل معك بخصوص الطلبات والعروض والإشعارات.</li>
+        <li>تحسين تجربة استخدام التطبيق.</li>
+        <li>حماية الحساب ومنع الاستخدام غير المصرح به.</li>
+      </ul>
+
+      <h2>مشاركة البيانات مع أطراف ثالثة</h2>
+      <p>نستخدم خدمات موثوقة لتشغيل التطبيق، مثل Firebase (المصادقة والإشعارات) وGoogle Maps (تحديد الموقع)، وبوابة الدفع الإلكتروني. هذه الأطراف تعالج بياناتك فقط بالقدر اللازم لتقديم خدماتها، ولا نبيع بياناتك لأي جهة تسويقية.</p>
+
+      <h2>حذف الحساب والبيانات</h2>
+      <p>يمكنك حذف حسابك وبياناتك نهائيًا في أي وقت من داخل التطبيق عبر: الحساب ← إعدادات الحساب ← حذف الحساب. عند الحذف تتم إزالة بياناتك الشخصية من أنظمتنا، باستثناء ما نلتزم قانونيًا بالاحتفاظ به (مثل سجلات فوترة).</p>
+
+      <h2>أمان البيانات</h2>
+      <p>نتخذ إجراءات تقنية وتنظيمية معقولة لحماية بياناتك من الوصول أو الاستخدام غير المصرح به.</p>
+
+      <h2>خصوصية الأطفال</h2>
+      <p>التطبيق غير موجه للأطفال دون 13 عامًا، ولا نجمع بيانات عن قصد من هذه الفئة العمرية.</p>
+
+      <h2>تحديثات على هذه السياسة</h2>
+      <p>قد نقوم بتحديث هذه السياسة من وقت لآخر. سيتم نشر أي تغييرات على هذه الصفحة مع تاريخ التحديث.</p>
+
+      <h2>تواصل معنا</h2>
+      <p>لأي استفسار يخص الخصوصية، راسلنا على: <a href="mailto:support@bs6a.com">support@bs6a.com</a></p>
+    </div>
+
+    <div data-lang="en">
+      <h1>Privacy Policy</h1>
+      <div class="updated">Last updated: September 28, 2026</div>
+
+      <p>The "Basta" app respects your privacy. This policy explains what data we collect when you use the app, how we use it, and who we may share it with.</p>
+
+      <h2>Data We Collect</h2>
+      <ul>
+        <li><strong>Account data:</strong> name, email, and phone number when you create an account or sign in (including Google Sign-In).</li>
+        <li><strong>Location:</strong> your delivery address or current location, used only to set the shipping address and calculate delivery.</li>
+        <li><strong>Order data:</strong> purchase history, cart contents, favorites, and coupons used.</li>
+        <li><strong>Push notification token (FCM):</strong> a device token used to send order status updates and offers.</li>
+        <li><strong>Payment data:</strong> payments are processed through a trusted third-party payment gateway; the app does not store your card details on its servers.</li>
+      </ul>
+
+      <h2>How We Use Your Data</h2>
+      <ul>
+        <li>Process, track, and deliver your orders.</li>
+        <li>Communicate with you about orders, offers, and notifications.</li>
+        <li>Improve the app experience.</li>
+        <li>Protect your account and prevent unauthorized use.</li>
+      </ul>
+
+      <h2>Sharing With Third Parties</h2>
+      <p>We rely on trusted services to run the app, such as Firebase (authentication and notifications), Google Maps (location), and a payment gateway for checkout. These providers process your data only as needed to deliver their service. We do not sell your data to any marketing party.</p>
+
+      <h2>Account and Data Deletion</h2>
+      <p>You can permanently delete your account and data at any time from inside the app: Account → Account Settings → Delete Account. Upon deletion, your personal data is removed from our systems, except where we are legally required to retain it (e.g. billing records).</p>
+
+      <h2>Data Security</h2>
+      <p>We apply reasonable technical and organizational measures to protect your data from unauthorized access or use.</p>
+
+      <h2>Children's Privacy</h2>
+      <p>The app is not directed at children under 13, and we do not knowingly collect data from this age group.</p>
+
+      <h2>Changes to This Policy</h2>
+      <p>We may update this policy from time to time. Any changes will be posted on this page along with the updated date.</p>
+
+      <h2>Contact Us</h2>
+      <p>For any privacy-related questions, email us at: <a href="mailto:support@bs6a.com">support@bs6a.com</a></p>
+    </div>
+  </main>
+
+  <script>
+    function setLang(lang){
+      document.querySelectorAll('[data-lang]').forEach(function(el){
+        el.classList.toggle('active', el.getAttribute('data-lang') === lang);
+      });
+      document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.documentElement.setAttribute('lang', lang);
+      document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    }
+  </script>
+</body>
+</html>

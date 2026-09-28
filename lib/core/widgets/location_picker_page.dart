@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,11 +28,28 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
   late LatLng _currentCenter;
   LatLng? _selected;
 
+  bool _myLocationEnabled = false;
+
   @override
   void initState() {
     super.initState();
     _currentCenter = widget.selectedLocation ?? widget.initialCenter;
     _selected = widget.selectedLocation;
+    _requestLocationPermission();
+  }
+
+  Future<void> _requestLocationPermission() async {
+    try {
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      final granted = permission == LocationPermission.always ||
+          permission == LocationPermission.whileInUse;
+      if (mounted && granted) {
+        setState(() => _myLocationEnabled = true);
+      }
+    } catch (_) {}
   }
 
   void _confirm() {
@@ -80,6 +98,7 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
             ),
             minMaxZoomPreference: const MinMaxZoomPreference(3, 19),
             zoomControlsEnabled: false,
+            myLocationEnabled: _myLocationEnabled,
             myLocationButtonEnabled: false,
             onMapCreated: (controller) => _controller = controller,
             onTap: (point) => setState(() => _selected = point),
@@ -98,6 +117,31 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
               Icons.add_location_alt_rounded,
               color: AppColors.primary.withValues(alpha: 0.9),
               size: 36,
+            ),
+          ),
+          Positioned(
+            right: 16,
+            top: 16 + MediaQuery.paddingOf(context).top,
+            child: DecoratedBox(
+              decoration: BoxDecoration(
+                color: AppColors.primary,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.18),
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
+              ),
+              child: IconButton(
+                onPressed: _moveToSelection,
+                tooltip: l10n.pick(ar: 'العودة للموقع المحدد', en: 'Return to pin'),
+                icon: const Icon(
+                  Icons.center_focus_strong_rounded,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
           Positioned(
@@ -148,11 +192,6 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _moveToSelection,
-        tooltip: l10n.pick(ar: 'العودة للموقع المحدد', en: 'Return to pin'),
-        child: const Icon(Icons.center_focus_strong_rounded),
       ),
     );
   }

@@ -2,10 +2,12 @@ part of '../cart_checkout_page.dart';
 
 class _PaymentMethodsPanel extends StatelessWidget {
   final int selectedIndex;
+  final bool cardPaymentEnabled;
   final ValueChanged<int> onSelected;
 
   const _PaymentMethodsPanel({
     required this.selectedIndex,
+    required this.cardPaymentEnabled,
     required this.onSelected,
   });
 
@@ -21,14 +23,15 @@ class _PaymentMethodsPanel extends StatelessWidget {
           en: 'Pay when the order arrives',
         ),
       ),
-      _PaymentMethod(
-        icon: Icons.credit_card_rounded,
-        title: l10n.pick(ar: 'بطاقة بنكية', en: 'Card payment'),
-        subtitle: l10n.pick(
-          ar: 'ادفع بأمان عبر Mastercard',
-          en: 'Pay securely with Mastercard',
+      if (cardPaymentEnabled)
+        _PaymentMethod(
+          icon: Icons.credit_card_rounded,
+          title: l10n.pick(ar: 'بطاقة بنكية', en: 'Card payment'),
+          subtitle: l10n.pick(
+            ar: 'ادفع بأمان عبر Mastercard',
+            en: 'Pay securely with Mastercard',
+          ),
         ),
-      ),
     ];
 
     return _Panel(

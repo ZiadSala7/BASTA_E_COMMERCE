@@ -49,6 +49,10 @@ class Endpoints {
   static const String shipping = 'api/shipping';
   static const String calculateShipping = '$shipping/calculate';
 
+  // Settings / Feature flags
+  static const String settings = 'api/settings';
+  static const String cardPaymentEnabled = '$settings/card-payment-enabled';
+
   // Orders & Tracking
   static const String orders = 'api/orders';
   static const String checkout = '$orders/checkout';

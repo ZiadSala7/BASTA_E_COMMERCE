@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>الدعم | بسطة</title>
+<style>
+  :root{
+    --bg:#faf9f7; --card:#ffffff; --text:#1c1c1e; --muted:#6b6b70;
+    --accent:#0a7d3f; --border:#e7e5e1;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#121212; --card:#1b1b1d; --text:#f2f2f3; --muted:#a0a0a5; --border:#2c2c2e; }
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;
+    line-height:1.8;
+  }
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 20px; border-bottom:1px solid var(--border);
+    position:sticky; top:0; background:var(--bg); z-index:10;
+  }
+  .brand{font-weight:700; font-size:18px;}
+  .lang-switch{
+    display:flex; gap:6px; background:var(--card); border:1px solid var(--border);
+    border-radius:999px; padding:4px;
+  }
+  .lang-switch button{
+    border:none; background:transparent; padding:6px 14px; border-radius:999px;
+    font-size:14px; cursor:pointer; color:var(--muted);
+  }
+  .lang-switch button.active{background:var(--accent); color:#fff;}
+  main{max-width:760px; margin:0 auto; padding:32px 20px 80px;}
+  h1{font-size:26px; margin-bottom:20px;}
+  h2{font-size:18px; margin-top:28px; margin-bottom:8px; color:var(--accent);}
+  p, li{color:var(--text); font-size:15px;}
+  ul{padding-inline-start:20px; margin:8px 0;}
+  a{color:var(--accent); text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  .card{
+    background:var(--card); border:1px solid var(--border); border-radius:14px;
+    padding:20px; margin-top:16px;
+  }
+  .contact-row{display:flex; align-items:center; gap:10px; margin:10px 0;}
+  [data-lang]{display:none;}
+  [data-lang].active{display:block;}
+</style>
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">بسطة · Basta</div>
+    <div class="lang-switch">
+      <button id="btn-ar" class="active" onclick="setLang('ar')">العربية</button>
+      <button id="btn-en" onclick="setLang('en')">English</button>
+    </div>
+  </div>
+
+  <main>
+    <div data-lang="ar" class="active">
+      <h1>الدعم والمساعدة</h1>
+      <p>إذا واجهت أي مشكلة في تطبيق "بسطة"، أو عندك استفسار حول طلب أو حساب أو دفع، تقدر تتواصل معنا مباشرة وفريقنا برد عليك بأقرب وقت.</p>
+
+      <div class="card">
+        <div class="contact-row">📧 البريد الإلكتروني: <a href="mailto:support@bs6a.com">support@bs6a.com</a></div>
+      </div>
+
+      <h2>أسئلة شائعة</h2>
+      <ul>
+        <li><strong>كيف أتتبع طلبي؟</strong> من داخل التطبيق: الطلبات ← اختر الطلب لعرض حالته.</li>
+        <li><strong>كيف أحذف حسابي؟</strong> الحساب ← إعدادات الحساب ← حذف الحساب. الحذف نهائي ولا يمكن التراجع عنه.</li>
+        <li><strong>عندي مشكلة بالدفع أو الطلب لم يصل؟</strong> راسلنا على البريد أعلاه مع رقم الطلب وسنساعدك فورًا.</li>
+        <li><strong>كيف أغيّر عنوان التوصيل؟</strong> من صفحة السلة/الدفع تقدر تختار أو تعدّل عنوان التوصيل قبل تأكيد الطلب.</li>
+      </ul>
+
+      <h2>سياسة الخصوصية</h2>
+      <p>لمعرفة كيف نتعامل مع بياناتك، راجع <a href="./privacy-policy.html">سياسة الخصوصية</a>.</p>
+    </div>
+
+    <div data-lang="en">
+      <h1>Support &amp; Help</h1>
+      <p>If you run into any issue with the "Basta" app, or have a question about an order, your account, or payment, reach out directly and our team will get back to you as soon as possible.</p>
+
+      <div class="card">
+        <div class="contact-row">📧 Email: <a href="mailto:support@bs6a.com">support@bs6a.com</a></div>
+      </div>
+
+      <h2>Frequently Asked Questions</h2>
+      <ul>
+        <li><strong>How do I track my order?</strong> In the app: Orders → select an order to view its status.</li>
+        <li><strong>How do I delete my account?</strong> Account → Account Settings → Delete Account. Deletion is permanent and cannot be undone.</li>
+        <li><strong>I have a payment issue or my order hasn't arrived.</strong> Email us at the address above with your order number and we'll help right away.</li>
+        <li><strong>How do I change my delivery address?</strong> From the cart/checkout page you can select or edit the delivery address before confirming the order.</li>
+      </ul>
+
+      <h2>Privacy Policy</h2>
+      <p>To learn how we handle your data, see our <a href="./privacy-policy.html">Privacy Policy</a>.</p>
+    </div>
+  </main>
+
+  <script>
+    function setLang(lang){
+      document.querySelectorAll('[data-lang]').forEach(function(el){
+        el.classList.toggle('active', el.getAttribute('data-lang') === lang);
+      });
+      document.getElementById('btn-ar').classList.toggle('active', lang === 'ar');
+      document.getElementById('btn-en').classList.toggle('active', lang === 'en');
+      document.documentElement.setAttribute('lang', lang);
+      document.documentElement.setAttribute('dir', lang === 'ar' ? 'rtl' : 'ltr');
+    }
+  </script>
+</body>
+</html>

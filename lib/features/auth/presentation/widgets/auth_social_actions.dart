@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_text_styles.dart';
@@ -11,6 +14,10 @@ class AuthSocialActions extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!kIsWeb && Platform.isIOS) {
+      return const SizedBox.shrink();
+    }
+
     final localizations = AppLocalizations.of(context)!;
 
     return Column(

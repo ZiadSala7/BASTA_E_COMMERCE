@@ -7,6 +7,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
   late final OrdersRepository _ordersRepository;
   late final CartBadgeController _cartBadgeController;
   late final CalculateShippingUseCase _calculateShipping;
+  late final IsCardPaymentEnabledUseCase _isCardPaymentEnabledUseCase;
   late final TextEditingController _phoneController;
   final List<CartItemEntity> _items = <CartItemEntity>[];
   final List<SavedAddressModel> _savedAddresses = <SavedAddressModel>[];
@@ -15,7 +16,10 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
   bool _isLoading = true;
   bool _isSubmitting = false;
   String? _errorMessage;
-  int _selectedPaymentMethod = 1;
+  // Card (Visa) payment stays hidden until the backend flag explicitly
+  // enables it; the payment method also defaults to cash on delivery (0).
+  bool _isCardPaymentEnabled = false;
+  int _selectedPaymentMethod = 0;
   LatLng? _selectedDeliveryLocation;
   String? _selectedAddressId;
   double _liveShippingFee = 5.0;
@@ -28,7 +32,18 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
     _ordersRepository = sl<OrdersRepository>();
     _cartBadgeController = sl<CartBadgeController>();
     _calculateShipping = sl<CalculateShippingUseCase>();
+    _isCardPaymentEnabledUseCase = sl<IsCardPaymentEnabledUseCase>();
     _loadCart();
+    _loadCardPaymentAvailability();
+  }
+
+  Future<void> _loadCardPaymentAvailability() async {
+    final enabled = await _isCardPaymentEnabledUseCase();
+    if (!mounted) return;
+    setState(() {
+      _isCardPaymentEnabled = enabled;
+      if (!enabled) _selectedPaymentMethod = 0;
+    });
   }
 
   @override
@@ -109,6 +124,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
           ],
           _PaymentMethodsPanel(
             selectedIndex: _selectedPaymentMethod,
+            cardPaymentEnabled: _isCardPaymentEnabled,
             onSelected: (index) =>
                 setState(() => _selectedPaymentMethod = index),
           ),
