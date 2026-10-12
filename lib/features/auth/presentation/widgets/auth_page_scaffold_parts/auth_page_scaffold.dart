@@ -42,8 +42,10 @@ class AuthPageScaffold extends StatelessWidget {
                                     ),
                                     shape: const CircleBorder(),
                                     child: InkWell(
-                                      onTap: () =>
-                                          Navigator.of(context).maybePop(),
+                                      onTap: () => AppNavigation.popOrGo(
+                                        context,
+                                        fallbackLocation: AppRoutes.login,
+                                      ),
                                       customBorder: const CircleBorder(),
                                       child: const SizedBox(
                                         width: 42,

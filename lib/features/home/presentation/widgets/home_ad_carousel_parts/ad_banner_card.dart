@@ -32,7 +32,6 @@ class _AdBannerCard extends StatelessWidget {
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final compact = constraints.maxHeight < 180;
-
                   return Stack(
                     fit: StackFit.expand,
                     children: [
@@ -40,8 +39,8 @@ class _AdBannerCard extends StatelessWidget {
                       const DecoratedBox(
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
+                            begin: AlignmentDirectional.centerStart,
+                            end: AlignmentDirectional.centerEnd,
                             colors: [
                               Color(0x15000000),
                               Color(0x26000000),
@@ -51,7 +50,7 @@ class _AdBannerCard extends StatelessWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.fromLTRB(
+                        padding: EdgeInsetsDirectional.fromSTEB(
                           compact ? 18 : 22,
                           compact ? 16 : 20,
                           compact ? 20 : 28,
@@ -62,7 +61,7 @@ class _AdBannerCard extends StatelessWidget {
                           children: [
                             Text(
                               banner.title,
-                              textAlign: TextAlign.right,
+                              textAlign: TextAlign.end,
                               maxLines: compact ? 2 : 3,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.cairo(
@@ -74,7 +73,7 @@ class _AdBannerCard extends StatelessWidget {
                             ),
                             const Spacer(),
                             Align(
-                              alignment: Alignment.bottomRight,
+                              alignment: AlignmentDirectional.bottomEnd,
                               child: IntrinsicWidth(
                                 child: Container(
                                   height: compact ? 34 : 46,

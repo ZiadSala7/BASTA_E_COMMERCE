@@ -48,7 +48,7 @@ class _EnhancedCheckoutPageState extends State<EnhancedCheckoutPage> {
         centerTitle: true,
         showSearch: false,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () => AppNavigation.popOrGo(context),
           icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
         ),
       ),

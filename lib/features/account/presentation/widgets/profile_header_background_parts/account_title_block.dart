@@ -8,10 +8,11 @@ class _AccountTitleBlock extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           l10n.myAccount,
+          textAlign: TextAlign.start,
           style: GoogleFonts.cairo(
             color: Colors.white,
             fontSize: 22,
@@ -22,6 +23,7 @@ class _AccountTitleBlock extends StatelessWidget {
         const SizedBox(height: 5),
         Text(
           l10n.editAccount,
+          textAlign: TextAlign.start,
           style: GoogleFonts.cairo(
             color: Colors.white.withOpacity(0.78),
             fontSize: 12,

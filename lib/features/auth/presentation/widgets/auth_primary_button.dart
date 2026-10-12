@@ -67,11 +67,11 @@ class AuthPrimaryButton extends StatelessWidget {
                     ),
                   ),
                 Align(
-                  alignment: Alignment.centerLeft,
+                  alignment: AlignmentDirectional.centerEnd,
                   child: Container(
                     width: 34,
                     height: 34,
-                    margin: const EdgeInsets.only(left: 12),
+                    margin: const EdgeInsetsDirectional.only(end: 12),
                     decoration: BoxDecoration(
                       // ignore: deprecated_member_use
                       color: Colors.white.withOpacity(0.14),

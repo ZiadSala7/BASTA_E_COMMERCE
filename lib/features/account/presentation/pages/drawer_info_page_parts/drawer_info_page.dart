@@ -16,11 +16,9 @@ class DrawerInfoPage extends StatelessWidget {
         centerTitle: true,
         showSearch: false,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
-          icon: Icon(
-            l10n.isArabic
-                ? Icons.arrow_forward_rounded
-                : Icons.arrow_back_rounded,
+          onPressed: () => AppNavigation.popOrGo(context),
+          icon: const Icon(
+            Icons.arrow_back_rounded,
             color: Colors.white,
           ),
         ),

@@ -53,7 +53,7 @@ class _HomeAdCarouselState extends State<HomeAdCarousel> {
       builder: (context, constraints) {
         final width = constraints.maxWidth;
         final pageWidth = width * _pageController.viewportFraction;
-        final cardHeight = (pageWidth / 2.2).clamp(148.0, 236.0).toDouble();
+        final cardHeight = (pageWidth / 1.9).clamp(120.0, 236.0).toDouble();
 
         return Column(
           children: [

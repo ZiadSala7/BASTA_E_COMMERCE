@@ -16,7 +16,7 @@ class ProductDetailErrorState extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => AppNavigation.popOrGo(context),
         ),
       ),
       body: Center(
@@ -48,7 +48,7 @@ class ProductDetailErrorState extends StatelessWidget {
               ElevatedButton(
                 onPressed: () {
                   // Retry logic would go here
-                  Navigator.pop(context);
+                  AppNavigation.popOrGo(context);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.primary,

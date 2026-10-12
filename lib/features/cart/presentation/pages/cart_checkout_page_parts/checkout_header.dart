@@ -6,6 +6,7 @@ class _CheckoutHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final textDirection = Directionality.of(context);
 
     return Container(
       height: 94 + MediaQuery.paddingOf(context).top,
@@ -23,36 +24,48 @@ class _CheckoutHeader extends StatelessWidget {
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
       ),
       child: Row(
+        textDirection: textDirection,
         children: [
           _HeaderButton(
             icon: Icons.arrow_back_rounded,
             tooltip: l10n.back,
-            onTap: () => Navigator.of(context).maybePop(),
+            onTap: () => AppNavigation.popOrGo(context),
           ),
-          const Spacer(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                l10n.proceedToCheckout,
-                style: GoogleFonts.cairo(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.w900,
-                  height: 1.05,
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Text(
+                  l10n.proceedToCheckout,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.end,
+                  style: GoogleFonts.cairo(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w900,
+                    height: 1.05,
+                  ),
                 ),
-              ),
-              const SizedBox(height: 5),
-              Text(
-                l10n.pick(ar: 'مراجعة الطلب والدفع', en: 'Review and payment'),
-                style: GoogleFonts.cairo(
-                  color: Colors.white.withOpacity(0.78),
-                  fontSize: 12,
-                  fontWeight: FontWeight.w700,
+                const SizedBox(height: 5),
+                Text(
+                  l10n.pick(
+                    ar: 'مراجعة الطلب والدفع',
+                    en: 'Review and payment',
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.end,
+                  style: GoogleFonts.cairo(
+                    color: Colors.white.withOpacity(0.78),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
           const SizedBox(width: 12),
           Container(

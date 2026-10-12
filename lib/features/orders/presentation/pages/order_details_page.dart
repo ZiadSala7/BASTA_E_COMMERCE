@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_navigation.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../core/utils/currency_helper.dart';
 import '../../../../core/widgets/common/custom_app_bar.dart';
@@ -86,7 +87,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           centerTitle: true,
           showSearch: false,
           leading: IconButton(
-            onPressed: () => context.pop(),
+            onPressed: () => AppNavigation.popOrGo(context),
             icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
           ),
         ),

@@ -6,8 +6,8 @@ class _SwipeDeleteBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      alignment: Alignment.centerRight,
-      padding: const EdgeInsets.only(right: 22),
+      alignment: AlignmentDirectional.centerEnd,
+      padding: const EdgeInsetsDirectional.only(end: 22),
       decoration: BoxDecoration(
         color: AppColors.badgeRed,
         borderRadius: BorderRadius.circular(18),

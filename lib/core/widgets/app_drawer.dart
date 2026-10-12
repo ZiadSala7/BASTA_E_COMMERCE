@@ -557,9 +557,7 @@ class _DrawerItem extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Icon(
-                l10n.isArabic
-                    ? Icons.chevron_left_rounded
-                    : Icons.chevron_right_rounded,
+                Icons.chevron_right_rounded,
                 color: colorScheme.onSurfaceVariant,
                 size: 20,
               ),

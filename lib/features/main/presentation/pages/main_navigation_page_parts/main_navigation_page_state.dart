@@ -34,11 +34,6 @@ class _MainNavigationPageState extends State<MainNavigationPage>
         },
       ),
       CartPage(
-        onBack: () {
-          setState(() {
-            _currentIndex = 0;
-          });
-        },
         onStartShopping: () {
           setState(() {
             _currentIndex = 0;

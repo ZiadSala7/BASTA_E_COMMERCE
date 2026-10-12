@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../l10n/app_localizations.dart';
+
 class DetailProductImage extends StatelessWidget {
   final String? imageUrl;
   final BoxFit fit;
@@ -14,11 +16,12 @@ class DetailProductImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final url = imageUrl?.trim() ?? '';
+    final l10n = AppLocalizations.of(context)!;
 
     if (url.isEmpty) {
-      return const _ImagePlaceholder(
+      return _ImagePlaceholder(
         icon: Icons.inventory_2_outlined,
-        label: 'No image available',
+        label: l10n.noImageAvailable,
       );
     }
 
@@ -28,9 +31,9 @@ class DetailProductImage extends StatelessWidget {
       height: double.infinity,
       fit: fit,
       alignment: Alignment.center,
-      errorBuilder: (context, error, stackTrace) => const _ImagePlaceholder(
+      errorBuilder: (context, error, stackTrace) => _ImagePlaceholder(
         icon: Icons.broken_image_outlined,
-        label: 'Image unavailable',
+        label: l10n.imageUnavailable,
       ),
       loadingBuilder: (context, child, progress) {
         if (progress == null) return child;

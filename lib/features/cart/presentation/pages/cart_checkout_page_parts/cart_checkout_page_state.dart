@@ -83,7 +83,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
           en: 'Your cart is empty. Add products before checkout.',
         ),
         actionLabel: l10n.shopNow,
-        onActionTap: () => Navigator.of(context).maybePop(),
+        onActionTap: () => AppNavigation.popOrGo(context),
       );
     }
 

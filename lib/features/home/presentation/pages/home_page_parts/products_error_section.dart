@@ -9,6 +9,7 @@ class _ProductsErrorSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final l10n = AppLocalizations.of(context)!;
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -29,7 +30,7 @@ class _ProductsErrorSection extends StatelessWidget {
                   style: TextStyle(color: colorScheme.onErrorContainer),
                 ),
               ),
-              TextButton(onPressed: onRetry, child: const Text('Retry')),
+              TextButton(onPressed: onRetry, child: Text(l10n.tryAgain)),
             ],
           ),
         ),

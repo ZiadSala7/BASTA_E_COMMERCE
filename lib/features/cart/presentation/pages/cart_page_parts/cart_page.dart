@@ -1,10 +1,9 @@
 part of '../cart_page.dart';
 
 class CartPage extends StatefulWidget {
-  const CartPage({super.key, this.onStartShopping, this.onBack});
+  const CartPage({super.key, this.onStartShopping});
 
   final VoidCallback? onStartShopping;
-  final VoidCallback? onBack;
 
   @override
   State<CartPage> createState() => _CartPageState();

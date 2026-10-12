@@ -109,7 +109,7 @@ class _StoresListingPageState extends State<StoresListingPage> {
           CustomAppBar(
             title: l10n.featuredStoresPageTitle,
             leading: IconButton(
-              onPressed: () => context.pop(),
+              onPressed: () => AppNavigation.popOrGo(context),
               icon: const Icon(Icons.arrow_back, color: Colors.white),
             ),
           ),

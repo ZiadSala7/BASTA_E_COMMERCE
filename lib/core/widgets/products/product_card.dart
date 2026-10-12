@@ -98,22 +98,6 @@ class ProductCard extends StatelessWidget {
                           ),
                           child: _ProductImage(imageUrl: imageUrl),
                         ),
-                        Positioned.fill(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.black.withValues(alpha: 0.06),
-                                  Colors.transparent,
-                                  Colors.black.withValues(alpha: 0.08),
-                                ],
-                                stops: const [0, 0.46, 1],
-                              ),
-                            ),
-                          ),
-                        ),
                         if (discountBadge != null)
                           PositionedDirectional(
                             top: 8,
@@ -187,8 +171,12 @@ class ProductCard extends StatelessWidget {
                         children: [
                           Expanded(
                             child: Text(
-                              (price.isNotEmpty && CurrencyHelper.parse(price) > 0)
-                                  ? (AppLocalizations.of(context)?.formatPrice(CurrencyHelper.parse(price)) ?? price)
+                              (price.isNotEmpty &&
+                                      CurrencyHelper.parse(price) > 0)
+                                  ? (AppLocalizations.of(context)?.formatPrice(
+                                          CurrencyHelper.parse(price),
+                                        ) ??
+                                        price)
                                   : price,
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -205,7 +193,12 @@ class ProductCard extends StatelessWidget {
                             Flexible(
                               child: Text(
                                 CurrencyHelper.parse(oldPrice!) > 0
-                                    ? (AppLocalizations.of(context)?.formatPrice(CurrencyHelper.parse(oldPrice!)) ?? oldPrice!)
+                                    ? (AppLocalizations.of(
+                                            context,
+                                          )?.formatPrice(
+                                            CurrencyHelper.parse(oldPrice!),
+                                          ) ??
+                                          oldPrice!)
                                     : oldPrice!,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
@@ -215,8 +208,9 @@ class ProductCard extends StatelessWidget {
                                   color: colorScheme.onSurfaceVariant
                                       .withValues(alpha: 0.78),
                                   decoration: TextDecoration.lineThrough,
-                                  decorationColor: const Color(0xFFE23B3B)
-                                      .withValues(alpha: 0.75),
+                                  decorationColor: const Color(
+                                    0xFFE23B3B,
+                                  ).withValues(alpha: 0.75),
                                   decorationThickness: 1.6,
                                 ),
                               ),
@@ -358,7 +352,9 @@ class _ProductImage extends StatelessWidget {
 
     return Image.network(
       imageUrl!,
-      fit: BoxFit.cover,
+      fit: BoxFit.fill,
+      alignment: Alignment.center,
+      filterQuality: FilterQuality.medium,
       errorBuilder: (_, _, _) => const _ImageFallback(),
       loadingBuilder: (context, child, progress) {
         if (progress == null) return child;

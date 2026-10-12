@@ -17,20 +17,13 @@ class MyCouponsPage extends StatelessWidget {
   final VoidCallback? onMenuPressed;
   final bool isTab;
 
-  const MyCouponsPage({
-    super.key,
-    this.onMenuPressed,
-    this.isTab = false,
-  });
+  const MyCouponsPage({super.key, this.onMenuPressed, this.isTab = false});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => sl<CouponsCubit>()..getMyCoupons(),
-      child: _MyCouponsView(
-        onMenuPressed: onMenuPressed,
-        isTab: isTab,
-      ),
+      child: _MyCouponsView(onMenuPressed: onMenuPressed, isTab: isTab),
     );
   }
 }
@@ -39,10 +32,7 @@ class _MyCouponsView extends StatefulWidget {
   final VoidCallback? onMenuPressed;
   final bool isTab;
 
-  const _MyCouponsView({
-    this.onMenuPressed,
-    this.isTab = false,
-  });
+  const _MyCouponsView({this.onMenuPressed, this.isTab = false});
 
   @override
   State<_MyCouponsView> createState() => _MyCouponsViewState();
@@ -64,6 +54,9 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
         showSearch: false,
         showNotificationButton: widget.isTab,
         showBackButton: !widget.isTab,
+        hideBackButton:
+            widget.isTab ||
+            GoRouterState.of(context).uri.path == AppRoutes.coupons,
         showMenuButton: widget.isTab,
         onMenuPressed: widget.onMenuPressed,
         onBackPressed: () {
@@ -78,9 +71,9 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
       body: BlocConsumer<CouponsCubit, CouponsState>(
         listener: (context, state) {
           if (state is CouponsError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
@@ -111,7 +104,8 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                     ),
                     const SizedBox(height: 16),
                     ElevatedButton.icon(
-                      onPressed: () => context.read<CouponsCubit>().getMyCoupons(),
+                      onPressed: () =>
+                          context.read<CouponsCubit>().getMyCoupons(),
                       icon: const Icon(Icons.refresh_rounded),
                       label: Text(l10n.tryAgain),
                       style: ElevatedButton.styleFrom(
@@ -132,7 +126,9 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
 
             if (allCoupons.isEmpty) {
               return RefreshIndicator(
-                onRefresh: () => context.read<CouponsCubit>().getMyCoupons(showLoading: false),
+                onRefresh: () => context.read<CouponsCubit>().getMyCoupons(
+                  showLoading: false,
+                ),
                 child: EmptyCouponsView(
                   onRefresh: () => context.read<CouponsCubit>().getMyCoupons(),
                 ),
@@ -146,7 +142,8 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
             };
 
             return RefreshIndicator(
-              onRefresh: () => context.read<CouponsCubit>().getMyCoupons(showLoading: false),
+              onRefresh: () =>
+                  context.read<CouponsCubit>().getMyCoupons(showLoading: false),
               child: CustomScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
                 slivers: [
@@ -213,7 +210,9 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                                     style: GoogleFonts.cairo(
                                       fontSize: 11.5,
                                       fontWeight: FontWeight.w600,
-                                      color: Colors.white.withValues(alpha: 0.9),
+                                      color: Colors.white.withValues(
+                                        alpha: 0.9,
+                                      ),
                                     ),
                                   ),
                                 ],
@@ -221,12 +220,16 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                             ),
                             const SizedBox(width: 8),
                             ElevatedButton(
-                              onPressed: () => context.push(AppRoutes.inviteFriends),
+                              onPressed: () =>
+                                  context.push(AppRoutes.inviteFriends),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 foregroundColor: AppColors.primary,
                                 elevation: 0,
-                                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 8,
+                                ),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -248,7 +251,10 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                   // Filter Chips
                   SliverToBoxAdapter(
                     child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 10,
+                      ),
                       child: Row(
                         children: [
                           _buildFilterChip(
@@ -289,7 +295,9 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                               Icon(
                                 Icons.inbox_outlined,
                                 size: 48,
-                                color: colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
+                                color: colorScheme.onSurfaceVariant.withValues(
+                                  alpha: 0.5,
+                                ),
                               ),
                               const SizedBox(height: 12),
                               Text(
@@ -310,13 +318,10 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                     )
                   else
                     SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                          final coupon = displayedCoupons[index];
-                          return CouponCard(coupon: coupon);
-                        },
-                        childCount: displayedCoupons.length,
-                      ),
+                      delegate: SliverChildBuilderDelegate((context, index) {
+                        final coupon = displayedCoupons[index];
+                        return CouponCard(coupon: coupon);
+                      }, childCount: displayedCoupons.length),
                     ),
 
                   const SliverToBoxAdapter(child: SizedBox(height: 32)),
@@ -386,7 +391,9 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                   style: GoogleFonts.cairo(
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
-                    color: isSelected ? Colors.white : colorScheme.onSurfaceVariant,
+                    color: isSelected
+                        ? Colors.white
+                        : colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),

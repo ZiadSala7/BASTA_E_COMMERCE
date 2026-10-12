@@ -93,7 +93,7 @@ class AppTheme {
     final colorScheme = ColorScheme.fromSeed(
       seedColor: AppColors.primary,
       brightness: Brightness.dark,
-    );
+    ).copyWith(onSurface: Colors.white, onSurfaceVariant: Colors.white);
 
     return ThemeData(
       useMaterial3: true,
@@ -105,8 +105,8 @@ class AppTheme {
       dividerColor: const Color(0xFF2A2D3A),
       fontFamily: AppTextStyles.fontFamilyFor(locale),
       textTheme: textTheme.apply(
-        bodyColor: const Color(0xFFF6F7FB),
-        displayColor: const Color(0xFFF6F7FB),
+        bodyColor: Colors.white,
+        displayColor: Colors.white,
       ),
       appBarTheme: AppBarTheme(
         backgroundColor: AppColors.primary,
@@ -123,9 +123,8 @@ class AppTheme {
           horizontal: 18,
           vertical: 18,
         ),
-        hintStyle: textTheme.bodySmall?.copyWith(
-          color: const Color(0xFF8E93A6),
-        ),
+        hintStyle: textTheme.bodySmall?.copyWith(color: Colors.white),
+        errorStyle: textTheme.bodySmall?.copyWith(color: Colors.white),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: const BorderSide(color: Color(0xFF2A2D3A)),
@@ -149,7 +148,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.primary,
+          foregroundColor: Colors.white,
           textStyle: textTheme.labelMedium,
         ),
       ),
@@ -163,10 +162,8 @@ class AppTheme {
         surfaceTintColor: Colors.transparent,
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: const Color(0xFFF6F7FB),
-        contentTextStyle: textTheme.bodyMedium?.copyWith(
-          color: const Color(0xFF101116),
-        ),
+        backgroundColor: const Color(0xFF21213A),
+        contentTextStyle: textTheme.bodyMedium?.copyWith(color: Colors.white),
       ),
     );
   }

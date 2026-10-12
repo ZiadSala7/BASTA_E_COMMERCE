@@ -8,6 +8,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_navigation.dart';
 import '../../../../core/utils/assets.dart';
 import '../../../../core/utils/currency_helper.dart';
 import '../../../../core/widgets/location_picker_page.dart';

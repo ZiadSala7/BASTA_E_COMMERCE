@@ -136,14 +136,26 @@ extension AppLocalizationsX on AppLocalizations {
     ar: 'تم تأكيد طلبك رقم #12345 ومغادرة المتجر',
     en: 'Your order #12345 was confirmed and left the store',
   );
-  String hoursAgo(int count) =>
-      isArabic ? 'منذ $count ساعات' : '$count hours ago';
+  String hoursAgo(int count) {
+    if (count <= 0) return pick(ar: 'الآن', en: 'Just now');
+    if (!isArabic) return count == 1 ? '1 hour ago' : '$count hours ago';
+    if (count == 1) return 'منذ ساعة';
+    if (count == 2) return 'منذ ساعتين';
+    if (count <= 10) return 'منذ $count ساعات';
+    return 'منذ $count ساعة';
+  }
 
   String get pending => pick(ar: 'قيد الانتظار', en: 'Pending');
   String get delivering => pick(ar: 'قيد التوصيل', en: 'Delivering');
   String get delivered => pick(ar: 'تم التوصيل', en: 'Delivered');
   String get orderLabel => pick(ar: 'طلب #', en: 'Order #');
-  String itemCount(int count) => isArabic ? '$count منتجات' : '$count items';
+  String itemCount(int count) {
+    if (!isArabic) return count == 1 ? '1 item' : '$count items';
+    if (count == 1) return 'منتج واحد';
+    if (count == 2) return 'منتجان';
+    if (count >= 3 && count <= 10) return '$count منتجات';
+    return '$count منتجًا';
+  }
   String get total => pick(ar: 'المجموع', en: 'Total');
   String get estimatedDelivery =>
       pick(ar: 'موعد التوصيل المتوقع', en: 'Estimated delivery');
@@ -157,7 +169,7 @@ extension AppLocalizationsX on AppLocalizations {
   String get discountOffer => pick(ar: 'عرض خصم', en: 'Discount offer');
   String get specialOfferForYou =>
       pick(ar: 'عرض خاص لك', en: 'Special offer for you');
-  String get orderReceived => pick(ar: 'استلام الطلب', en: 'Order received');
+  String get orderReceived => pick(ar: 'تم استلام الطلب', en: 'Order received');
   String get notificationDiscountBody => pick(
     ar: 'سارع الآن! احصل على خصم 50% على كل منتج تشتريه',
     en: 'Hurry now! Get 50% off every product you buy',
@@ -167,7 +179,7 @@ extension AppLocalizationsX on AppLocalizations {
     en: 'You got an exclusive 20% discount! Use code MYDEAL20 before midnight',
   );
   String get notificationOrderReceivedBody => pick(
-    ar: 'شكراً لنا تم تأكيد طلبك رقم #123123 بنجاح',
+    ar: 'شكرًا لك، تم تأكيد طلبك رقم #123123 بنجاح.',
     en: 'Thanks! Your order #123123 has been confirmed successfully',
   );
   String get unread => pick(ar: 'غير مقروء', en: 'Unread');

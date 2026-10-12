@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/extensions/app_localizations_x.dart';
+import '../../../../core/utils/app_navigation.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/common/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';

@@ -65,7 +65,6 @@ class _CartPageState extends State<CartPage> {
           _CartHeader(
             itemCount: itemCount,
             subtotal: _subtotal,
-            onBack: _handleBack,
           ),
           Expanded(
             child: RefreshIndicator(
@@ -285,14 +284,6 @@ class _CartPageState extends State<CartPage> {
         _isLoading = false;
       });
     }
-  }
-
-  Future<void> _handleBack() async {
-    final didPop = await Navigator.of(context).maybePop();
-    if (!mounted || didPop) return;
-
-    final fallback = widget.onBack ?? widget.onStartShopping;
-    fallback?.call();
   }
 
   Future<void> _changeQuantity(int index, int change) async {

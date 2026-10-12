@@ -31,6 +31,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final bool showNotificationButton;
   final bool showMenuButton;
   final bool showBackButton;
+  final bool hideBackButton;
 
   const CustomAppBar({
     super.key,
@@ -53,6 +54,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.showNotificationButton = true,
     this.showMenuButton = true,
     this.showBackButton = false,
+    this.hideBackButton = false,
   });
 
   static const _fullHeight = 156.0;
@@ -66,6 +68,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final canPop = context.canPop();
+    final shouldShowBackButton =
+        !hideBackButton && (showBackButton || canPop);
 
     return Material(
       color: Colors.transparent,
@@ -109,19 +114,19 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       storeName: storeName ?? l10n.storeName,
                       storeCode: storeCode,
                       logoAsset: logoAsset,
-                      textDirection: l10n.inverseAppBarDirection,
+                      textDirection: Directionality.of(context),
                       onMenuPressed: onMenuPressed,
                       onNotificationPressed: onNotificationPressed,
                       onBackPressed: onBackPressed,
                       showLogo: showLogo,
                       showNotificationButton: showNotificationButton,
                       showMenuButton: showMenuButton,
-                      showBackButton: showBackButton,
+                      showBackButton: shouldShowBackButton,
                     ),
                     if (showSearch) ...[
                       const SizedBox(height: 10),
                       Row(
-                        textDirection: l10n.inverseAppBarDirection,
+                        textDirection: Directionality.of(context),
                         children: [
                           Expanded(
                             child: _AppSearchField(
@@ -183,85 +188,88 @@ class _AppBarTopRow extends StatelessWidget {
     return Row(
       textDirection: textDirection,
       crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        if (showMenuButton) _MenuButton(onTap: onMenuPressed),
-        if (showNotificationButton) ...[
-          if (showMenuButton) const SizedBox(width: 8),
-          _NotificationButton(onTap: onNotificationPressed),
-        ],
-        const SizedBox(width: 10),
-        if (titleWidget != null)
-          Expanded(child: titleWidget!)
-        else if (title != null)
-          Expanded(
-            child: Text(
-              title!,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.end,
-              style: GoogleFonts.cairo(
-                color: Colors.white,
-                fontSize: 17,
-                fontWeight: FontWeight.w800,
-                height: 1.15,
-              ),
-            ),
-          )
-        else ...[
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  storeName,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.right,
-                  style: GoogleFonts.cairo(
-                    color: Colors.white,
-                    fontSize: 15.5,
-                    fontWeight: FontWeight.w800,
-                    height: 1.1,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 9,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.16),
-                    borderRadius: BorderRadius.circular(999),
-                    border: Border.all(color: Colors.white.withOpacity(0.16)),
-                  ),
-                  child: Text(
-                    storeCode,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.cairo(
-                      color: Colors.white.withOpacity(0.86),
-                      fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      height: 1.1,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          if (showLogo) ...[
-            const SizedBox(width: 8),
-            _LogoBadge(assetName: logoAsset),
-          ],
-        ],
-        if (showBackButton) ...[
-          const SizedBox(width: 8),
-          _BackButton(onTap: onBackPressed),
-        ],
-      ],
+      children: title == null && titleWidget == null
+          ? _buildBrandHeader()
+          : _buildPageHeader(),
     );
   }
+
+  List<Widget> _buildBrandHeader() => [
+    if (showBackButton) _BackButton(onTap: onBackPressed),
+    if (showBackButton && showLogo) const SizedBox(width: 8),
+    if (showLogo) _LogoBadge(assetName: logoAsset),
+    if (showLogo) const SizedBox(width: 8),
+    Expanded(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            storeName,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.start,
+            style: GoogleFonts.cairo(
+              color: Colors.white,
+              fontSize: 15.5,
+              fontWeight: FontWeight.w800,
+              height: 1.1,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.16),
+              borderRadius: BorderRadius.circular(999),
+              border: Border.all(color: Colors.white.withOpacity(0.16)),
+            ),
+            child: Text(
+              storeCode,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.cairo(
+                color: Colors.white.withOpacity(0.86),
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                height: 1.1,
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
+    if (showNotificationButton) const SizedBox(width: 8),
+    if (showNotificationButton)
+      _NotificationButton(onTap: onNotificationPressed),
+    if (showMenuButton) const SizedBox(width: 8),
+    if (showMenuButton) _MenuButton(onTap: onMenuPressed),
+  ];
+
+  List<Widget> _buildPageHeader() => [
+    if (showBackButton) _BackButton(onTap: onBackPressed),
+    if (showBackButton) const SizedBox(width: 8),
+    Expanded(
+      child:
+          titleWidget ??
+          Text(
+            title!,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: GoogleFonts.cairo(
+              color: Colors.white,
+              fontSize: 17,
+              fontWeight: FontWeight.w800,
+              height: 1.15,
+            ),
+          ),
+    ),
+    if (showNotificationButton) const SizedBox(width: 8),
+    if (showNotificationButton)
+      _NotificationButton(onTap: onNotificationPressed),
+    if (showMenuButton) const SizedBox(width: 8),
+    if (showMenuButton) _MenuButton(onTap: onMenuPressed),
+  ];
 }
 
 class _MenuButton extends StatelessWidget {
@@ -383,28 +391,33 @@ class _BackButton extends StatelessWidget {
   final VoidCallback? onTap;
 
   @override
+
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Material(
       color: Colors.white.withOpacity(0.14),
       shape: const CircleBorder(),
-      child: InkWell(
-        onTap: onTap ??
-            () {
-              if (context.canPop()) {
-                context.pop();
-              } else {
-                context.go(AppRoutes.mainNavigation);
-              }
-            },
-        customBorder: const CircleBorder(),
-        child: SizedBox(
-          width: 42,
-          height: 42,
-          child: Icon(
-            l10n.isArabic ? Icons.arrow_forward_rounded : Icons.arrow_back_rounded,
-            color: Colors.white,
-            size: 22,
+      child: Tooltip(
+        message: l10n.back,
+        child: InkWell(
+          onTap:
+              onTap ??
+              () {
+                if (context.canPop()) {
+                  context.pop();
+                } else {
+                  context.go(AppRoutes.mainNavigation);
+                }
+              },
+          customBorder: const CircleBorder(),
+          child: const SizedBox(
+            width: 42,
+            height: 42,
+            child: Icon(
+              Icons.arrow_back_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
           ),
         ),
       ),
@@ -459,6 +472,8 @@ class _AppSearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textDirection = Directionality.of(context);
+
     return SizedBox(
       height: 46,
       child: TextField(
@@ -469,13 +484,13 @@ class _AppSearchField extends StatelessWidget {
         readOnly: onTap != null,
         enableInteractiveSelection: onTap == null,
         textInputAction: TextInputAction.search,
-        textAlign: TextAlign.right,
-        textDirection: TextDirection.rtl,
+        textAlign: TextAlign.start,
+        textDirection: textDirection,
         decoration: InputDecoration(
           filled: true,
           fillColor: Colors.white.withOpacity(0.96),
           hintText: hintText,
-          hintTextDirection: TextDirection.rtl,
+          hintTextDirection: textDirection,
           hintStyle: GoogleFonts.cairo(
             color: const Color(0xFF9E9AA8),
             fontSize: 13,

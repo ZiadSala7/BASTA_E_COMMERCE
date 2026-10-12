@@ -12,8 +12,6 @@ class ProfileHeaderBackground extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-
     return ClipRRect(
       borderRadius: const BorderRadius.vertical(bottom: Radius.circular(34)),
       child: DecoratedBox(
@@ -30,23 +28,22 @@ class ProfileHeaderBackground extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.fromLTRB(20, topPadding + 14, 20, 0),
             child: Row(
-              textDirection: l10n.inverseAppBarDirection,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                HeaderIconButton(
-                  icon: Icons.menu_rounded,
-                  onTap: onMenuPressed,
-                ),
-                const SizedBox(width: 10),
+                const _AccountIcon(),
+                const SizedBox(width: 12),
+                const _AccountTitleBlock(),
+                const Spacer(),
                 HeaderIconButton(
                   icon: Icons.notifications_none_rounded,
                   onTap: () => context.push(AppRoutes.notifications),
                   showDot: true,
                 ),
-                const Spacer(),
-                const _AccountTitleBlock(),
-                const SizedBox(width: 12),
-                const _AccountIcon(),
+                const SizedBox(width: 8),
+                HeaderIconButton(
+                  icon: Icons.menu_rounded,
+                  onTap: onMenuPressed,
+                ),
               ],
             ),
           ),

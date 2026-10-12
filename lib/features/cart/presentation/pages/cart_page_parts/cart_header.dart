@@ -4,12 +4,10 @@ class _CartHeader extends StatelessWidget {
   const _CartHeader({
     required this.itemCount,
     required this.subtotal,
-    required this.onBack,
   });
 
   final int itemCount;
   final double subtotal;
-  final VoidCallback onBack;
 
   @override
   Widget build(BuildContext context) {
@@ -29,37 +27,7 @@ class _CartHeader extends StatelessWidget {
       child: Column(
         children: [
           Row(
-            textDirection: l10n.inverseAppBarDirection,
             children: [
-              _HeaderIconButton(icon: Icons.arrow_back_rounded, onTap: onBack),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    l10n.cart,
-                    style: GoogleFonts.cairo(
-                      color: Colors.white,
-                      fontSize: 23,
-                      fontWeight: FontWeight.w900,
-                      height: 1.05,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    l10n.pick(
-                      ar: '$itemCount عناصر في السلة',
-                      en: '$itemCount items in your cart',
-                    ),
-                    style: GoogleFonts.cairo(
-                      color: Colors.white.withOpacity(0.78),
-                      fontSize: 12,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(width: 12),
               Container(
                 width: 48,
                 height: 48,
@@ -72,6 +40,37 @@ class _CartHeader extends StatelessWidget {
                   Icons.shopping_bag_outlined,
                   color: Colors.white,
                   size: 24,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.cart,
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.cairo(
+                        color: Colors.white,
+                        fontSize: 23,
+                        fontWeight: FontWeight.w900,
+                        height: 1.05,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      l10n.pick(
+                        ar: '$itemCount عناصر في السلة',
+                        en: '$itemCount items in your cart',
+                      ),
+                      textAlign: TextAlign.start,
+                      style: GoogleFonts.cairo(
+                        color: Colors.white.withOpacity(0.78),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

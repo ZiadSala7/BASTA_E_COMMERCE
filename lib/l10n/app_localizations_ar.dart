@@ -58,7 +58,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get skip => 'تخطي';
 
   @override
-  String get back => 'الخلف';
+  String get back => 'رجوع';
 
   @override
   String get next => 'التالي';
@@ -72,6 +72,15 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get replaceImagePathHint =>
       'استبدل imagePath داخل\nOnboardingLocalDataSource';
+
+  @override
+  String get noImageAvailable => 'لا توجد صورة متاحة';
+
+  @override
+  String get imageUnavailable => 'تعذر تحميل الصورة';
+
+  @override
+  String get verificationCode => 'رمز التحقق';
 
   @override
   String get onboardingTitle1 => 'اكتشف أحدث العروض والمنتجات القريبة منك';

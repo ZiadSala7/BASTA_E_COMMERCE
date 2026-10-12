@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/utils/app_navigation.dart';
+import '../../../../core/utils/app_router.dart';
 import '../../../../core/utils/app_colors.dart';
 
 part 'auth_page_scaffold_parts/auth_page_scaffold.dart';

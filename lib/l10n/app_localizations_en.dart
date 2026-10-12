@@ -74,6 +74,15 @@ class AppLocalizationsEn extends AppLocalizations {
       'Replace the imagePath in\nOnboardingLocalDataSource';
 
   @override
+  String get noImageAvailable => 'No image available';
+
+  @override
+  String get imageUnavailable => 'Image unavailable';
+
+  @override
+  String get verificationCode => 'Verification code';
+
+  @override
   String get onboardingTitle1 =>
       'Discover the latest offers and products near you';
 

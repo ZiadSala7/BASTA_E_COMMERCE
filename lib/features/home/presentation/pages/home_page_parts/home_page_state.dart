@@ -196,7 +196,10 @@ class _HomePageState extends State<HomePage> {
 
               if (snapshot.hasError) {
                 return _ProductsErrorSection(
-                  message: 'Unable to load categories right now.',
+                  message: l10n.pick(
+                    ar: 'تعذر تحميل الفئات الآن.',
+                    en: 'Unable to load categories right now.',
+                  ),
                   onRetry: () {
                     setState(() {
                       _categoriesFuture = _getCategories();
@@ -225,7 +228,10 @@ class _HomePageState extends State<HomePage> {
 
               if (snapshot.hasError) {
                 return _ProductsErrorSection(
-                  message: 'Unable to load products right now.',
+                  message: l10n.pick(
+                    ar: 'تعذر تحميل المنتجات الآن.',
+                    en: 'Unable to load products right now.',
+                  ),
                   onRetry: () {
                     setState(() {
                       _productsFuture = _fetchProducts();
@@ -345,7 +351,10 @@ class _HomePageState extends State<HomePage> {
 
               if (snapshot.hasError) {
                 return _ProductsErrorSection(
-                  message: 'Unable to load stores right now.',
+                  message: l10n.pick(
+                    ar: 'تعذر تحميل المتاجر الآن.',
+                    en: 'Unable to load stores right now.',
+                  ),
                   onRetry: () {
                     setState(() {
                       _storesFuture = _fetchStores();

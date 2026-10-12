@@ -11,10 +11,12 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/auth/presentation/pages/verification_page.dart';
 import '../../features/account/presentation/pages/addresses_page.dart';
+import '../../features/account/presentation/pages/account_page.dart';
 import '../../features/account/presentation/pages/drawer_info_page.dart';
 import '../../features/account/presentation/pages/invite_friends_page.dart';
 import '../../features/coupons/presentation/pages/my_coupons_page.dart';
 import '../../features/cart/presentation/pages/cart_checkout_page.dart';
+import '../../features/cart/presentation/pages/cart_page.dart';
 import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/home/presentation/pages/stores_listing_page.dart';
@@ -45,6 +47,8 @@ abstract class AppRoutes {
   static const String stores = '/stores';
   static const String productDetail = '/product-detail';
   static const String checkout = '/checkout';
+  static const String cart = '/cart';
+  static const String account = '/account';
   static const String favorites = '/favorites';
   static const String orders = '/orders';
   static const String orderDetails = '/order-details';
@@ -166,6 +170,16 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.checkout,
         builder: (context, state) => const CartCheckoutPage(),
+      ),
+      GoRoute(
+        path: AppRoutes.cart,
+        builder: (context, state) => CartPage(
+          onStartShopping: () => context.go(AppRoutes.mainNavigation),
+        ),
+      ),
+      GoRoute(
+        path: AppRoutes.account,
+        builder: (context, state) => const AccountPage(),
       ),
       GoRoute(
         path: AppRoutes.favorites,

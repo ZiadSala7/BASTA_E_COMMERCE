@@ -104,7 +104,7 @@ class _ProductHeaderState extends State<ProductHeader> {
                       children: [
                         _HeaderIconButton(
                           icon: Icons.arrow_back_rounded,
-                          onTap: () => Navigator.pop(context),
+                          onTap: () => AppNavigation.popOrGo(context),
                         ),
                         const Spacer(),
                         _HeaderIconButton(

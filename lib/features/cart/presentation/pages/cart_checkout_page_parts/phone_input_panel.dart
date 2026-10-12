@@ -21,7 +21,7 @@ class _PhoneInputPanel extends StatelessWidget {
           TextField(
             controller: controller,
             keyboardType: TextInputType.phone,
-            textAlign: l10n.isArabic ? TextAlign.right : TextAlign.left,
+            textAlign: TextAlign.start,
             style: GoogleFonts.cairo(
               fontSize: 14,
               fontWeight: FontWeight.w700,

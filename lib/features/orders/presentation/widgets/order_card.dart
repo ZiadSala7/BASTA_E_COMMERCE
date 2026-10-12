@@ -77,7 +77,7 @@ class OrderCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 4),
                       Icon(
-                        l10n.isArabic ? Icons.arrow_back_ios_new_rounded : Icons.arrow_forward_ios_rounded,
+                        Icons.arrow_forward_ios_rounded,
                         size: 12,
                         color: AppColors.primary,
                       ),

@@ -26,7 +26,6 @@ part 'cart_page_parts/indexed_cart_product.dart';
 part 'cart_page_parts/vendor_cart_group.dart';
 part 'cart_page_parts/vendor_cart_section.dart';
 part 'cart_page_parts/cart_header.dart';
-part 'cart_page_parts/header_icon_button.dart';
 part 'cart_page_parts/header_metric.dart';
 part 'cart_page_parts/order_readiness_panel.dart';
 part 'cart_page_parts/readiness_chip.dart';

@@ -1,18 +1,18 @@
 import 'dart:ui';
 
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'core/di/service_locator.dart';
 import 'core/api/dio_helper.dart';
 import 'core/cache/cache_helper.dart';
 import 'core/deeplinks/deep_link_handler.dart';
-import 'core/notifications/local_notification_service.dart';
+import 'core/di/service_locator.dart';
 import 'core/managers/language_cubit.dart';
 import 'core/managers/theme_cubit.dart';
+import 'core/notifications/local_notification_service.dart';
 import 'firebase_options.dart';
 import 'ionbit_e_commerce.dart';
 

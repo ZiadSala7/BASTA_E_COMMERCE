@@ -6,6 +6,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
+import '../../../../core/utils/app_navigation.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
@@ -369,7 +370,10 @@ class _NotificationDetailsPageState extends State<NotificationDetailsPage> {
     } else {
       buttonText = l10n.pick(ar: 'العودة للإشعارات', en: 'Back to Notifications');
       buttonIcon = Icons.arrow_back_rounded;
-      onAction = () => Navigator.of(context).maybePop();
+      onAction = () => AppNavigation.popOrGo(
+        context,
+        fallbackLocation: AppRoutes.notifications,
+      );
     }
 
     return ElevatedButton.icon(

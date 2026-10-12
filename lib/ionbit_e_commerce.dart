@@ -2,16 +2,21 @@ import 'package:device_preview/device_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import 'core/di/service_locator.dart';
 import 'core/theme/app_theme.dart';
 import 'core/utils/app_router.dart';
 import 'core/managers/language_cubit.dart';
 import 'core/managers/theme_cubit.dart';
+import 'core/widgets/app_bottom_navigation_shell.dart';
+import 'features/cart/domain/services/cart_badge_controller.dart';
 import 'l10n/app_localizations.dart';
 
 class IonbitECommerce extends StatelessWidget {
   const IonbitECommerce({super.key});
 
   static final AppRouter _appRouter = AppRouter.instance;
+  static final CartBadgeController _cartBadgeController =
+      sl<CartBadgeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +33,11 @@ class IonbitECommerce extends StatelessWidget {
       locale: DevicePreview.locale(context) ?? languageState.locale,
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
-      builder: DevicePreview.appBuilder,
+      builder: (context, child) => AppBottomNavigationShell(
+        router: _appRouter.router,
+        cartBadgeController: _cartBadgeController,
+        child: DevicePreview.appBuilder(context, child),
+      ),
       routerConfig: _appRouter.router,
     );
   }

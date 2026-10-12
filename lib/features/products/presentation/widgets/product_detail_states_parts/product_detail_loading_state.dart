@@ -9,7 +9,7 @@ class ProductDetailLoadingState extends StatelessWidget {
       appBar: AppBar(
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => AppNavigation.popOrGo(context),
         ),
       ),
       body: Center(

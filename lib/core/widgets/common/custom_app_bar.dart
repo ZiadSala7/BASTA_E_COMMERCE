@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../l10n/app_localizations.dart';
 import '../../utils/app_colors.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -116,7 +117,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                         _SearchField(
                           controller: searchController,
                           onChanged: onSearchChanged,
-                          hint: searchHint ?? 'Search...',
+                          hint:
+                              searchHint ??
+                              AppLocalizations.of(context)!.searchHint,
                         ),
                       ],
                     ],
@@ -173,6 +176,8 @@ class _SearchField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final textDirection = Directionality.of(context);
+
     return Container(
       height: 46,
       decoration: BoxDecoration(
@@ -190,8 +195,11 @@ class _SearchField extends StatelessWidget {
       child: TextField(
         controller: controller,
         onChanged: onChanged,
+        textAlign: TextAlign.start,
+        textDirection: textDirection,
         decoration: InputDecoration(
           hintText: hint,
+          hintTextDirection: textDirection,
           hintStyle: GoogleFonts.cairo(
             color: const Color(0xFF9E9AA8),
             fontSize: 14,

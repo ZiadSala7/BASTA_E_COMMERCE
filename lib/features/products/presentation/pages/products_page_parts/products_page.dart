@@ -14,11 +14,11 @@ class ProductsPage extends StatelessWidget {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: CustomAppBar(
-        title: title ?? l10n.products,
+        title: title ?? l10n.pick(ar: 'المنتجات', en: 'Products'),
         centerTitle: true,
         showSearch: false,
         leading: IconButton(
-          onPressed: () => Navigator.of(context).maybePop(),
+          onPressed: () => AppNavigation.popOrGo(context),
           icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
         ),
         actions: [

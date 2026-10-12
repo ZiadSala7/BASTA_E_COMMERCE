@@ -218,6 +218,24 @@ abstract class AppLocalizations {
   /// **'Replace the imagePath in\nOnboardingLocalDataSource'**
   String get replaceImagePathHint;
 
+  /// No description provided for @noImageAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'No image available'**
+  String get noImageAvailable;
+
+  /// No description provided for @imageUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Image unavailable'**
+  String get imageUnavailable;
+
+  /// No description provided for @verificationCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code'**
+  String get verificationCode;
+
   /// No description provided for @onboardingTitle1.
   ///
   /// In en, this message translates to:

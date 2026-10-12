@@ -38,7 +38,7 @@ class AppTextStyles {
 
   static TextStyle authBrand(BuildContext context) {
     return Theme.of(context).textTheme.titleLarge!.copyWith(
-      color: AppColors.primary,
+      color: _primaryTextColor(context),
       fontSize: 20,
       fontWeight: AppFontWeights.bold,
     );
@@ -85,7 +85,7 @@ class AppTextStyles {
 
   static TextStyle authLinkText(BuildContext context) {
     return Theme.of(context).textTheme.labelMedium!.copyWith(
-      color: AppColors.primary,
+      color: _primaryTextColor(context),
       fontSize: 14,
       fontWeight: AppFontWeights.semiBold,
     );
@@ -117,7 +117,7 @@ class AppTextStyles {
 
   static TextStyle onboardingSheetButton(BuildContext context) {
     return Theme.of(context).textTheme.labelLarge!.copyWith(
-      color: AppColors.primary,
+      color: _primaryTextColor(context),
       fontSize: 15,
       fontWeight: AppFontWeights.bold,
     );
@@ -143,5 +143,11 @@ class AppTextStyles {
       fontWeight: fontWeight,
       height: height,
     );
+  }
+
+  static Color _primaryTextColor(BuildContext context) {
+    return Theme.of(context).brightness == Brightness.dark
+        ? Colors.white
+        : AppColors.primary;
   }
 }

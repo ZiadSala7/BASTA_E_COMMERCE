@@ -42,7 +42,7 @@ class _AuthOtpInputRowState extends State<AuthOtpInputRow> {
 
     return Semantics(
       textField: true,
-      label: 'Verification code',
+      label: AppLocalizations.of(context)!.verificationCode,
       value: code,
       child: GestureDetector(
         behavior: HitTestBehavior.opaque,

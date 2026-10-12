@@ -78,7 +78,7 @@ class AccountMenuItem extends StatelessWidget {
                 )
               else
                 Icon(
-                  Icons.arrow_back_ios_new,
+                  Icons.arrow_forward_ios_rounded,
                   size: 16,
                   color: colorScheme.onSurfaceVariant,
                 ),
