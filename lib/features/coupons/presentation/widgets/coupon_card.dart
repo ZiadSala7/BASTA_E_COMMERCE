@@ -12,11 +12,7 @@ class CouponCard extends StatelessWidget {
   final CouponEntity coupon;
   final VoidCallback? onApply;
 
-  const CouponCard({
-    super.key,
-    required this.coupon,
-    this.onApply,
-  });
+  const CouponCard({super.key, required this.coupon, this.onApply});
 
   void _copyCouponCode(BuildContext context) {
     Clipboard.setData(ClipboardData(text: coupon.code));
@@ -29,7 +25,11 @@ class CouponCard extends StatelessWidget {
         SnackBar(
           content: Row(
             children: [
-              const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+              const Icon(
+                Icons.check_circle_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -44,7 +44,9 @@ class CouponCard extends StatelessWidget {
           ),
           backgroundColor: AppColors.accentGreen,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -53,18 +55,17 @@ class CouponCard extends StatelessWidget {
   String _formatDiscount(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final numVal = coupon.numericValue;
-    final valStr = numVal % 1 == 0 ? numVal.toInt().toString() : numVal.toStringAsFixed(2);
+    final valStr = numVal % 1 == 0
+        ? numVal.toInt().toString()
+        : numVal.toStringAsFixed(2);
 
     if (coupon.isFixed) {
       return l10n.pick(
-        ar: '$valStr د.أ خصم',
+        ar: '${l10n.formatPrice(numVal, numVal % 1 == 0 ? 0 : 2)} خصم',
         en: '$valStr JOD OFF',
       );
     } else {
-      return l10n.pick(
-        ar: 'خصم $valStr%',
-        en: '$valStr% OFF',
-      );
+      return l10n.pick(ar: 'خصم $valStr%', en: '$valStr% OFF');
     }
   }
 
@@ -149,7 +150,9 @@ class CouponCard extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isValid
                     ? accentColor.withValues(alpha: isDark ? 0.12 : 0.05)
-                    : colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+                    : colorScheme.surfaceContainerHighest.withValues(
+                        alpha: 0.3,
+                      ),
               ),
               child: Row(
                 children: [
@@ -178,7 +181,9 @@ class CouponCard extends StatelessWidget {
                           style: GoogleFonts.cairo(
                             fontSize: 20,
                             fontWeight: FontWeight.w900,
-                            color: isValid ? accentColor : colorScheme.onSurface,
+                            color: isValid
+                                ? accentColor
+                                : colorScheme.onSurface,
                             height: 1.1,
                           ),
                         ),
@@ -203,7 +208,10 @@ class CouponCard extends StatelessWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
                     decoration: BoxDecoration(
                       color: badgeColor,
                       borderRadius: BorderRadius.circular(20),
@@ -238,20 +246,29 @@ class CouponCard extends StatelessWidget {
                 children: [
                   Material(
                     color: isValid
-                        ? (isDark ? const Color(0xFF1E2430) : const Color(0xFFF3F5FA))
-                        : colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                        ? (isDark
+                              ? const Color(0xFF1E2430)
+                              : const Color(0xFFF3F5FA))
+                        : colorScheme.surfaceContainerHighest.withValues(
+                            alpha: 0.4,
+                          ),
                     borderRadius: BorderRadius.circular(14),
                     child: InkWell(
                       onTap: () => _copyCouponCode(context),
                       borderRadius: BorderRadius.circular(14),
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
                             color: isValid
                                 ? accentColor.withValues(alpha: 0.25)
-                                : colorScheme.outlineVariant.withValues(alpha: 0.5),
+                                : colorScheme.outlineVariant.withValues(
+                                    alpha: 0.5,
+                                  ),
                             style: BorderStyle.solid,
                           ),
                         ),
@@ -275,7 +292,10 @@ class CouponCard extends StatelessWidget {
                               ),
                             ),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 6,
+                              ),
                               decoration: BoxDecoration(
                                 color: AppColors.primary,
                                 borderRadius: BorderRadius.circular(10),
@@ -283,7 +303,11 @@ class CouponCard extends StatelessWidget {
                               child: Row(
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  const Icon(Icons.copy_rounded, size: 14, color: Colors.white),
+                                  const Icon(
+                                    Icons.copy_rounded,
+                                    size: 14,
+                                    color: Colors.white,
+                                  ),
                                   const SizedBox(width: 5),
                                   Text(
                                     l10n.pick(ar: 'نسخ', en: 'Copy'),
@@ -361,7 +385,7 @@ class CouponCard extends StatelessWidget {
                       alignment: AlignmentDirectional.centerStart,
                       child: Text(
                         l10n.pick(
-                          ar: '• الحد الأدنى للطلب: ${coupon.numericMinOrder.toStringAsFixed(2)} د.أ',
+                          ar: '• الحد الأدنى للطلب: ${l10n.formatPrice(coupon.numericMinOrder)}',
                           en: '• Minimum order amount: JD ${coupon.numericMinOrder.toStringAsFixed(2)}',
                         ),
                         style: GoogleFonts.cairo(

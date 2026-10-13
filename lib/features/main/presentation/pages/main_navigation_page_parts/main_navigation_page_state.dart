@@ -19,9 +19,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     _notificationsController.setupAfterLogin();
 
     _pages = [
-      HomePage(
-        onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
-      ),
+      HomePage(onMenuPressed: () => _scaffoldKey.currentState?.openDrawer()),
       MyCouponsPage(
         onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
         isTab: true,
@@ -34,15 +32,10 @@ class _MainNavigationPageState extends State<MainNavigationPage>
         },
       ),
       CartPage(
-        onStartShopping: () {
-          setState(() {
-            _currentIndex = 0;
-          });
-        },
+        onStartShopping: () =>
+            AppRouter.instance.router.push(AppRoutes.products),
       ),
-      AccountPage(
-        onMenuPressed: () => _scaffoldKey.currentState?.openDrawer(),
-      ),
+      AccountPage(onMenuPressed: () => _scaffoldKey.currentState?.openDrawer()),
     ];
   }
 
@@ -64,10 +57,7 @@ class _MainNavigationPageState extends State<MainNavigationPage>
     return Scaffold(
       key: _scaffoldKey,
       drawer: const AppDrawer(),
-      body: IndexedStack(
-        index: _currentIndex,
-        children: _pages,
-      ),
+      body: IndexedStack(index: _currentIndex, children: _pages),
       bottomNavigationBar: AnimatedBuilder(
         animation: _cartBadgeController,
         builder: (context, child) {

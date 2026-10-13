@@ -39,4 +39,5 @@ class _SummaryRow extends StatelessWidget {
   }
 }
 
-String _money(double value) => CurrencyHelper.format(value);
+String _money(double value, BuildContext context) =>
+    CurrencyHelper.format(value, context: context);

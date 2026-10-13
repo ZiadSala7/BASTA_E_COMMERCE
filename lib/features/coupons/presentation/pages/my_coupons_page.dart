@@ -204,7 +204,7 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                                   const SizedBox(height: 2),
                                   Text(
                                     l10n.pick(
-                                      ar: 'ادعُ أصدقاءك واحصل على 5 د.أ لكل صديق يطلب!',
+                                      ar: 'ادعُ أصدقاءك واحصل على ${l10n.formatPrice(5, 0)} لكل صديق يطلب!',
                                       en: 'Invite friends & get 5 JOD for every order!',
                                     ),
                                     style: GoogleFonts.cairo(

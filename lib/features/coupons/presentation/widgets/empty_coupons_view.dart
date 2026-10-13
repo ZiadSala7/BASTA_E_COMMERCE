@@ -53,10 +53,8 @@ class EmptyCouponsView extends StatelessWidget {
             const SizedBox(height: 10),
             Text(
               l10n.pick(
-                ar:
-                    'شارك رمز الدعوة الخاص بك مع أصدقائك واكسب قسيمة خصم بقيمة 5 د.أ فور تسجيلهم وطلبهم الأول!',
-                en:
-                    'Share your invite code with friends to earn a JOD 5 discount coupon when they register and complete their first order!',
+                ar: 'شارك رمز الدعوة الخاص بك مع أصدقائك واكسب قسيمة خصم بقيمة ${l10n.formatPrice(5, 0)} فور تسجيلهم وطلبهم الأول!',
+                en: 'Share your invite code with friends to earn a JOD 5 discount coupon when they register and complete their first order!',
               ),
               textAlign: TextAlign.center,
               style: GoogleFonts.cairo(

@@ -57,8 +57,9 @@ class _CartProduct {
   final bool isFavorite;
   final bool darkImage;
 
-  String get effectiveVariantId =>
-      variantId.isNotEmpty ? variantId : (productId.isNotEmpty ? productId : id);
+  String get effectiveVariantId => variantId.isNotEmpty
+      ? variantId
+      : (productId.isNotEmpty ? productId : id);
 
   String get removeProductId => effectiveVariantId;
 
@@ -72,7 +73,7 @@ class _CartProduct {
     return 'unknown-store';
   }
 
-  factory _CartProduct.fromEntity(CartItemEntity item) {
+  factory _CartProduct.fromEntity(CartItemEntity item, BuildContext context) {
     return _CartProduct(
       id: item.id,
       cartItemId: item.cartItemId,
@@ -82,7 +83,7 @@ class _CartProduct {
       storeId: item.storeId,
       storeName: item.storeName.trim(),
       storeSlug: item.storeSlug,
-      price: _money(item.activePrice),
+      price: _money(item.activePrice, context),
       unitPrice: item.activePrice,
       compareAtPrice: item.compareAtPrice,
       discountEndDate: item.discountEndDate,

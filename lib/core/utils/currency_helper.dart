@@ -1,9 +1,10 @@
 import 'package:flutter/widgets.dart';
 
 import '../../l10n/app_localizations.dart';
+import '../extensions/app_localizations_x.dart';
 
 class CurrencyHelper {
-  /// Format a numeric amount to localized currency string (e.g. `24.99 د.أ` in Arabic, `JD 24.99` in English).
+  /// Format a numeric amount using the active locale's currency label.
   static String format(
     num? amount, {
     BuildContext? context,
@@ -15,12 +16,17 @@ class CurrencyHelper {
     final formattedNum = amount.toStringAsFixed(decimalDigits);
     if (!showCurrency) return formattedNum;
 
-    final isAr = isArabic ??
+    final isAr =
+        isArabic ??
         (context != null
-            ? (AppLocalizations.of(context)?.localeName.startsWith('ar') ?? true)
+            ? (AppLocalizations.of(context)?.localeName.startsWith('ar') ??
+                  true)
             : true);
 
-    return isAr ? '$formattedNum د.أ' : 'JD $formattedNum';
+    final currencyLabel = AppLocalizationsX.currencyLabelFor(isAr);
+    return isAr
+        ? '$formattedNum $currencyLabel'
+        : '$currencyLabel $formattedNum';
   }
 
   /// Robustly extracts a numeric value from a string that may contain Arabic or English currency symbols, commas, or dots in abbreviations
@@ -33,7 +39,7 @@ class CurrencyHelper {
 
     // Strip known currency words and symbols
     final stripped = text
-        .replaceAll('د.أ', '')
+        .replaceAll(AppLocalizationsX.currencyLabelFor(true), '')
         .replaceAll('د.ا', '')
         .replaceAll('دينار', '')
         .replaceAll(RegExp(r'[a-zA-Z$€£¥]'), '')

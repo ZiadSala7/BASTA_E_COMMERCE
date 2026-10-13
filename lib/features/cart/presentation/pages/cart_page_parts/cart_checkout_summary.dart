@@ -48,18 +48,18 @@ class _CartCheckoutSummary extends StatelessWidget {
             const SizedBox(height: 12),
             _SummaryRow(
               label: l10n.pick(ar: 'المجموع الفرعي', en: 'Subtotal'),
-              value: _money(subtotal),
+              value: _money(subtotal, context),
             ),
             const SizedBox(height: 6),
             _SummaryRow(
               label: l10n.pick(ar: 'الشحن', en: 'Shipping'),
-              value: _money(shipping),
+              value: _money(shipping, context),
             ),
             if (discount > 0) ...[
               const SizedBox(height: 6),
               _SummaryRow(
                 label: l10n.pick(ar: 'خصم الكوبون', en: 'Coupon discount'),
-                value: '-${_money(discount)}',
+                value: '-${_money(discount, context)}',
                 valueColor: AppColors.accentGreen,
               ),
             ],
@@ -81,7 +81,7 @@ class _CartCheckoutSummary extends StatelessWidget {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        _money(total),
+                        _money(total, context),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.cairo(

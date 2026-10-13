@@ -85,9 +85,14 @@ class _CartItemDetails extends StatelessWidget {
             runSpacing: 2,
             children: attributeLabels.take(2).map((attr) {
               return Container(
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 1.5),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 5,
+                  vertical: 1.5,
+                ),
                 decoration: BoxDecoration(
-                  color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                  color: colorScheme.surfaceContainerHighest.withValues(
+                    alpha: 0.5,
+                  ),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Text(
@@ -120,7 +125,7 @@ class _CartItemDetails extends StatelessWidget {
           textBaseline: TextBaseline.alphabetic,
           children: [
             Text(
-              _money(item.unitPrice),
+              _money(item.unitPrice, context),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.cairo(
@@ -133,7 +138,7 @@ class _CartItemDetails extends StatelessWidget {
             if (hasDiscount) ...[
               const SizedBox(width: 6),
               Text(
-                _money(item.compareAtPrice!),
+                _money(item.compareAtPrice!, context),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.cairo(
@@ -141,7 +146,9 @@ class _CartItemDetails extends StatelessWidget {
                   fontSize: 12,
                   fontWeight: FontWeight.w700,
                   decoration: TextDecoration.lineThrough,
-                  decorationColor: const Color(0xFFE53935).withValues(alpha: 0.75),
+                  decorationColor: const Color(
+                    0xFFE53935,
+                  ).withValues(alpha: 0.75),
                   decorationThickness: 1.5,
                   height: 1,
                 ),

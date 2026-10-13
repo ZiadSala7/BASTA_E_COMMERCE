@@ -53,6 +53,7 @@ class AppBottomNavigationShell extends StatelessWidget {
     if (location == AppRoutes.mainNavigation ||
         location == AppRoutes.splash ||
         location == AppRoutes.onboarding ||
+        location == AppRoutes.products ||
         location.startsWith('/auth/')) {
       return false;
     }

@@ -58,7 +58,7 @@ class _VendorCartSection extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 Text(
-                  _money(group.subtotal),
+                  _money(group.subtotal, context),
                   style: GoogleFonts.cairo(
                     color: AppColors.primary,
                     fontSize: 13,

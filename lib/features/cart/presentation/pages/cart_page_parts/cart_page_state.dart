@@ -62,10 +62,7 @@ class _CartPageState extends State<CartPage> {
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Column(
         children: [
-          _CartHeader(
-            itemCount: itemCount,
-            subtotal: _subtotal,
-          ),
+          _CartHeader(itemCount: itemCount, subtotal: _subtotal),
           Expanded(
             child: RefreshIndicator(
               onRefresh: _loadCart,
@@ -103,10 +100,8 @@ class _CartPageState extends State<CartPage> {
                             icon: Icons.shopping_cart_outlined,
                             title: l10n.cart,
                             message: l10n.pick(
-                              ar:
-                                  'سلة التسوق فارغة الآن. ابدأ بإضافة منتجاتك المفضلة.',
-                              en:
-                                  'Your cart is empty right now. Start adding products you love.',
+                              ar: 'سلة التسوق فارغة الآن. ابدأ بإضافة منتجاتك المفضلة.',
+                              en: 'Your cart is empty right now. Start adding products you love.',
                             ),
                             actionLabel: l10n.shopNow,
                             onActionTap: widget.onStartShopping,
@@ -129,10 +124,8 @@ class _CartPageState extends State<CartPage> {
                             en: 'Cart items',
                           ),
                           subtitle: l10n.pick(
-                            ar:
-                                '${localizedItems.length} منتجات جاهزة للطلب',
-                            en:
-                                '${localizedItems.length} products ready for checkout',
+                            ar: '${localizedItems.length} منتجات جاهزة للطلب',
+                            en: '${localizedItems.length} products ready for checkout',
                           ),
                         ),
                         const SizedBox(height: 12),
@@ -144,10 +137,8 @@ class _CartPageState extends State<CartPage> {
                           _VendorCartSection(
                             group: cartGroups[groupIndex],
                             updatingItemIds: _updatingItemIds,
-                            onIncrement: (index) =>
-                                _changeQuantity(index, 1),
-                            onDecrement: (index) =>
-                                _changeQuantity(index, -1),
+                            onIncrement: (index) => _changeQuantity(index, 1),
+                            onDecrement: (index) => _changeQuantity(index, -1),
                             onRemove: _removeItem,
                             onFavoriteTap: _toggleFavorite,
                           ),
@@ -273,7 +264,7 @@ class _CartPageState extends State<CartPage> {
       setState(() {
         _items
           ..clear()
-          ..addAll(items.map(_CartProduct.fromEntity));
+          ..addAll(items.map((item) => _CartProduct.fromEntity(item, context)));
         _isLoading = false;
       });
       _updateShippingFee();
@@ -396,7 +387,7 @@ class _CartPageState extends State<CartPage> {
       setState(() {
         _items
           ..clear()
-          ..addAll(items.map(_CartProduct.fromEntity));
+          ..addAll(items.map((item) => _CartProduct.fromEntity(item, context)));
       });
       _updateShippingFee();
     } catch (_) {

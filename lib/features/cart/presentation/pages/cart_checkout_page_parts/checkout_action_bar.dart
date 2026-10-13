@@ -46,7 +46,7 @@ class _CheckoutActionBar extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    _money(total),
+                    _money(total, context),
                     style: GoogleFonts.cairo(
                       color: AppColors.primary,
                       fontSize: 22,
@@ -83,4 +83,5 @@ class _CheckoutActionBar extends StatelessWidget {
   }
 }
 
-String _money(double value) => CurrencyHelper.format(value);
+String _money(double value, BuildContext context) =>
+    CurrencyHelper.format(value, context: context);

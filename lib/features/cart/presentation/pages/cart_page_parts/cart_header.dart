@@ -1,10 +1,7 @@
 part of '../cart_page.dart';
 
 class _CartHeader extends StatelessWidget {
-  const _CartHeader({
-    required this.itemCount,
-    required this.subtotal,
-  });
+  const _CartHeader({required this.itemCount, required this.subtotal});
 
   final int itemCount;
   final double subtotal;
@@ -81,7 +78,7 @@ class _CartHeader extends StatelessWidget {
               Expanded(
                 child: _HeaderMetric(
                   label: l10n.pick(ar: 'المجموع الفرعي', en: 'Subtotal'),
-                  value: _money(subtotal),
+                  value: _money(subtotal, context),
                 ),
               ),
               const SizedBox(width: 10),

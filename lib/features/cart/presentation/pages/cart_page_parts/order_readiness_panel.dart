@@ -107,7 +107,7 @@ class _OrderReadinessPanel extends StatelessWidget {
                   child: _ReadinessChip(
                     icon: Icons.payments_outlined,
                     label: l10n.pick(ar: 'المجموع', en: 'Subtotal'),
-                    value: _money(subtotal),
+                    value: _money(subtotal, context),
                   ),
                 ),
               ],

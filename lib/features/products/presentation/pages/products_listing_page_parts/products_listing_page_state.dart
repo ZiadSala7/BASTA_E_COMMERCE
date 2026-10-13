@@ -134,6 +134,11 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
         children: [
           CustomAppBar(
             title: _screenTitle(l10n),
+            leading: IconButton(
+              onPressed: () => AppNavigation.popOrGo(context),
+              tooltip: l10n.back,
+              icon: const Icon(Icons.arrow_back_rounded, color: Colors.white),
+            ),
             showSearch: true,
             searchController: _searchController,
             searchHint: l10n.pick(

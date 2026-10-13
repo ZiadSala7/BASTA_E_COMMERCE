@@ -57,6 +57,16 @@ class _PaymentTile extends StatelessWidget {
                       color: colorScheme.onSurfaceVariant,
                     ),
                   ),
+                  if (method.brands.isNotEmpty) ...[
+                    const SizedBox(height: 6),
+                    Wrap(
+                      spacing: 6,
+                      children: [
+                        for (final brand in method.brands)
+                          _PaymentBrandMark(brand: brand),
+                      ],
+                    ),
+                  ],
                 ],
               ),
             ),
@@ -69,4 +79,80 @@ class _PaymentTile extends StatelessWidget {
       ),
     );
   }
+}
+
+class _PaymentBrandMark extends StatelessWidget {
+  const _PaymentBrandMark({required this.brand});
+
+  final String brand;
+
+  @override
+  Widget build(BuildContext context) {
+    final isVisa = brand == 'VISA';
+
+    return Container(
+      height: 24,
+      padding: const EdgeInsets.symmetric(horizontal: 7),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        border: Border.all(color: const Color(0xFFD9DCE3)),
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Center(
+        child: isVisa
+            ? Text(
+                brand,
+                style: const TextStyle(
+                  color: Color(0xFF1A1F71),
+                  fontSize: 11,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w900,
+                ),
+              )
+            : Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const SizedBox(
+                    width: 20,
+                    height: 12,
+                    child: Stack(
+                      children: [
+                        Positioned(
+                          left: 0,
+                          child: _BrandCircle(color: Color(0xFFE31B23)),
+                        ),
+                        Positioned(
+                          left: 7,
+                          child: _BrandCircle(color: Color(0xFFF79E1B)),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    brand,
+                    style: const TextStyle(
+                      color: Color(0xFF252525),
+                      fontSize: 9,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  ),
+                ],
+              ),
+      ),
+    );
+  }
+}
+
+class _BrandCircle extends StatelessWidget {
+  const _BrandCircle({required this.color});
+
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) => Container(
+    width: 12,
+    height: 12,
+    decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+  );
 }

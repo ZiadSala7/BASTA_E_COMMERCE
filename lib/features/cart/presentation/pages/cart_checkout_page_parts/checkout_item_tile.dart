@@ -57,7 +57,7 @@ class _CheckoutItemTile extends StatelessWidget {
             ),
             const SizedBox(width: 10),
             Text(
-              _money(item.activePrice * item.quantity),
+              _money(item.activePrice * item.quantity, context),
               style: GoogleFonts.cairo(
                 color: hasStockIssue
                     ? const Color(0xFFE53935)

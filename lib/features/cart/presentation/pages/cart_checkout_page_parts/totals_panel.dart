@@ -19,11 +19,11 @@ class _TotalsPanel extends StatelessWidget {
       title: l10n.pick(ar: 'ملخص الدفع', en: 'Payment summary'),
       child: Column(
         children: [
-          _TotalLine(label: l10n.subtotal, value: _money(subtotal)),
+          _TotalLine(label: l10n.subtotal, value: _money(subtotal, context)),
           const SizedBox(height: 8),
           _TotalLine(
             label: l10n.pick(ar: 'الشحن', en: 'Shipping'),
-            value: _money(shipping),
+            value: _money(shipping, context),
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
@@ -31,7 +31,7 @@ class _TotalsPanel extends StatelessWidget {
           ),
           _TotalLine(
             label: l10n.grandTotal,
-            value: _money(total),
+            value: _money(total, context),
             isBold: true,
           ),
         ],

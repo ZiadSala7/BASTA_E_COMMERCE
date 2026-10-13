@@ -128,16 +128,16 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
             }),
             onManageAddresses: _openAddressesManager,
           ),
-          if (_selectedSavedAddress == null) ...[
-            const SizedBox(height: 12),
-            _DeliveryLocationPanel(
-              selectedLocation: _selectedDeliveryLocation,
-              initialLocation:
-                  _selectedDeliveryLocation ?? _initialDeliveryLocation,
-              onLocationSelected: (location) =>
-                  setState(() => _selectedDeliveryLocation = location),
-            ),
-          ],
+          const SizedBox(height: 12),
+          _DeliveryLocationPanel(
+            selectedLocation: _selectedDeliveryLocation,
+            initialLocation:
+                _selectedDeliveryLocation ?? _initialDeliveryLocation,
+            onLocationSelected: (location) => setState(() {
+              _selectedAddressId = null;
+              _selectedDeliveryLocation = location;
+            }),
+          ),
           const SizedBox(height: 12),
           _PhoneInputPanel(controller: _phoneController),
           const SizedBox(height: 12),
@@ -177,7 +177,8 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
             selectedAddress.latitude,
             selectedAddress.longitude,
           );
-          if (selectedAddress.phone.trim().isNotEmpty && _phoneController.text.trim().isEmpty) {
+          if (selectedAddress.phone.trim().isNotEmpty &&
+              _phoneController.text.trim().isEmpty) {
             _phoneController.text = selectedAddress.phone.trim();
           }
         }
@@ -200,7 +201,9 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
 
   Future<void> _updateShippingFee() async {
     final address = _selectedSavedAddress;
-    String city = (address != null && address.city.isNotEmpty) ? address.city : '';
+    String city = (address != null && address.city.isNotEmpty)
+        ? address.city
+        : '';
     String? street = address?.street;
 
     if (city.isEmpty && _selectedDeliveryLocation != null) {
@@ -211,7 +214,11 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
         );
         if (placemarks.isNotEmpty) {
           final p = placemarks.first;
-          city = p.locality ?? p.subAdministrativeArea ?? p.administrativeArea ?? '';
+          city =
+              p.locality ??
+              p.subAdministrativeArea ??
+              p.administrativeArea ??
+              '';
           street ??= p.street;
         }
       } catch (_) {}
@@ -257,10 +264,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
     }
 
     final addressPayload = selectedAddress != null
-        ? {
-            ...selectedAddress.toCheckoutPayload(),
-            'phone': phone,
-          }
+        ? {...selectedAddress.toCheckoutPayload(), 'phone': phone}
         : _addressPayload(deliveryLocation!, phone: phone);
 
     setState(() => _isSubmitting = true);
@@ -461,10 +465,18 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
     final street = (saved != null && saved.street.isNotEmpty)
         ? saved.street
         : 'Pinned delivery location: $coordinates';
-    final city = (saved != null && saved.city.isNotEmpty) ? saved.city : 'Amman';
-    final state = (saved != null && saved.state.isNotEmpty) ? saved.state : 'Amman';
-    final postalCode = (saved != null && saved.postalCode.isNotEmpty) ? saved.postalCode : '11183';
-    final country = (saved != null && saved.country.isNotEmpty) ? saved.country : 'Jordan';
+    final city = (saved != null && saved.city.isNotEmpty)
+        ? saved.city
+        : 'Amman';
+    final state = (saved != null && saved.state.isNotEmpty)
+        ? saved.state
+        : 'Amman';
+    final postalCode = (saved != null && saved.postalCode.isNotEmpty)
+        ? saved.postalCode
+        : '11183';
+    final country = (saved != null && saved.country.isNotEmpty)
+        ? saved.country
+        : 'Jordan';
     final resolvedPhone = phone ?? _phoneController.text.trim();
 
     return {

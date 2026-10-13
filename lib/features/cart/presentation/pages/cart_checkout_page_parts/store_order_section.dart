@@ -47,7 +47,7 @@ class _StoreOrderSection extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  _money(_storeTotal),
+                  _money(_storeTotal, context),
                   style: GoogleFonts.cairo(
                     color: AppColors.primary,
                     fontSize: 13,

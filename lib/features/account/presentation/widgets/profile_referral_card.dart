@@ -27,7 +27,11 @@ class ProfileReferralCard extends StatelessWidget {
         SnackBar(
           content: Row(
             children: [
-              const Icon(Icons.check_circle_rounded, color: Colors.white, size: 20),
+              const Icon(
+                Icons.check_circle_rounded,
+                color: Colors.white,
+                size: 20,
+              ),
               const SizedBox(width: 10),
               Expanded(
                 child: Text(
@@ -42,7 +46,9 @@ class ProfileReferralCard extends StatelessWidget {
           ),
           backgroundColor: AppColors.accentGreen,
           behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
           duration: const Duration(seconds: 2),
         ),
       );
@@ -51,10 +57,8 @@ class ProfileReferralCard extends StatelessWidget {
   void _shareInvite(BuildContext context, String code) {
     final l10n = AppLocalizations.of(context)!;
     final message = l10n.pick(
-      ar:
-          '🍕 مرحباً! استخدم رمز الدعوة الخاص بي ($code) عند التسجيل في تطبيق بَسطة واحصل على خصم 5 د.أ على طلبك!\n\nرابط التسجيل: $_appDownloadUrl?ref=$code',
-      en:
-          '🍕 Hello! Use my invite code ($code) when registering on Basta and get a JOD 5 discount on your order!\n\nRegistration link: $_appDownloadUrl?ref=$code',
+      ar: '🍕 مرحباً! استخدم رمز الدعوة الخاص بي ($code) عند التسجيل في تطبيق بَسطة واحصل على خصم ${l10n.formatPrice(5, 0)} على طلبك!\n\nرابط التسجيل: $_appDownloadUrl?ref=$code',
+      en: '🍕 Hello! Use my invite code ($code) when registering on Basta and get a JOD 5 discount on your order!\n\nRegistration link: $_appDownloadUrl?ref=$code',
     );
 
     Share.share(
@@ -106,7 +110,9 @@ class ProfileReferralCard extends StatelessWidget {
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(18),
+              ),
             ),
             child: Row(
               children: [
@@ -129,7 +135,7 @@ class ProfileReferralCard extends StatelessWidget {
                     children: [
                       Text(
                         l10n.pick(
-                          ar: 'ادعُ أصدقاءك واكسب 5 د.أ! 🎉',
+                          ar: 'ادعُ أصدقاءك واكسب ${l10n.formatPrice(5, 0)}! 🎉',
                           en: 'Invite Friends & Earn 5 JOD! 🎉',
                         ),
                         style: GoogleFonts.cairo(
@@ -160,7 +166,10 @@ class ProfileReferralCard extends StatelessWidget {
                     color: Colors.white,
                     size: 20,
                   ),
-                  tooltip: l10n.pick(ar: 'تفاصيل المكافآت', en: 'Reward details'),
+                  tooltip: l10n.pick(
+                    ar: 'تفاصيل المكافآت',
+                    en: 'Reward details',
+                  ),
                 ),
               ],
             ),
@@ -173,14 +182,19 @@ class ProfileReferralCard extends StatelessWidget {
                 ? Column(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 14,
+                          vertical: 10,
+                        ),
                         decoration: BoxDecoration(
                           color: isDark
                               ? const Color(0xFF1E2430)
                               : const Color(0xFFF4F6FB),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
-                            color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+                            color: colorScheme.outlineVariant.withValues(
+                              alpha: 0.6,
+                            ),
                           ),
                         ),
                         child: Row(

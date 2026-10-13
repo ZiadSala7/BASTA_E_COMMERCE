@@ -1,8 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../features/main/presentation/pages/main_navigation_page.dart';
-import '../di/service_locator.dart';
+import '../../features/account/presentation/pages/account_page.dart';
+import '../../features/account/presentation/pages/addresses_page.dart';
+import '../../features/account/presentation/pages/drawer_info_page.dart';
+import '../../features/account/presentation/pages/invite_friends_page.dart';
 import '../../features/auth/presentation/cubits/auth_cubit.dart';
 import '../../features/auth/presentation/models/auth_verification_args.dart';
 import '../../features/auth/presentation/pages/forgot_password_page.dart';
@@ -10,16 +12,13 @@ import '../../features/auth/presentation/pages/login_page.dart';
 import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/reset_password_page.dart';
 import '../../features/auth/presentation/pages/verification_page.dart';
-import '../../features/account/presentation/pages/addresses_page.dart';
-import '../../features/account/presentation/pages/account_page.dart';
-import '../../features/account/presentation/pages/drawer_info_page.dart';
-import '../../features/account/presentation/pages/invite_friends_page.dart';
-import '../../features/coupons/presentation/pages/my_coupons_page.dart';
 import '../../features/cart/presentation/pages/cart_checkout_page.dart';
 import '../../features/cart/presentation/pages/cart_page.dart';
+import '../../features/coupons/presentation/pages/my_coupons_page.dart';
 import '../../features/favorites/presentation/pages/favorites_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/home/presentation/pages/stores_listing_page.dart';
+import '../../features/main/presentation/pages/main_navigation_page.dart';
 import '../../features/notifications/domain/entities/app_notification_entity.dart';
 import '../../features/notifications/presentation/pages/notification_details_page.dart';
 import '../../features/notifications/presentation/pages/notifications_page.dart';
@@ -30,6 +29,7 @@ import '../../features/orders/presentation/pages/orders_page.dart';
 import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/products_listing_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
+import '../di/service_locator.dart';
 
 abstract class AppRoutes {
   static const String splash = '/';
@@ -89,7 +89,9 @@ class AppRouter {
       GoRoute(
         path: AppRoutes.register,
         builder: (context, state) {
-          final referralCode = state.extra is String ? state.extra as String : null;
+          final referralCode = state.extra is String
+              ? state.extra as String
+              : null;
           return BlocProvider(
             create: (_) => sl<AuthCubit>(),
             child: RegisterPage(initialReferralCode: referralCode),
@@ -173,9 +175,8 @@ class AppRouter {
       ),
       GoRoute(
         path: AppRoutes.cart,
-        builder: (context, state) => CartPage(
-          onStartShopping: () => context.go(AppRoutes.mainNavigation),
-        ),
+        builder: (context, state) =>
+            CartPage(onStartShopping: () => context.push(AppRoutes.products)),
       ),
       GoRoute(
         path: AppRoutes.account,

@@ -28,6 +28,7 @@ class _PaymentMethodsPanel extends StatelessWidget {
           ar: 'ادفع بأمان عبر Mastercard',
           en: 'Pay securely with Mastercard',
         ),
+        brands: const ['VISA', 'Mastercard'],
       ),
     ];
 

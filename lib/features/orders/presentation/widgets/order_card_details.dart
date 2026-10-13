@@ -31,7 +31,8 @@ class OrderCardDetails extends StatelessWidget {
         if (order.shippingCost > 0)
           OrderMeta(
             icon: Icons.local_shipping_outlined,
-            label: '${l10n.pick(ar: 'الشحن', en: 'Shipping')}: ${CurrencyHelper.format(order.shippingCost)}',
+            label:
+                '${l10n.pick(ar: 'الشحن', en: 'Shipping')}: ${CurrencyHelper.format(order.shippingCost, context: context)}',
           ),
       ],
     );

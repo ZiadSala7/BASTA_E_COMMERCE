@@ -38,7 +38,9 @@ class _OffersPageState extends State<OffersPage> {
               return RefreshIndicator(
                 onRefresh: () async {
                   if (_mainTabIndex == 0) {
-                    await blocContext.read<CouponsCubit>().getMyCoupons(showLoading: false);
+                    await blocContext.read<CouponsCubit>().getMyCoupons(
+                      showLoading: false,
+                    );
                   }
                 },
                 child: CustomScrollView(
@@ -49,8 +51,14 @@ class _OffersPageState extends State<OffersPage> {
                       delegate: _OffersHeaderDelegate(
                         topPadding: MediaQuery.paddingOf(context).top,
                         title: _mainTabIndex == 0
-                            ? l10n.pick(ar: 'مكافآتي وكوبوناتي', en: 'My Rewards & Coupons')
-                            : l10n.pick(ar: 'خصم فوق الخصم', en: 'Discounts on deals'),
+                            ? l10n.pick(
+                                ar: 'مكافآتي وكوبوناتي',
+                                en: 'My Rewards & Coupons',
+                              )
+                            : l10n.pick(
+                                ar: 'خصم فوق الخصم',
+                                en: 'Discounts on deals',
+                              ),
                         hintText: l10n.pick(
                           ar: 'ابحث باسم الكوبون، المتجر',
                           en: 'Search coupon or store',
@@ -60,7 +68,9 @@ class _OffersPageState extends State<OffersPage> {
                             context.push(AppRoutes.notifications),
                         onFilterTap: _showFilterSheet,
                         onSearchChanged: (value) {
-                          setState(() => _searchQuery = value.trim().toLowerCase());
+                          setState(
+                            () => _searchQuery = value.trim().toLowerCase(),
+                          );
                         },
                       ),
                     ),
@@ -72,10 +82,13 @@ class _OffersPageState extends State<OffersPage> {
                         child: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: colorScheme.surfaceContainerHighest.withOpacity(0.55),
+                            color: colorScheme.surfaceContainerHighest
+                                .withOpacity(0.55),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
-                              color: colorScheme.outlineVariant.withOpacity(0.6),
+                              color: colorScheme.outlineVariant.withOpacity(
+                                0.6,
+                              ),
                             ),
                           ),
                           child: Row(
@@ -88,7 +101,8 @@ class _OffersPageState extends State<OffersPage> {
                                   ),
                                   icon: Icons.card_giftcard_rounded,
                                   isSelected: _mainTabIndex == 0,
-                                  onTap: () => setState(() => _mainTabIndex = 0),
+                                  onTap: () =>
+                                      setState(() => _mainTabIndex = 0),
                                 ),
                               ),
                               const SizedBox(width: 6),
@@ -100,7 +114,8 @@ class _OffersPageState extends State<OffersPage> {
                                   ),
                                   icon: Icons.storefront_rounded,
                                   isSelected: _mainTabIndex == 1,
-                                  onTap: () => setState(() => _mainTabIndex = 1),
+                                  onTap: () =>
+                                      setState(() => _mainTabIndex = 1),
                                 ),
                               ),
                             ],
@@ -129,11 +144,11 @@ class _OffersPageState extends State<OffersPage> {
                           itemCount: offers.length,
                           gridDelegate:
                               const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 10,
-                            mainAxisSpacing: 12,
-                            childAspectRatio: 0.68,
-                          ),
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 10,
+                                mainAxisSpacing: 12,
+                                childAspectRatio: 0.68,
+                              ),
                           itemBuilder: (context, index) {
                             return _OfferCouponCard(
                               offer: offers[index],
@@ -199,7 +214,8 @@ class _OffersPageState extends State<OffersPage> {
                     ),
                     const SizedBox(height: 14),
                     ElevatedButton.icon(
-                      onPressed: () => context.read<CouponsCubit>().getMyCoupons(),
+                      onPressed: () =>
+                          context.read<CouponsCubit>().getMyCoupons(),
                       icon: const Icon(Icons.refresh_rounded),
                       label: Text(l10n.tryAgain),
                       style: ElevatedButton.styleFrom(
@@ -272,7 +288,7 @@ class _OffersPageState extends State<OffersPage> {
                             children: [
                               Text(
                                 l10n.pick(
-                                  ar: 'ادعُ أصدقاءك واكسب 5 د.أ! 🎉',
+                                  ar: 'ادعُ أصدقاءك واكسب ${l10n.formatPrice(5, 0)}! 🎉',
                                   en: 'Invite friends & earn JOD 5! 🎉',
                                 ),
                                 style: GoogleFonts.cairo(
@@ -298,12 +314,16 @@ class _OffersPageState extends State<OffersPage> {
                         ),
                         const SizedBox(width: 8),
                         ElevatedButton(
-                          onPressed: () => context.push(AppRoutes.inviteFriends),
+                          onPressed: () =>
+                              context.push(AppRoutes.inviteFriends),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: AppColors.primary,
                             elevation: 0,
-                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 8,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(10),
                             ),
@@ -326,7 +346,10 @@ class _OffersPageState extends State<OffersPage> {
                 // Sub-filter chips: All / Active / Inactive
                 SliverToBoxAdapter(
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
                     child: Row(
                       children: [
                         _buildFilterChip(
@@ -359,7 +382,8 @@ class _OffersPageState extends State<OffersPage> {
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: EmptyCouponsView(
-                    onRefresh: () => context.read<CouponsCubit>().getMyCoupons(),
+                    onRefresh: () =>
+                        context.read<CouponsCubit>().getMyCoupons(),
                   ),
                 )
               else if (displayedCoupons.isEmpty)
@@ -374,7 +398,9 @@ class _OffersPageState extends State<OffersPage> {
                           Icon(
                             Icons.inbox_outlined,
                             size: 48,
-                            color: colorScheme.onSurfaceVariant.withOpacity(0.5),
+                            color: colorScheme.onSurfaceVariant.withOpacity(
+                              0.5,
+                            ),
                           ),
                           const SizedBox(height: 12),
                           Text(
@@ -395,13 +421,10 @@ class _OffersPageState extends State<OffersPage> {
                 )
               else
                 SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final coupon = displayedCoupons[index];
-                      return CouponCard(coupon: coupon);
-                    },
-                    childCount: displayedCoupons.length,
-                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final coupon = displayedCoupons[index];
+                    return CouponCard(coupon: coupon);
+                  }, childCount: displayedCoupons.length),
                 ),
             ],
           );

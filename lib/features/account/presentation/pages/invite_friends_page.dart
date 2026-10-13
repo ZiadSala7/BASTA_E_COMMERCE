@@ -3,13 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../auth/domain/entities/user_entity.dart';
-import '../../../auth/domain/usecases/get_current_user_usecase.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../auth/domain/entities/user_entity.dart';
+import '../../../auth/domain/usecases/get_current_user_usecase.dart';
 
 class InviteFriendsPage extends StatefulWidget {
   const InviteFriendsPage({super.key});
@@ -43,10 +43,8 @@ class _InviteFriendsPageState extends State<InviteFriendsPage> {
   String _shareMessage(String referralCode) {
     final l10n = AppLocalizations.of(context)!;
     return l10n.pick(
-      ar:
-          '🍕 مرحباً! استخدم رمز الدعوة الخاص بي ($referralCode) عند التسجيل في تطبيق بَسطة واحصل على خصم 5 د.أ على طلبك القادم!\n\nرابط التسجيل: $_appDownloadUrl?ref=$referralCode',
-      en:
-          '🍕 Hello! Use my invite code ($referralCode) when registering on Basta and get a JOD 5 discount on your next order!\n\nRegistration link: $_appDownloadUrl?ref=$referralCode',
+      ar: '🍕 مرحباً! استخدم رمز الدعوة الخاص بي ($referralCode) عند التسجيل في تطبيق بَسطة واحصل على خصم ${l10n.formatPrice(5, 0)} على طلبك القادم!\n\nرابط التسجيل: $_appDownloadUrl?ref=$referralCode',
+      en: '🍕 Hello! Use my invite code ($referralCode) when registering on Basta and get a JOD 5 discount on your next order!\n\nRegistration link: $_appDownloadUrl?ref=$referralCode',
     );
   }
 
@@ -56,9 +54,10 @@ class _InviteFriendsPageState extends State<InviteFriendsPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          AppLocalizations.of(
-            context,
-          )!.pick(ar: 'تم نسخ رمز الدعوة بنجاح! 📋', en: 'Referral code copied! 📋'),
+          AppLocalizations.of(context)!.pick(
+            ar: 'تم نسخ رمز الدعوة بنجاح! 📋',
+            en: 'Referral code copied! 📋',
+          ),
         ),
         backgroundColor: AppColors.accentGreen,
         duration: const Duration(seconds: 2),
@@ -69,9 +68,10 @@ class _InviteFriendsPageState extends State<InviteFriendsPage> {
   Future<void> _shareInvite(String referralCode) async {
     await Share.share(
       _shareMessage(referralCode),
-      subject: AppLocalizations.of(
-          context,
-        )!.pick(ar: 'دعوة للانضمام إلى تطبيق بَسطة 🍝', en: 'Join Basta with my invite 🍝'),
+      subject: AppLocalizations.of(context)!.pick(
+        ar: 'دعوة للانضمام إلى تطبيق بَسطة 🍝',
+        en: 'Join Basta with my invite 🍝',
+      ),
     );
   }
 
@@ -98,11 +98,13 @@ class _InviteFriendsPageState extends State<InviteFriendsPage> {
 
           final referralCode = _referralCode(snapshot.data);
           if (referralCode.isEmpty) {
-            return _MissingCodeView(onRetry: () {
-              setState(() {
-                _userFuture = _loadUser();
-              });
-            });
+            return _MissingCodeView(
+              onRetry: () {
+                setState(() {
+                  _userFuture = _loadUser();
+                });
+              },
+            );
           }
 
           return _InviteContent(
@@ -154,7 +156,7 @@ class _InviteContent extends StatelessWidget {
           const SizedBox(height: 20),
           Text(
             l10n.pick(
-              ar: 'ادعُ أصدقاءك واكسب 5 د.أ! 🎉',
+              ar: 'ادعُ أصدقاءك واكسب ${l10n.formatPrice(5, 0)}! 🎉',
               en: 'Invite friends and earn JOD 5! 🎉',
             ),
             textAlign: TextAlign.center,
@@ -167,10 +169,8 @@ class _InviteContent extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             l10n.pick(
-              ar:
-                  'شارك رمز الدعوة مع أصدقائك. يحصل صديقك على قسيمة خصم فور التسجيل، وتحصل أنت على مكافأتك تلقائياً عند إتمام طلبه الأول!',
-              en:
-                  'Share your invite code with friends. Your friend gets a discount coupon upon sign-up, and you automatically receive your reward when their first order is delivered!',
+              ar: 'شارك رمز الدعوة مع أصدقائك. يحصل صديقك على قسيمة خصم فور التسجيل، وتحصل أنت على مكافأتك تلقائياً عند إتمام طلبه الأول!',
+              en: 'Share your invite code with friends. Your friend gets a discount coupon upon sign-up, and you automatically receive your reward when their first order is delivered!',
             ),
             textAlign: TextAlign.center,
             style: GoogleFonts.cairo(
@@ -199,7 +199,9 @@ class _InviteContent extends StatelessWidget {
               ],
             ),
             child: Row(
-              textDirection: l10n.isArabic ? TextDirection.rtl : TextDirection.ltr,
+              textDirection: l10n.isArabic
+                  ? TextDirection.rtl
+                  : TextDirection.ltr,
               children: [
                 Expanded(
                   child: Column(
@@ -258,10 +260,7 @@ class _InviteContent extends StatelessWidget {
               onPressed: onShare,
               icon: const Icon(Icons.share_rounded),
               label: Text(
-                l10n.pick(
-                  ar: 'مشاركة رابط الدعوة',
-                  en: 'Share invite link',
-                ),
+                l10n.pick(ar: 'مشاركة رابط الدعوة', en: 'Share invite link'),
                 style: GoogleFonts.cairo(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
@@ -301,8 +300,7 @@ class _InviteContent extends StatelessWidget {
             stepNumber: '2',
             title: l10n.pick(ar: 'صديقك يسجل', en: 'Your friend registers'),
             description: l10n.pick(
-              ar:
-                  'يقوم صديقك بإنشاء حساب جديد وإدخال رمزك في حقل رمز الدعوة.',
+              ar: 'يقوم صديقك بإنشاء حساب جديد وإدخال رمزك في حقل رمز الدعوة.',
               en: 'Your friend creates a new account and enters your code in the referral field.',
             ),
             icon: Icons.person_add_alt_1_rounded,
@@ -311,10 +309,8 @@ class _InviteContent extends StatelessWidget {
             stepNumber: '3',
             title: l10n.pick(ar: 'اربح مكافأتك!', en: 'Earn your reward!'),
             description: l10n.pick(
-              ar:
-                  'يحصل صديقك فوراً على قسيمة ترحيبية، وعند تسليم طلبه الأول، ستصلك قسيمة الخصم الخاصة بك مع إشعار فوري!',
-              en:
-                  'Your friend gets an instant welcome coupon, and once their first order is delivered, you receive your reward coupon and a push notification!',
+              ar: 'يحصل صديقك فوراً على قسيمة ترحيبية، وعند تسليم طلبه الأول، ستصلك قسيمة الخصم الخاصة بك مع إشعار فوري!',
+              en: 'Your friend gets an instant welcome coupon, and once their first order is delivered, you receive your reward coupon and a push notification!',
             ),
             icon: Icons.celebration_rounded,
             isLast: true,
@@ -415,8 +411,7 @@ class _StepTile extends StatelessWidget {
               const SizedBox(height: 4),
               Text(
                 description,
-                textAlign:
-                    l10n.isArabic ? TextAlign.right : TextAlign.left,
+                textAlign: l10n.isArabic ? TextAlign.right : TextAlign.left,
                 style: GoogleFonts.cairo(
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
@@ -469,10 +464,8 @@ class _MissingCodeView extends StatelessWidget {
             const SizedBox(height: 8),
             Text(
               l10n.pick(
-                ar:
-                    'تعذر العثور على رمز الدعوة الخاص بك. حاول مرة أخرى أو تواصل مع الدعم.',
-                en:
-                    'We could not find your referral code. Try again or contact support.',
+                ar: 'تعذر العثور على رمز الدعوة الخاص بك. حاول مرة أخرى أو تواصل مع الدعم.',
+                en: 'We could not find your referral code. Try again or contact support.',
               ),
               textAlign: TextAlign.center,
               style: GoogleFonts.cairo(

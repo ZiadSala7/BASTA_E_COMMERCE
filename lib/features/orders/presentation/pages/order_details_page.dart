@@ -20,11 +20,7 @@ class OrderDetailsPage extends StatefulWidget {
   final String orderId;
   final OrderEntity? initialOrder;
 
-  const OrderDetailsPage({
-    super.key,
-    required this.orderId,
-    this.initialOrder,
-  });
+  const OrderDetailsPage({super.key, required this.orderId, this.initialOrder});
 
   @override
   State<OrderDetailsPage> createState() => _OrderDetailsPageState();
@@ -45,7 +41,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   }
 
   Future<void> _fetchOrderDetails() async {
-    if (_order != null && _order!.items.isNotEmpty && _order!.shippingAddress != null) {
+    if (_order != null &&
+        _order!.items.isNotEmpty &&
+        _order!.shippingAddress != null) {
       setState(() => _isLoading = false);
       return;
     }
@@ -96,7 +94,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             : _errorMessage != null && order == null
             ? EmptyState(
                 icon: Icons.error_outline_rounded,
-                title: l10n.pick(ar: 'تعذر تحميل تفاصيل الطلب', en: 'Failed to load order details'),
+                title: l10n.pick(
+                  ar: 'تعذر تحميل تفاصيل الطلب',
+                  en: 'Failed to load order details',
+                ),
                 message: _errorMessage,
                 actionLabel: l10n.tryAgain,
                 onActionTap: _fetchOrderDetails,
@@ -147,7 +148,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  Widget _buildHeaderCard(BuildContext context, OrderEntity order, AppLocalizations l10n) {
+  Widget _buildHeaderCard(
+    BuildContext context,
+    OrderEntity order,
+    AppLocalizations l10n,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     final statusColor = orderStatusColor(order.status);
 
@@ -156,7 +161,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.04),
@@ -204,7 +211,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                  l10n.pick(ar: 'تم نسخ رقم الطلب', en: 'Order ID copied'),
+                                  l10n.pick(
+                                    ar: 'تم نسخ رقم الطلب',
+                                    en: 'Order ID copied',
+                                  ),
                                   style: GoogleFonts.cairo(),
                                 ),
                                 behavior: SnackBarBehavior.floating,
@@ -214,7 +224,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           borderRadius: BorderRadius.circular(8),
                           child: const Padding(
                             padding: EdgeInsets.all(4),
-                            child: Icon(Icons.copy_rounded, size: 16, color: AppColors.primary),
+                            child: Icon(
+                              Icons.copy_rounded,
+                              size: 16,
+                              color: AppColors.primary,
+                            ),
                           ),
                         ),
                       ],
@@ -223,11 +237,16 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: statusColor.withValues(alpha: 0.12),
                   borderRadius: BorderRadius.circular(999),
-                  border: Border.all(color: statusColor.withValues(alpha: 0.28)),
+                  border: Border.all(
+                    color: statusColor.withValues(alpha: 0.28),
+                  ),
                 ),
                 child: Text(
                   orderStatusLabel(l10n, order.status),
@@ -246,7 +265,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.calendar_today_outlined, size: 14, color: colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.calendar_today_outlined,
+                  size: 14,
+                  color: colorScheme.onSurfaceVariant,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   _formatDate(order.createdAt!),
@@ -264,16 +287,36 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  Widget _buildTrackingStepper(BuildContext context, OrderEntity order, AppLocalizations l10n) {
+  Widget _buildTrackingStepper(
+    BuildContext context,
+    OrderEntity order,
+    AppLocalizations l10n,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     final status = order.status.toUpperCase();
     final isCancelled = status == 'CANCELLED' || status == 'FAILED';
 
     final steps = [
-      {'title': l10n.pick(ar: 'تم الطلب', en: 'Placed'), 'key': 'PLACED', 'icon': Icons.receipt_long_rounded},
-      {'title': l10n.pick(ar: 'قيد التجهيز', en: 'Processing'), 'key': 'PROCESSING', 'icon': Icons.inventory_2_outlined},
-      {'title': l10n.pick(ar: 'قيد الشحن', en: 'Shipped'), 'key': 'SHIPPED', 'icon': Icons.local_shipping_outlined},
-      {'title': l10n.pick(ar: 'تم التسليم', en: 'Delivered'), 'key': 'DELIVERED', 'icon': Icons.task_alt_rounded},
+      {
+        'title': l10n.pick(ar: 'تم الطلب', en: 'Placed'),
+        'key': 'PLACED',
+        'icon': Icons.receipt_long_rounded,
+      },
+      {
+        'title': l10n.pick(ar: 'قيد التجهيز', en: 'Processing'),
+        'key': 'PROCESSING',
+        'icon': Icons.inventory_2_outlined,
+      },
+      {
+        'title': l10n.pick(ar: 'قيد الشحن', en: 'Shipped'),
+        'key': 'SHIPPED',
+        'icon': Icons.local_shipping_outlined,
+      },
+      {
+        'title': l10n.pick(ar: 'تم التسليم', en: 'Delivered'),
+        'key': 'DELIVERED',
+        'icon': Icons.task_alt_rounded,
+      },
     ];
 
     int currentStepIndex = 0;
@@ -302,7 +345,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    l10n.pick(ar: 'تم إلغاء هذا الطلب', en: 'This order was cancelled'),
+                    l10n.pick(
+                      ar: 'تم إلغاء هذا الطلب',
+                      en: 'This order was cancelled',
+                    ),
                     style: GoogleFonts.cairo(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
@@ -310,7 +356,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     ),
                   ),
                   Text(
-                    l10n.pick(ar: 'تم تحرير المنتجات واسترجاع المخزون بنجاح.', en: 'Items were released and inventory restored.'),
+                    l10n.pick(
+                      ar: 'تم تحرير المنتجات واسترجاع المخزون بنجاح.',
+                      en: 'Items were released and inventory restored.',
+                    ),
                     style: GoogleFonts.cairo(
                       fontSize: 11.5,
                       color: Colors.red.shade600,
@@ -329,7 +378,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -349,7 +400,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               final step = steps[index];
               final isDone = index <= currentStepIndex;
               final isCurrent = index == currentStepIndex;
-              final stepColor = isDone ? AppColors.primary : colorScheme.outlineVariant;
+              final stepColor = isDone
+                  ? AppColors.primary
+                  : colorScheme.outlineVariant;
 
               return Expanded(
                 child: Column(
@@ -365,14 +418,18 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                               height: 3,
                               color: index < currentStepIndex
                                   ? AppColors.primary
-                                  : colorScheme.outlineVariant.withValues(alpha: 0.5),
+                                  : colorScheme.outlineVariant.withValues(
+                                      alpha: 0.5,
+                                    ),
                             ),
                           ),
                         Container(
                           width: 38,
                           height: 38,
                           decoration: BoxDecoration(
-                            color: isDone ? AppColors.primary : colorScheme.surface,
+                            color: isDone
+                                ? AppColors.primary
+                                : colorScheme.surface,
                             shape: BoxShape.circle,
                             border: Border.all(
                               color: isCurrent ? AppColors.primary : stepColor,
@@ -381,7 +438,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             boxShadow: isCurrent
                                 ? [
                                     BoxShadow(
-                                      color: AppColors.primary.withValues(alpha: 0.3),
+                                      color: AppColors.primary.withValues(
+                                        alpha: 0.3,
+                                      ),
                                       blurRadius: 8,
                                       offset: const Offset(0, 3),
                                     ),
@@ -391,7 +450,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           child: Icon(
                             step['icon'] as IconData,
                             size: 18,
-                            color: isDone ? Colors.white : colorScheme.onSurfaceVariant,
+                            color: isDone
+                                ? Colors.white
+                                : colorScheme.onSurfaceVariant,
                           ),
                         ),
                       ],
@@ -402,8 +463,12 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                       textAlign: TextAlign.center,
                       style: GoogleFonts.cairo(
                         fontSize: 11,
-                        fontWeight: isCurrent ? FontWeight.w800 : FontWeight.w600,
-                        color: isCurrent ? AppColors.primary : colorScheme.onSurfaceVariant,
+                        fontWeight: isCurrent
+                            ? FontWeight.w800
+                            : FontWeight.w600,
+                        color: isCurrent
+                            ? AppColors.primary
+                            : colorScheme.onSurfaceVariant,
                         height: 1.1,
                       ),
                     ),
@@ -417,7 +482,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  Widget _buildItemsCard(BuildContext context, OrderEntity order, AppLocalizations l10n) {
+  Widget _buildItemsCard(
+    BuildContext context,
+    OrderEntity order,
+    AppLocalizations l10n,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     final items = order.items;
 
@@ -426,14 +495,20 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.shopping_bag_outlined, size: 18, color: AppColors.primary),
+              const Icon(
+                Icons.shopping_bag_outlined,
+                size: 18,
+                color: AppColors.primary,
+              ),
               const SizedBox(width: 8),
               Text(
                 items.isNotEmpty
@@ -483,7 +558,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
               itemCount: items.length,
-              separatorBuilder: (_, __) => Divider(
+              separatorBuilder: (_, _) => Divider(
                 color: colorScheme.outlineVariant.withValues(alpha: 0.4),
                 height: 24,
               ),
@@ -497,21 +572,34 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                       width: 58,
                       height: 58,
                       decoration: BoxDecoration(
-                        color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                        color: colorScheme.surfaceContainerHighest.withValues(
+                          alpha: 0.4,
+                        ),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.4)),
+                        border: Border.all(
+                          color: colorScheme.outlineVariant.withValues(
+                            alpha: 0.4,
+                          ),
+                        ),
                       ),
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(12),
-                        child: item.imageUrl != null && item.imageUrl!.isNotEmpty
+                        child:
+                            item.imageUrl != null && item.imageUrl!.isNotEmpty
                             ? Image.network(
                                 item.imageUrl!.startsWith('http')
                                     ? item.imageUrl!
                                     : 'https://api.bs6a.com${item.imageUrl}',
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, __, ___) => const Icon(Icons.inventory_2_outlined, color: Colors.grey),
+                                errorBuilder: (_, _, _) => const Icon(
+                                  Icons.inventory_2_outlined,
+                                  color: Colors.grey,
+                                ),
                               )
-                            : const Icon(Icons.shopping_bag_outlined, color: Colors.grey),
+                            : const Icon(
+                                Icons.shopping_bag_outlined,
+                                color: Colors.grey,
+                              ),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -531,11 +619,17 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             ),
                           ),
                           const SizedBox(height: 4),
-                          if (item.storeName != null && item.storeName!.isNotEmpty) ...[
+                          if (item.storeName != null &&
+                              item.storeName!.isNotEmpty) ...[
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 2,
+                              ),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withValues(alpha: 0.08),
+                                color: AppColors.primary.withValues(
+                                  alpha: 0.08,
+                                ),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
@@ -549,7 +643,8 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             ),
                             const SizedBox(height: 4),
                           ],
-                          if (item.trackingNumber != null && item.trackingNumber!.isNotEmpty)
+                          if (item.trackingNumber != null &&
+                              item.trackingNumber!.isNotEmpty)
                             Text(
                               '${l10n.pick(ar: 'رقم التتبع', en: 'Tracking')}: #${item.trackingNumber}',
                               style: GoogleFonts.cairo(
@@ -565,7 +660,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          CurrencyHelper.format(item.totalPrice),
+                          CurrencyHelper.format(
+                            item.totalPrice,
+                            context: context,
+                          ),
                           style: GoogleFonts.cairo(
                             fontSize: 14,
                             fontWeight: FontWeight.w900,
@@ -591,7 +689,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  Widget _buildShippingAddressCard(BuildContext context, OrderEntity order, AppLocalizations l10n) {
+  Widget _buildShippingAddressCard(
+    BuildContext context,
+    OrderEntity order,
+    AppLocalizations l10n,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     final address = order.shippingAddress;
 
@@ -600,17 +702,26 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.location_on_outlined, size: 18, color: AppColors.primary),
+              const Icon(
+                Icons.location_on_outlined,
+                size: 18,
+                color: AppColors.primary,
+              ),
               const SizedBox(width: 8),
               Text(
-                l10n.pick(ar: 'عنوان التوصيل والشحن', en: 'Delivery & Shipping Address'),
+                l10n.pick(
+                  ar: 'عنوان التوصيل والشحن',
+                  en: 'Delivery & Shipping Address',
+                ),
                 style: GoogleFonts.cairo(
                   fontSize: 14.5,
                   fontWeight: FontWeight.w800,
@@ -623,7 +734,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           Text(
             address != null && address.fullAddress.isNotEmpty
                 ? address.fullAddress
-                : l10n.pick(ar: 'موقع التوصيل المحدد على الخريطة', en: 'Pinned delivery location'),
+                : l10n.pick(
+                    ar: 'موقع التوصيل المحدد على الخريطة',
+                    en: 'Pinned delivery location',
+                  ),
             style: GoogleFonts.cairo(
               fontSize: 13,
               fontWeight: FontWeight.w600,
@@ -635,7 +749,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             const SizedBox(height: 8),
             Row(
               children: [
-                Icon(Icons.phone_outlined, size: 14, color: colorScheme.onSurfaceVariant),
+                Icon(
+                  Icons.phone_outlined,
+                  size: 14,
+                  color: colorScheme.onSurfaceVariant,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   address.phone!,
@@ -653,7 +771,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  Widget _buildPaymentInfoCard(BuildContext context, OrderEntity order, AppLocalizations l10n) {
+  Widget _buildPaymentInfoCard(
+    BuildContext context,
+    OrderEntity order,
+    AppLocalizations l10n,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
     final isCard = order.paymentMethod.toUpperCase() == 'CARD';
     final isPaid = order.paymentStatus.toUpperCase() == 'PAID';
@@ -663,14 +785,20 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.payment_rounded, size: 18, color: AppColors.primary),
+              const Icon(
+                Icons.payment_rounded,
+                size: 18,
+                color: AppColors.primary,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.pick(ar: 'معلومات الدفع', en: 'Payment Information'),
@@ -686,8 +814,14 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           _buildRow(
             label: l10n.pick(ar: 'طريقة الدفع', en: 'Payment Method'),
             value: isCard
-                ? l10n.pick(ar: '💳 بطاقة بنكية (Mastercard/Visa)', en: '💳 Credit / Debit Card')
-                : l10n.pick(ar: '💵 الدفع عند الاستلام (COD)', en: '💵 Cash On Delivery (COD)'),
+                ? l10n.pick(
+                    ar: '💳 بطاقة بنكية (Mastercard/Visa)',
+                    en: '💳 Credit / Debit Card',
+                  )
+                : l10n.pick(
+                    ar: '💵 الدفع عند الاستلام (COD)',
+                    en: '💵 Cash On Delivery (COD)',
+                  ),
             context: context,
           ),
           const Divider(height: 18),
@@ -696,7 +830,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             value: isPaid
                 ? l10n.pick(ar: '🟢 مدفوع بالكامل', en: '🟢 Paid')
                 : order.paymentStatus.toUpperCase() == 'FAILED'
-                ? l10n.pick(ar: '🔴 غير مكتمل / ملغي', en: '🔴 Failed / Cancelled')
+                ? l10n.pick(
+                    ar: '🔴 غير مكتمل / ملغي',
+                    en: '🔴 Failed / Cancelled',
+                  )
                 : l10n.pick(ar: '🟡 قيد الانتظار', en: '🟡 Pending'),
             context: context,
             valueColor: isPaid
@@ -710,7 +847,11 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  Widget _buildPriceSummaryCard(BuildContext context, OrderEntity order, AppLocalizations l10n) {
+  Widget _buildPriceSummaryCard(
+    BuildContext context,
+    OrderEntity order,
+    AppLocalizations l10n,
+  ) {
     final colorScheme = Theme.of(context).colorScheme;
 
     return Container(
@@ -718,14 +859,20 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              const Icon(Icons.receipt_outlined, size: 18, color: AppColors.primary),
+              const Icon(
+                Icons.receipt_outlined,
+                size: 18,
+                color: AppColors.primary,
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.pick(ar: 'ملخص الحساب والفاتورة', en: 'Payment Summary'),
@@ -740,20 +887,21 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
           const SizedBox(height: 14),
           _buildRow(
             label: l10n.pick(ar: 'مجموع المنتجات', en: 'Subtotal'),
-            value: CurrencyHelper.format(order.subtotal),
+            value: CurrencyHelper.format(order.subtotal, context: context),
             context: context,
           ),
           const SizedBox(height: 8),
           _buildRow(
             label: l10n.pick(ar: 'رسوم الشحن والتوصيل', en: 'Shipping Fee'),
-            value: CurrencyHelper.format(order.shippingCost),
+            value: CurrencyHelper.format(order.shippingCost, context: context),
             context: context,
           ),
           if (order.discountAmount > 0) ...[
             const SizedBox(height: 8),
             _buildRow(
               label: l10n.pick(ar: 'الخصم وقسيمة الشراء', en: 'Discount'),
-              value: '- ${CurrencyHelper.format(order.discountAmount)}',
+              value:
+                  '- ${CurrencyHelper.format(order.discountAmount, context: context)}',
               context: context,
               valueColor: AppColors.accentGreen,
             ),
@@ -771,7 +919,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 ),
               ),
               Text(
-                CurrencyHelper.format(order.total),
+                CurrencyHelper.format(order.total, context: context),
                 style: GoogleFonts.cairo(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
@@ -816,19 +964,28 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, OrderEntity order, AppLocalizations l10n) {
+  Widget _buildActionButtons(
+    BuildContext context,
+    OrderEntity order,
+    AppLocalizations l10n,
+  ) {
     return Column(
       children: [
         ElevatedButton.icon(
           onPressed: () async {
             try {
-              final invoiceUrl = await _ordersRepository.getOrderInvoiceUrl(order.id);
+              final invoiceUrl = await _ordersRepository.getOrderInvoiceUrl(
+                order.id,
+              );
               if (!mounted) return;
               if (invoiceUrl != null && invoiceUrl.isNotEmpty) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      l10n.pick(ar: 'رابط الفاتورة: $invoiceUrl', en: 'Invoice URL: $invoiceUrl'),
+                      l10n.pick(
+                        ar: 'رابط الفاتورة: $invoiceUrl',
+                        en: 'Invoice URL: $invoiceUrl',
+                      ),
                       style: GoogleFonts.cairo(),
                     ),
                     behavior: SnackBarBehavior.floating,
@@ -838,7 +995,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
                     content: Text(
-                      l10n.pick(ar: 'الفاتورة الإلكترونية قيد المعالجة', en: 'Invoice is processing'),
+                      l10n.pick(
+                        ar: 'الفاتورة الإلكترونية قيد المعالجة',
+                        en: 'Invoice is processing',
+                      ),
                       style: GoogleFonts.cairo(),
                     ),
                     behavior: SnackBarBehavior.floating,
@@ -848,26 +1008,40 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             } catch (_) {}
           },
           icon: const Icon(Icons.download_rounded, size: 18),
-          label: Text(l10n.pick(ar: 'تحميل الفاتورة الإلكترونية', en: 'Download Invoice')),
+          label: Text(
+            l10n.pick(ar: 'تحميل الفاتورة الإلكترونية', en: 'Download Invoice'),
+          ),
           style: ElevatedButton.styleFrom(
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
             minimumSize: const Size.fromHeight(50),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            textStyle: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w800),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            textStyle: GoogleFonts.cairo(
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
         const SizedBox(height: 10),
         OutlinedButton.icon(
           onPressed: () => context.push(AppRoutes.products),
           icon: const Icon(Icons.shopping_bag_outlined, size: 18),
-          label: Text(l10n.pick(ar: 'تصفح المزيد من المنتجات', en: 'Continue Shopping')),
+          label: Text(
+            l10n.pick(ar: 'تصفح المزيد من المنتجات', en: 'Continue Shopping'),
+          ),
           style: OutlinedButton.styleFrom(
             foregroundColor: AppColors.primary,
             minimumSize: const Size.fromHeight(50),
             side: const BorderSide(color: AppColors.primary),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-            textStyle: GoogleFonts.cairo(fontSize: 14, fontWeight: FontWeight.w800),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            textStyle: GoogleFonts.cairo(
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
+            ),
           ),
         ),
       ],
@@ -876,7 +1050,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
 
   String _formatDate(DateTime date) {
     final local = date.toLocal();
-    final hour = local.hour > 12 ? local.hour - 12 : (local.hour == 0 ? 12 : local.hour);
+    final hour = local.hour > 12
+        ? local.hour - 12
+        : (local.hour == 0 ? 12 : local.hour);
     final period = local.hour >= 12 ? 'م' : 'ص';
     final minute = local.minute.toString().padLeft(2, '0');
     return '${local.year}-${local.month.toString().padLeft(2, '0')}-${local.day.toString().padLeft(2, '0')}  $hour:$minute $period';
