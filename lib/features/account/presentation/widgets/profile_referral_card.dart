@@ -2,19 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../services/invite_friends_share.dart';
 
 class ProfileReferralCard extends StatelessWidget {
   final String? referralCode;
 
   const ProfileReferralCard({super.key, this.referralCode});
-
-  static const String _appDownloadUrl = 'https://bs6a.com/register';
 
   void _copyToClipboard(BuildContext context, String code) {
     Clipboard.setData(ClipboardData(text: code));
@@ -54,21 +52,8 @@ class ProfileReferralCard extends StatelessWidget {
       );
   }
 
-  void _shareInvite(BuildContext context, String code) {
-    final l10n = AppLocalizations.of(context)!;
-    final message = l10n.pick(
-      ar: '🍕 مرحباً! استخدم رمز الدعوة الخاص بي ($code) عند التسجيل في تطبيق بَسطة واحصل على خصم ${l10n.formatPrice(5, 0)} على طلبك!\n\nرابط التسجيل: $_appDownloadUrl?ref=$code',
-      en: '🍕 Hello! Use my invite code ($code) when registering on Basta and get a JOD 5 discount on your order!\n\nRegistration link: $_appDownloadUrl?ref=$code',
-    );
-
-    Share.share(
-      message,
-      subject: l10n.pick(
-        ar: 'دعوة للانضمام إلى تطبيق بَسطة 🍝',
-        en: 'Join Basta with my invite 🍝',
-      ),
-    );
-  }
+  Future<void> _shareInvite(BuildContext context, String code) =>
+      InviteFriendsShare.show(context, referralCode: code);
 
   @override
   Widget build(BuildContext context) {
@@ -99,79 +84,89 @@ class ProfileReferralCard extends StatelessWidget {
       child: Column(
         children: [
           // Top gradient header
-          Container(
-            padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  AppColors.primary,
-                  AppColors.primary.withValues(alpha: 0.85),
-                ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
+          Material(
+            color: Colors.transparent,
+            borderRadius: const BorderRadius.vertical(top: Radius.circular(18)),
+            child: InkWell(
+              onTap: () => InviteFriendsShare.show(context, referralCode: code),
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(18),
               ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withValues(alpha: 0.2),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.card_giftcard_rounded,
-                    color: Colors.white,
-                    size: 22,
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        l10n.pick(
-                          ar: 'ادعُ أصدقاءك واكسب ${l10n.formatPrice(5, 0)}! 🎉',
-                          en: 'Invite Friends & Earn 5 JOD! 🎉',
-                        ),
-                        style: GoogleFonts.cairo(
-                          fontSize: 14.5,
-                          fontWeight: FontWeight.w900,
-                          color: Colors.white,
-                        ),
-                      ),
-                      const SizedBox(height: 1),
-                      Text(
-                        l10n.pick(
-                          ar: 'يحصل صديقك على خصم وتكسب أنت قسيمة عند طلبه الأول',
-                          en: 'Friend gets discount & you earn a coupon on their 1st order',
-                        ),
-                        style: GoogleFonts.cairo(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white.withValues(alpha: 0.9),
-                        ),
-                      ),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      AppColors.primary,
+                      AppColors.primary.withValues(alpha: 0.85),
                     ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                  borderRadius: const BorderRadius.vertical(
+                    top: Radius.circular(18),
                   ),
                 ),
-                IconButton(
-                  onPressed: () => context.push(AppRoutes.inviteFriends),
-                  icon: const Icon(
-                    Icons.info_outline_rounded,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                  tooltip: l10n.pick(
-                    ar: 'تفاصيل المكافآت',
-                    en: 'Reward details',
-                  ),
+                child: Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withValues(alpha: 0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: const Icon(
+                        Icons.card_giftcard_rounded,
+                        color: Colors.white,
+                        size: 22,
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l10n.pick(
+                              ar: 'ادعُ أصدقاءك واكسب ${l10n.formatPrice(5, 0)}! 🎉',
+                              en: 'Invite Friends & Earn 5 JOD! 🎉',
+                            ),
+                            style: GoogleFonts.cairo(
+                              fontSize: 14.5,
+                              fontWeight: FontWeight.w900,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 1),
+                          Text(
+                            l10n.pick(
+                              ar: 'يحصل صديقك على خصم وتكسب أنت قسيمة عند طلبه الأول',
+                              en: 'Friend gets discount & you earn a coupon on their 1st order',
+                            ),
+                            style: GoogleFonts.cairo(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white.withValues(alpha: 0.9),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => context.push(AppRoutes.inviteFriends),
+                      icon: const Icon(
+                        Icons.info_outline_rounded,
+                        color: Colors.white,
+                        size: 20,
+                      ),
+                      tooltip: l10n.pick(
+                        ar: 'تفاصيل المكافآت',
+                        en: 'Reward details',
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ),
 
@@ -300,7 +295,10 @@ class ProfileReferralCard extends StatelessWidget {
                         ),
                       ),
                       ElevatedButton(
-                        onPressed: () => context.push(AppRoutes.inviteFriends),
+                        onPressed: () => InviteFriendsShare.show(
+                          context,
+                          referralCode: code,
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: AppColors.primary,
                           foregroundColor: Colors.white,

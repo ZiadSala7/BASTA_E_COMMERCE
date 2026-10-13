@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
+import '../../../../core/api/api_keys.dart';
 import '../../../../core/api/dio_consumer.dart';
 import '../../../../core/api/endpoints.dart';
 import '../models/order_model.dart';
@@ -32,8 +33,8 @@ class OrdersApiClient {
       final Map<String, dynamic> body = response.data is Map<String, dynamic>
           ? response.data as Map<String, dynamic>
           : (response.data is Map
-              ? Map<String, dynamic>.from(response.data as Map)
-              : <String, dynamic>{});
+                ? Map<String, dynamic>.from(response.data as Map)
+                : <String, dynamic>{});
 
       final orderData = body['data'] is Map<String, dynamic>
           ? body['data'] as Map<String, dynamic>
@@ -52,20 +53,54 @@ class OrdersApiClient {
       final Map<String, dynamic> body = response.data is Map<String, dynamic>
           ? response.data as Map<String, dynamic>
           : (response.data is Map
-              ? Map<String, dynamic>.from(response.data as Map)
-              : <String, dynamic>{});
+                ? Map<String, dynamic>.from(response.data as Map)
+                : <String, dynamic>{});
 
-      final data = body['data'] is Map<String, dynamic>
-          ? body['data'] as Map<String, dynamic>
-          : body;
+      final rawData = body['data'];
+      if (rawData is String && rawData.trim().isNotEmpty) return rawData;
+      final data = rawData is Map ? Map<String, dynamic>.from(rawData) : body;
 
       return (data['invoiceUrl'] ??
               data['invoice_url'] ??
               data['url'] ??
               data['pdfUrl'])
           ?.toString();
+    } on DioException catch (error, stackTrace) {
+      log(
+        'Get order invoice link failed',
+        error: error,
+        stackTrace: stackTrace,
+      );
+      throw Exception(ordersDioMessage(error));
     } catch (_) {
       return null;
     }
+  }
+
+  Future<List<int>?> downloadOrderInvoice(String orderId) async {
+    final invoiceUrl = await getOrderInvoiceUrl(orderId);
+    if (invoiceUrl == null || invoiceUrl.trim().isEmpty) return null;
+
+    final parsedUrl = Uri.tryParse(invoiceUrl.trim());
+    if (parsedUrl == null) throw const FormatException('Invalid invoice URL.');
+    final invoiceUri = parsedUrl.hasScheme
+        ? parsedUrl
+        : Uri.parse(ApiKeys.baseUrl).resolve(invoiceUrl.trim());
+    if (invoiceUri.scheme != 'https' && invoiceUri.scheme != 'http') {
+      throw const FormatException('Unsupported invoice URL scheme.');
+    }
+
+    final apiUri = Uri.parse(ApiKeys.baseUrl);
+    final client = invoiceUri.origin == apiUri.origin ? _dio.dio : Dio();
+    final response = await client.get<List<int>>(
+      invoiceUri.toString(),
+      options: Options(responseType: ResponseType.bytes),
+    );
+    final bytes = response.data;
+    if (bytes == null || bytes.isEmpty) return null;
+    if (bytes.length < 5 || String.fromCharCodes(bytes.take(5)) != '%PDF-') {
+      throw const FormatException('The invoice response is not a PDF.');
+    }
+    return bytes;
   }
 }

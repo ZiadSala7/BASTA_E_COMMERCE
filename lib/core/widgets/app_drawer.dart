@@ -10,6 +10,7 @@ import '../../features/account/domain/usecases/get_account_stats_usecase.dart';
 import '../../features/auth/domain/entities/user_entity.dart';
 import '../../features/auth/domain/usecases/get_current_user_usecase.dart';
 import '../../features/auth/domain/usecases/logout_usecase.dart';
+import '../../features/account/presentation/services/invite_friends_share.dart';
 import '../../l10n/app_localizations.dart';
 import '../di/service_locator.dart';
 import '../extensions/app_localizations_x.dart';
@@ -115,7 +116,7 @@ class AppDrawer extends StatelessWidget {
                             _DrawerItem(
                               label: l10n.inviteFriends,
                               icon: Icons.group_add_outlined,
-                              onTap: () => openRoute(AppRoutes.inviteFriends),
+                              onTap: () => InviteFriendsShare.show(context),
                             ),
                             _DrawerItem(
                               label: l10n.privacyPolicy,
@@ -398,7 +399,10 @@ class _ProfilePhoto extends StatelessWidget {
       ),
       padding: const EdgeInsets.all(3),
       child: ClipOval(
-        child: Image.asset('assets/images/play_store_512.png', fit: BoxFit.cover),
+        child: Image.asset(
+          'assets/images/play_store_512.png',
+          fit: BoxFit.cover,
+        ),
       ),
     );
   }

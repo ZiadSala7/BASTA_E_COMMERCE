@@ -1,5 +1,5 @@
-import '../../domain/entities/order_entity.dart';
 import '../../domain/entities/checkout_result_entity.dart';
+import '../../domain/entities/order_entity.dart';
 import '../../domain/repositories/orders_repository.dart';
 import '../datasources/orders_remote_datasource.dart';
 
@@ -22,6 +22,11 @@ class OrdersRepositoryImpl implements OrdersRepository {
   @override
   Future<String?> getOrderInvoiceUrl(String orderId) {
     return _remoteDataSource.getOrderInvoiceUrl(orderId);
+  }
+
+  @override
+  Future<List<int>?> downloadOrderInvoice(String orderId) {
+    return _remoteDataSource.downloadOrderInvoice(orderId);
   }
 
   @override

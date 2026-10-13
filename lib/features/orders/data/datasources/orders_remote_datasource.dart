@@ -12,6 +12,8 @@ abstract class OrdersRemoteDataSource {
 
   Future<String?> getOrderInvoiceUrl(String orderId);
 
+  Future<List<int>?> downloadOrderInvoice(String orderId);
+
   Future<CheckoutResultModel> checkout({
     required Map<String, dynamic> address,
     required String paymentMethod,
@@ -43,6 +45,10 @@ class OrdersRemoteDataSourceImpl implements OrdersRemoteDataSource {
   @override
   Future<String?> getOrderInvoiceUrl(String orderId) =>
       _orders.getOrderInvoiceUrl(orderId);
+
+  @override
+  Future<List<int>?> downloadOrderInvoice(String orderId) =>
+      _orders.downloadOrderInvoice(orderId);
 
   @override
   Future<CheckoutResultModel> checkout({

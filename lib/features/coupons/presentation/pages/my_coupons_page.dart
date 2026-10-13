@@ -9,6 +9,7 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../account/presentation/services/invite_friends_share.dart';
 import '../cubits/coupons_cubit.dart';
 import '../widgets/coupon_card.dart';
 import '../widgets/empty_coupons_view.dart';
@@ -221,7 +222,7 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                             const SizedBox(width: 8),
                             ElevatedButton(
                               onPressed: () =>
-                                  context.push(AppRoutes.inviteFriends),
+                                  InviteFriendsShare.show(context),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 foregroundColor: AppColors.primary,

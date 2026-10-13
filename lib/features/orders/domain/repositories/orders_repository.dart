@@ -1,5 +1,5 @@
-import '../entities/order_entity.dart';
 import '../entities/checkout_result_entity.dart';
+import '../entities/order_entity.dart';
 
 abstract class OrdersRepository {
   Future<List<OrderEntity>> getMyOrders();
@@ -7,6 +7,8 @@ abstract class OrdersRepository {
   Future<OrderEntity?> getOrderById(String orderId);
 
   Future<String?> getOrderInvoiceUrl(String orderId);
+
+  Future<List<int>?> downloadOrderInvoice(String orderId);
 
   Future<CheckoutResultEntity> checkout({
     required Map<String, dynamic> address,

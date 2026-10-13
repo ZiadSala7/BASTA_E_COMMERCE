@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
@@ -10,6 +9,7 @@ import '../../../../core/widgets/custom_app_bar.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../../auth/domain/entities/user_entity.dart';
 import '../../../auth/domain/usecases/get_current_user_usecase.dart';
+import '../services/invite_friends_share.dart';
 
 class InviteFriendsPage extends StatefulWidget {
   const InviteFriendsPage({super.key});
@@ -19,8 +19,6 @@ class InviteFriendsPage extends StatefulWidget {
 }
 
 class _InviteFriendsPageState extends State<InviteFriendsPage> {
-  static const String _appDownloadUrl = 'https://bs6a.com/register';
-
   late final Future<UserEntity?> _userFuture;
 
   @override
@@ -40,14 +38,6 @@ class _InviteFriendsPageState extends State<InviteFriendsPage> {
   String _referralCode(UserEntity? user) =>
       user?.referralCode?.trim().toUpperCase() ?? '';
 
-  String _shareMessage(String referralCode) {
-    final l10n = AppLocalizations.of(context)!;
-    return l10n.pick(
-      ar: '🍕 مرحباً! استخدم رمز الدعوة الخاص بي ($referralCode) عند التسجيل في تطبيق بَسطة واحصل على خصم ${l10n.formatPrice(5, 0)} على طلبك القادم!\n\nرابط التسجيل: $_appDownloadUrl?ref=$referralCode',
-      en: '🍕 Hello! Use my invite code ($referralCode) when registering on Basta and get a JOD 5 discount on your next order!\n\nRegistration link: $_appDownloadUrl?ref=$referralCode',
-    );
-  }
-
   Future<void> _copyToClipboard(String referralCode) async {
     await Clipboard.setData(ClipboardData(text: referralCode));
     if (!mounted) return;
@@ -66,13 +56,7 @@ class _InviteFriendsPageState extends State<InviteFriendsPage> {
   }
 
   Future<void> _shareInvite(String referralCode) async {
-    await Share.share(
-      _shareMessage(referralCode),
-      subject: AppLocalizations.of(context)!.pick(
-        ar: 'دعوة للانضمام إلى تطبيق بَسطة 🍝',
-        en: 'Join Basta with my invite 🍝',
-      ),
-    );
+    await InviteFriendsShare.show(context, referralCode: referralCode);
   }
 
   @override

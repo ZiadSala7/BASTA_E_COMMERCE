@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
-import '../../../../core/utils/app_router.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../../../account/presentation/services/invite_friends_share.dart';
 
 class EmptyCouponsView extends StatelessWidget {
   final VoidCallback? onRefresh;
@@ -68,7 +67,7 @@ class EmptyCouponsView extends StatelessWidget {
             SizedBox(
               height: 48,
               child: ElevatedButton.icon(
-                onPressed: () => context.push(AppRoutes.inviteFriends),
+                onPressed: () => InviteFriendsShare.show(context),
                 icon: const Icon(Icons.group_add_rounded, size: 20),
                 label: Text(
                   l10n.pick(

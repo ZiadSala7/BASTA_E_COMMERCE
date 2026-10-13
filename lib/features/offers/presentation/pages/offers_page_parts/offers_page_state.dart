@@ -314,8 +314,7 @@ class _OffersPageState extends State<OffersPage> {
                         ),
                         const SizedBox(width: 8),
                         ElevatedButton(
-                          onPressed: () =>
-                              context.push(AppRoutes.inviteFriends),
+                          onPressed: () => InviteFriendsShare.show(context),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
                             foregroundColor: AppColors.primary,
