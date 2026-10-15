@@ -1,9 +1,15 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../extensions/app_localizations_x.dart';
 import '../utils/app_colors.dart';
+import '../utils/open_street_map_attribution.dart';
 import '../../l10n/app_localizations.dart';
 
 class LocationPickerPage extends StatefulWidget {
@@ -23,7 +29,7 @@ class LocationPickerPage extends StatefulWidget {
 }
 
 class _LocationPickerPageState extends State<LocationPickerPage> {
-  GoogleMapController? _controller;
+  final MapController _controller = MapController();
   late LatLng _currentCenter;
   LatLng? _selected;
 
@@ -38,15 +44,82 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
     Navigator.of(context).pop<LatLng>(_selected ?? _currentCenter);
   }
 
-  Future<void> _moveToSelection() async {
-    await _controller?.animateCamera(
-      CameraUpdate.newLatLngZoom(_selected ?? _currentCenter, 15),
-    );
+  void _moveToSelection() {
+    _controller.move(_selected ?? _currentCenter, 15);
+  }
+
+  Future<void> _useCurrentLocation() async {
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      if (!await Geolocator.isLocationServiceEnabled()) {
+        _showLocationMessage(
+          l10n.pick(
+            ar: 'فعّل خدمة الموقع على جهازك ثم حاول مرة أخرى.',
+            en: 'Enable location services on your device and try again.',
+          ),
+        );
+        return;
+      }
+
+      var permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+      }
+      if (permission == LocationPermission.denied ||
+          permission == LocationPermission.deniedForever) {
+        _showLocationMessage(
+          l10n.pick(
+            ar: 'اسمح للتطبيق بالوصول إلى موقعك لاستخدام موقعك الحالي.',
+            en: 'Allow location access to use your current location.',
+          ),
+        );
+        return;
+      }
+
+      final position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+          timeLimit: Duration(seconds: 15),
+        ),
+      );
+      if (!mounted) return;
+
+      final location = LatLng(position.latitude, position.longitude);
+      setState(() {
+        _currentCenter = location;
+        _selected = location;
+      });
+      _controller.move(location, 15);
+    } on LocationServiceDisabledException {
+      _showLocationMessage(
+        l10n.pick(
+          ar: 'فعّل خدمة الموقع على جهازك ثم حاول مرة أخرى.',
+          en: 'Enable location services on your device and try again.',
+        ),
+      );
+    } on PermissionDeniedException {
+      _showLocationMessage(
+        l10n.pick(
+          ar: 'اسمح للتطبيق بالوصول إلى موقعك لاستخدام موقعك الحالي.',
+          en: 'Allow location access to use your current location.',
+        ),
+      );
+    } on TimeoutException {
+      _showLocationMessage(l10n.currentLocationError);
+    } on PlatformException {
+      _showLocationMessage(l10n.currentLocationError);
+    }
+  }
+
+  void _showLocationMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
   void dispose() {
-    _controller?.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -73,25 +146,51 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
       body: Stack(
         alignment: Alignment.center,
         children: [
-          GoogleMap(
-            initialCameraPosition: CameraPosition(
-              target: _currentCenter,
-              zoom: 15,
+          FlutterMap(
+            mapController: _controller,
+            options: MapOptions(
+              initialCenter: _currentCenter,
+              initialZoom: 15,
+              minZoom: 3,
+              maxZoom: 19,
+              onTap: (_, point) => setState(() => _selected = point),
+              onPositionChanged: (camera, hasGesture) {
+                _currentCenter = camera.center;
+                if (hasGesture && _selected != null) {
+                  setState(() => _selected = null);
+                }
+              },
             ),
-            minMaxZoomPreference: const MinMaxZoomPreference(3, 19),
-            zoomControlsEnabled: false,
-            myLocationButtonEnabled: false,
-            onMapCreated: (controller) => _controller = controller,
-            onTap: (point) => setState(() => _selected = point),
-            onCameraMove: (position) => _currentCenter = position.target,
-            markers: _selected == null
-                ? const <Marker>{}
-                : {
+            children: [
+              TileLayer(
+                urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                userAgentPackageName: 'busta',
+              ),
+              if (_selected case final selected?)
+                MarkerLayer(
+                  markers: [
                     Marker(
-                      markerId: const MarkerId('selected_location'),
-                      position: _selected!,
+                      point: selected,
+                      width: 40,
+                      height: 40,
+                      child: const Icon(
+                        Icons.location_pin,
+                        color: Color(0xFFE53935),
+                        size: 40,
+                      ),
                     ),
-                  },
+                  ],
+                ),
+              RichAttributionWidget(
+                attributions: [
+                  TextSourceAttribution(
+                    '© OpenStreetMap contributors',
+                    onTap: () =>
+                        OpenStreetMapAttribution.openCopyrightPage(context),
+                  ),
+                ],
+              ),
+            ],
           ),
           IgnorePointer(
             child: Icon(
@@ -149,10 +248,24 @@ class _LocationPickerPageState extends State<LocationPickerPage> {
           ),
         ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _moveToSelection,
-        tooltip: l10n.pick(ar: 'العودة للموقع المحدد', en: 'Return to pin'),
-        child: const Icon(Icons.center_focus_strong_rounded),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton.small(
+            onPressed: _moveToSelection,
+            tooltip: l10n.pick(ar: 'العودة للموقع المحدد', en: 'Return to pin'),
+            child: const Icon(Icons.center_focus_strong_rounded),
+          ),
+          const SizedBox(height: 10),
+          FloatingActionButton(
+            onPressed: _useCurrentLocation,
+            tooltip: l10n.pick(
+              ar: 'استخدام موقعي الحالي',
+              en: 'Use my current location',
+            ),
+            child: const Icon(Icons.my_location_rounded),
+          ),
+        ],
       ),
     );
   }

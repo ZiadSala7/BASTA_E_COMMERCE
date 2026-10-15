@@ -1,9 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:latlong2/latlong.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
@@ -11,6 +12,7 @@ import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_navigation.dart';
 import '../../../../core/utils/assets.dart';
 import '../../../../core/utils/currency_helper.dart';
+import '../../../../core/utils/open_street_map_attribution.dart';
 import '../../../../core/widgets/location_picker_page.dart';
 import '../../../../core/widgets/status/empty_state.dart';
 import '../../../../l10n/app_localizations.dart';

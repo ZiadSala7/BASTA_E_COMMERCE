@@ -41,18 +41,6 @@ android {
         versionCode = flutter.versionCode
         versionName = flutter.versionName
 
-        val localProperties = Properties().apply {
-            val localPropertiesFile = rootProject.file("local.properties")
-            if (localPropertiesFile.exists()) {
-                load(localPropertiesFile.inputStream())
-            }
-        }
-
-        val mapsApiKey = localProperties["MAPS_API_KEY"] as String?
-            ?: project.findProperty("MAPS_API_KEY") as String?
-            ?: "YOUR_GOOGLE_MAPS_API_KEY"
-
-        manifestPlaceholders["com.google.android.geo.API_KEY"] = mapsApiKey
     }
 
     signingConfigs {

@@ -60,6 +60,10 @@ extension AppLocalizationsX on AppLocalizations {
   static String currencyLabelFor(bool isArabic) => isArabic ? 'د.أ' : 'JD';
   String get currencyLabel => currencyLabelFor(isArabic);
   String get notificationSettings => pick(ar: 'الإشعارات', en: 'Notifications');
+  String get currentLocationError => pick(
+    ar: 'تعذر تحديد موقعك الحالي. حاول مرة أخرى.',
+    en: 'Could not determine your current location. Please try again.',
+  );
   String get currentLanguageLabel =>
       pick(ar: 'اللغة: العربية', en: 'Language: English');
   String get lightMode => pick(ar: 'الوضع الفاتح', en: 'Light mode');

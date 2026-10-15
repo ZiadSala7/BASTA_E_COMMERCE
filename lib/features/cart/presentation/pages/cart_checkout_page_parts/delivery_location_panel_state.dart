@@ -1,7 +1,8 @@
 part of '../cart_checkout_page.dart';
 
 class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
-  GoogleMapController? _mapController;
+  final MapController _mapController = MapController();
+  bool _mapControllerReady = false;
   late LatLng _currentMapCenter;
   String? _selectedPlaceName;
   bool _isResolvingPlace = false;
@@ -24,9 +25,9 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
       _currentMapCenter = widget.selectedLocation ?? widget.initialLocation;
       if (widget.selectedLocation != null) {
         _resolvePlaceName(widget.selectedLocation!);
-        _mapController?.animateCamera(
-          CameraUpdate.newLatLngZoom(widget.selectedLocation!, 15),
-        );
+        if (_mapControllerReady) {
+          _mapController.move(widget.selectedLocation!, 15);
+        }
       } else {
         _clearPlaceName();
       }
@@ -35,19 +36,19 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
 
   @override
   void dispose() {
-    _mapController?.dispose();
+    _mapController.dispose();
     super.dispose();
   }
 
-  Future<void> _selectLocation(LatLng location) async {
+  void _selectLocation(LatLng location) {
     widget.onLocationSelected(location);
     setState(() {
       _currentMapCenter = location;
     });
     _resolvePlaceName(location);
-    await _mapController?.animateCamera(
-      CameraUpdate.newLatLngZoom(location, 15),
-    );
+    if (_mapControllerReady) {
+      _mapController.move(location, 15);
+    }
   }
 
   Future<void> _resolvePlaceName(LatLng location) async {
@@ -108,7 +109,7 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
     );
 
     if (result != null) {
-      await _selectLocation(result);
+      _selectLocation(result);
     }
   }
 
@@ -142,26 +143,51 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
               child: Stack(
                 alignment: Alignment.center,
                 children: [
-                  GoogleMap(
-                    initialCameraPosition: CameraPosition(
-                      target: _currentMapCenter,
-                      zoom: 13,
+                  FlutterMap(
+                    mapController: _mapController,
+                    options: MapOptions(
+                      initialCenter: _currentMapCenter,
+                      initialZoom: 13,
+                      minZoom: 3,
+                      maxZoom: 19,
+                      onMapReady: () => _mapControllerReady = true,
+                      onTap: (_, point) => _selectLocation(point),
+                      onPositionChanged: (camera, _) =>
+                          _currentMapCenter = camera.center,
                     ),
-                    zoomControlsEnabled: false,
-                    myLocationButtonEnabled: false,
-                    onMapCreated: (controller) => _mapController = controller,
-                    onTap: _selectLocation,
-                    onCameraMove: (position) {
-                      _currentMapCenter = position.target;
-                    },
-                    markers: selectedLocation == null
-                        ? const <Marker>{}
-                        : {
+                    children: [
+                      TileLayer(
+                        urlTemplate:
+                            'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+                        userAgentPackageName: 'busta',
+                      ),
+                      if (selectedLocation != null)
+                        MarkerLayer(
+                          markers: [
                             Marker(
-                              markerId: const MarkerId('delivery_location'),
-                              position: selectedLocation,
+                              point: selectedLocation,
+                              width: 40,
+                              height: 40,
+                              child: const Icon(
+                                Icons.location_pin,
+                                size: 40,
+                                color: Color(0xFFE53935),
+                              ),
                             ),
-                          },
+                          ],
+                        ),
+                      RichAttributionWidget(
+                        attributions: [
+                          TextSourceAttribution(
+                            '© OpenStreetMap contributors',
+                            onTap: () =>
+                                OpenStreetMapAttribution.openCopyrightPage(
+                                  context,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   const Icon(
                     Icons.location_pin,
@@ -228,10 +254,10 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
                             en: 'Resolving location...',
                           )
                         : _selectedPlaceName ??
-                          l10n.pick(
-                            ar: 'الموقع المحدد',
-                            en: 'Selected location',
-                          ),
+                              l10n.pick(
+                                ar: 'الموقع المحدد',
+                                en: 'Selected location',
+                              ),
                     style: GoogleFonts.cairo(
                       color: selectedLocation == null
                           ? colorScheme.onSurfaceVariant
