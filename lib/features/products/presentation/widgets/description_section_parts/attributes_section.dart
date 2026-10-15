@@ -26,10 +26,13 @@ class _AttributesSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            Icon(Icons.tune_rounded, size: 18, color: AppColors.primary),
+            const Icon(Icons.tune_rounded, size: 18, color: AppColors.primary),
             const SizedBox(width: 6),
             Text(
-              l10n.pick(ar: 'المواصفات والخصائص', en: 'Specifications & Attributes'),
+              l10n.pick(
+                ar: 'المواصفات والخصائص',
+                en: 'Specifications & Attributes',
+              ),
               style: GoogleFonts.cairo(
                 fontSize: 15,
                 fontWeight: FontWeight.w800,
@@ -42,7 +45,9 @@ class _AttributesSection extends StatelessWidget {
         Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(12),
-            border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
+            border: Border.all(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+            ),
           ),
           clipBehavior: Clip.antiAlias,
           child: Column(
@@ -54,7 +59,10 @@ class _AttributesSection extends StatelessWidget {
                 color: isEven
                     ? colorScheme.surfaceContainerHighest.withValues(alpha: 0.3)
                     : Colors.transparent,
-                padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 10,
+                ),
                 child: Row(
                   children: [
                     Expanded(

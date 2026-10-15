@@ -26,7 +26,9 @@ class _ReviewsSectionState extends State<ReviewsSection> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -41,7 +43,11 @@ class _ReviewsSectionState extends State<ReviewsSection> {
           // Header row with count & Write Review button
           Row(
             children: [
-              Icon(Icons.star_half_rounded, size: 20, color: const Color(0xFFF59E0B)),
+              const Icon(
+                Icons.star_half_rounded,
+                size: 20,
+                color: Color(0xFFF59E0B),
+              ),
               const SizedBox(width: 8),
               Text(
                 l10n.pick(ar: 'تقييمات وآراء العملاء', en: 'Customer Reviews'),
@@ -72,7 +78,10 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                 onTap: () => setState(() => _showComposer = !_showComposer),
                 borderRadius: BorderRadius.circular(8),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
                   decoration: BoxDecoration(
                     color: _showComposer
                         ? colorScheme.surfaceContainerHighest
@@ -86,7 +95,9 @@ class _ReviewsSectionState extends State<ReviewsSection> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(
-                        _showComposer ? Icons.close_rounded : Icons.rate_review_outlined,
+                        _showComposer
+                            ? Icons.close_rounded
+                            : Icons.rate_review_outlined,
                         size: 14,
                         color: AppColors.primary,
                       ),
@@ -114,7 +125,9 @@ class _ReviewsSectionState extends State<ReviewsSection> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
+                color: colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.35,
+                ),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -179,7 +192,10 @@ class _ReviewsSectionState extends State<ReviewsSection> {
           else if (widget.error != null)
             _ReviewsMessage(
               icon: Icons.error_outline_rounded,
-              title: l10n.pick(ar: 'تعذر تحميل التقييمات', en: 'Reviews unavailable'),
+              title: l10n.pick(
+                ar: 'تعذر تحميل التقييمات',
+                en: 'Reviews unavailable',
+              ),
               message: widget.error!,
               actionLabel: l10n.tryAgain,
               onAction: widget.onRetry,
@@ -194,7 +210,9 @@ class _ReviewsSectionState extends State<ReviewsSection> {
               ),
             )
           else
-            ...widget.reviews.take(4).map(
+            ...widget.reviews
+                .take(4)
+                .map(
                   (review) => Padding(
                     padding: const EdgeInsets.only(bottom: 10),
                     child: _ReviewItem(review: review),

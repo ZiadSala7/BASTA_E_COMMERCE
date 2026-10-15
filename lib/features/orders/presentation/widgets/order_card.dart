@@ -27,7 +27,9 @@ class OrderCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.7)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.7),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(
@@ -43,10 +45,7 @@ class OrderCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
         child: InkWell(
           onTap: () {
-            context.push(
-              AppRoutes.orderDetails,
-              extra: order,
-            );
+            context.push(AppRoutes.orderDetails, extra: order);
           },
           borderRadius: BorderRadius.circular(18),
           child: Padding(
@@ -58,7 +57,10 @@ class OrderCard extends StatelessWidget {
                 const SizedBox(height: 12),
                 OrderCardDetails(order: order),
                 const SizedBox(height: 12),
-                Divider(color: colorScheme.outlineVariant.withValues(alpha: 0.4), height: 1),
+                Divider(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                  height: 1,
+                ),
                 const SizedBox(height: 12),
                 OrderTotalSummary(order: order),
                 const SizedBox(height: 10),
@@ -68,7 +70,10 @@ class OrderCard extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        l10n.pick(ar: 'عرض تفاصيل الطلب وتتبعه', en: 'View Order Details & Tracking'),
+                        l10n.pick(
+                          ar: 'عرض تفاصيل الطلب وتتبعه',
+                          en: 'View Order Details & Tracking',
+                        ),
                         style: GoogleFonts.cairo(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
@@ -76,7 +81,7 @@ class OrderCard extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(width: 4),
-                      Icon(
+                      const Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 12,
                         color: AppColors.primary,

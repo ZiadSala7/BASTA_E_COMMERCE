@@ -25,7 +25,9 @@ class _DescriptionSectionState extends State<DescriptionSection> {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.03),
@@ -39,10 +41,17 @@ class _DescriptionSectionState extends State<DescriptionSection> {
         children: [
           Row(
             children: [
-              Icon(Icons.notes_rounded, size: 20, color: AppColors.primary),
+              const Icon(
+                Icons.notes_rounded,
+                size: 20,
+                color: AppColors.primary,
+              ),
               const SizedBox(width: 8),
               Text(
-                l10n.pick(ar: 'تفاصيل ووصف المنتج', en: 'Product Description & Specs'),
+                l10n.pick(
+                  ar: 'تفاصيل ووصف المنتج',
+                  en: 'Product Description & Specs',
+                ),
                 style: GoogleFonts.cairo(
                   fontSize: 16,
                   fontWeight: FontWeight.w900,
@@ -56,7 +65,9 @@ class _DescriptionSectionState extends State<DescriptionSection> {
             Text(
               description,
               maxLines: _isExpanded ? null : 4,
-              overflow: _isExpanded ? TextOverflow.visible : TextOverflow.ellipsis,
+              overflow: _isExpanded
+                  ? TextOverflow.visible
+                  : TextOverflow.ellipsis,
               style: GoogleFonts.cairo(
                 fontSize: 14,
                 color: colorScheme.onSurfaceVariant,
@@ -86,7 +97,9 @@ class _DescriptionSectionState extends State<DescriptionSection> {
                       ),
                       const SizedBox(width: 4),
                       Icon(
-                        _isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
+                        _isExpanded
+                            ? Icons.keyboard_arrow_up_rounded
+                            : Icons.keyboard_arrow_down_rounded,
                         size: 16,
                         color: AppColors.primary,
                       ),
@@ -115,11 +128,18 @@ class _DescriptionSectionState extends State<DescriptionSection> {
               runSpacing: 8,
               children: product.tags!.map((tag) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
+                    color: colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.5,
+                    ),
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.4)),
+                    border: Border.all(
+                      color: colorScheme.outlineVariant.withValues(alpha: 0.4),
+                    ),
                   ),
                   child: Text(
                     '#$tag',
