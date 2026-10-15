@@ -49,6 +49,14 @@ extension AppLocalizationsX on AppLocalizations {
   String get contactUs => pick(ar: 'تواصل معنا', en: 'Contact us');
   String get settings => pick(ar: 'الإعدادات', en: 'Settings');
   String get language => pick(ar: 'اللغة', en: 'Language');
+  String get socialAccounts =>
+      pick(ar: 'حساباتنا على وسائل التواصل', en: 'Follow us on social media');
+  String get instagram => 'Instagram';
+  String get facebook => 'Facebook';
+  String get socialLinkError => pick(
+    ar: 'تعذر فتح حساب التواصل الاجتماعي. حاول مرة أخرى.',
+    en: 'Could not open the social media account. Please try again.',
+  );
   static String currencyLabelFor(bool isArabic) => isArabic ? 'د.أ' : 'JD';
   String get currencyLabel => currencyLabelFor(isArabic);
   String get notificationSettings => pick(ar: 'الإشعارات', en: 'Notifications');

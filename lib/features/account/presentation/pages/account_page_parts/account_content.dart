@@ -46,6 +46,8 @@ class _AccountContent extends StatelessWidget {
                     const AccountSupportSection(),
                     const SizedBox(height: 16),
                     const AccountSettingsSection(),
+                    const SizedBox(height: 16),
+                    const AccountSocialSection(),
                     const SizedBox(height: 32),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
