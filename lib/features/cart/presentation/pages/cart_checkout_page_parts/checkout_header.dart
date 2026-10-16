@@ -24,20 +24,17 @@ class _CheckoutHeader extends StatelessWidget {
         ),
         borderRadius: BorderRadius.vertical(bottom: Radius.circular(24)),
       ),
-      child: Row(
+      child: Directionality(
         textDirection: textDirection,
-        children: [
-          _HeaderButton(
-            icon: isArabic
-                ? Icons.arrow_forward_rounded
-                : Icons.arrow_back_rounded,
-            tooltip: l10n.back,
-            onTap: () => AppNavigation.popOrGo(context),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Directionality(
-              textDirection: textDirection,
+        child: Row(
+          children: [
+            _HeaderButton(
+              icon: Icons.arrow_back_rounded,
+              tooltip: l10n.back,
+              onTap: () => AppNavigation.popOrGo(context),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -72,19 +69,22 @@ class _CheckoutHeader extends StatelessWidget {
                 ],
               ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Container(
-            width: 44,
-            height: 44,
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.16),
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white.withOpacity(0.22)),
+            const SizedBox(width: 12),
+            Container(
+              width: 44,
+              height: 44,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.16),
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.white.withOpacity(0.22)),
+              ),
+              child: const Icon(
+                Icons.lock_outline_rounded,
+                color: Colors.white,
+              ),
             ),
-            child: const Icon(Icons.lock_outline_rounded, color: Colors.white),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

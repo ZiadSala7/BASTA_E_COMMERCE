@@ -1,6 +1,8 @@
 part of '../cart_page.dart';
 
 class _CartPageState extends State<CartPage> {
+  static const LatLng _defaultDeliveryLocation = LatLng(31.9539, 35.9106);
+
   final TextEditingController _couponController = TextEditingController();
   late final CartRepository _cartRepository;
   late final CartBadgeController _cartBadgeController;
@@ -203,10 +205,30 @@ class _CartPageState extends State<CartPage> {
       (a) => a?.isDefault == true,
       orElse: () => addresses.isNotEmpty ? addresses.first : null,
     );
-    final city = (defaultAddress != null && defaultAddress.city.isNotEmpty)
+    var city = (defaultAddress != null && defaultAddress.city.isNotEmpty)
         ? defaultAddress.city
-        : 'Amman';
-    final street = defaultAddress?.street;
+        : '';
+    String? street = defaultAddress?.street;
+
+    if (city.isEmpty) {
+      try {
+        final placemarks = await placemarkFromCoordinates(
+          _defaultDeliveryLocation.latitude,
+          _defaultDeliveryLocation.longitude,
+        );
+        if (placemarks.isNotEmpty) {
+          final placemark = placemarks.first;
+          city =
+              placemark.locality ??
+              placemark.subAdministrativeArea ??
+              placemark.administrativeArea ??
+              '';
+          street ??= placemark.street;
+        }
+      } catch (_) {}
+    }
+
+    if (city.isEmpty) city = 'Amman';
 
     try {
       final rate = await _calculateShipping(city: city, streetAddress: street);
@@ -214,7 +236,10 @@ class _CartPageState extends State<CartPage> {
       setState(() {
         _liveShippingFee = rate.shippingFee;
       });
-    } catch (_) {}
+    } catch (error) {
+      if (!mounted) return;
+      _showSnackBar(_cleanError(error));
+    }
   }
 
   List<_VendorCartGroup> _cartGroups(List<_CartProduct> items) {
@@ -440,6 +465,7 @@ class _CartPageState extends State<CartPage> {
       MaterialPageRoute<bool>(
         builder: (_) => CartCheckoutPage(
           couponCode: couponCode?.isEmpty == true ? null : couponCode,
+          couponDiscount: _discount,
         ),
       ),
     );

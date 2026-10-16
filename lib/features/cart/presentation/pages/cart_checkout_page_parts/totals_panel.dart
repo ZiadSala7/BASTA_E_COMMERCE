@@ -3,11 +3,13 @@ part of '../cart_checkout_page.dart';
 class _TotalsPanel extends StatelessWidget {
   final double subtotal;
   final double shipping;
+  final double discount;
   final double total;
 
   const _TotalsPanel({
     required this.subtotal,
     required this.shipping,
+    required this.discount,
     required this.total,
   });
 
@@ -25,6 +27,13 @@ class _TotalsPanel extends StatelessWidget {
             label: l10n.pick(ar: 'الشحن', en: 'Shipping'),
             value: _money(shipping, context),
           ),
+          if (discount > 0) ...[
+            const SizedBox(height: 8),
+            _TotalLine(
+              label: l10n.pick(ar: 'خصم الكوبون', en: 'Coupon discount'),
+              value: '-${_money(discount, context)}',
+            ),
+          ],
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 10),
             child: Divider(height: 1),

@@ -50,11 +50,11 @@ class _CartCheckoutSummary extends StatelessWidget {
               label: l10n.pick(ar: 'المجموع الفرعي', en: 'Subtotal'),
               value: _money(subtotal, context),
             ),
-            const SizedBox(height: 6),
-            _SummaryRow(
-              label: l10n.pick(ar: 'الشحن', en: 'Shipping'),
-              value: _money(shipping, context),
-            ),
+            // const SizedBox(height: 6),
+            // _SummaryRow(
+            //   label: l10n.pick(ar: 'الشحن', en: 'Shipping'),
+            //   value: _money(shipping, context),
+            // ),
             if (discount > 0) ...[
               const SizedBox(height: 6),
               _SummaryRow(

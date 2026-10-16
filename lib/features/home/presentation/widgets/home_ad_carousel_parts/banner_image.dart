@@ -10,7 +10,7 @@ class _BannerImage extends StatelessWidget {
     if (banner.imageAsset != null && banner.imageAsset!.isNotEmpty) {
       return Image.asset(
         banner.imageAsset!,
-        fit: BoxFit.cover,
+        fit: BoxFit.fill,
         errorBuilder: (_, _, _) => const _BannerFallback(),
       );
     }

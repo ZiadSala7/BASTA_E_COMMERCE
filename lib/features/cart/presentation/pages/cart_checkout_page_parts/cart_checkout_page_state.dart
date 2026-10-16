@@ -141,7 +141,12 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
           const SizedBox(height: 12),
           _PhoneInputPanel(controller: _phoneController),
           const SizedBox(height: 12),
-          _TotalsPanel(subtotal: _subtotal, shipping: _shipping, total: _total),
+          _TotalsPanel(
+            subtotal: _subtotal,
+            shipping: _shipping,
+            discount: widget.couponDiscount,
+            total: _total,
+          ),
         ],
       ),
     );
@@ -606,7 +611,9 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
 
   double get _shipping => _items.isEmpty ? 0 : _liveShippingFee;
 
-  double get _total => _subtotal + _shipping;
+  double get _total => (_subtotal + _shipping - widget.couponDiscount)
+      .clamp(0, double.infinity)
+      .toDouble();
 
   SavedAddressModel? get _selectedSavedAddress {
     final selectedId = _selectedAddressId;
