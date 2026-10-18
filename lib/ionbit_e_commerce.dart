@@ -36,6 +36,7 @@ class IonbitECommerce extends StatelessWidget {
       builder: (context, child) => AppBottomNavigationShell(
         router: _appRouter.router,
         cartBadgeController: _cartBadgeController,
+        routeObserver: _appRouter.routeObserver,
         child: DevicePreview.appBuilder(context, child),
       ),
       routerConfig: _appRouter.router,

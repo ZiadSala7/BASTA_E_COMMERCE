@@ -15,12 +15,17 @@ class ShippingRateModel extends ShippingRateEntity {
     final rawFee = payload['shippingFee'] ??
         payload['shipping_fee'] ??
         payload['fee'] ??
-        payload['rate'] ??
-        0;
+        payload['rate'];
 
     final fee = rawFee is num
         ? rawFee.toDouble()
-        : double.tryParse(rawFee.toString()) ?? 0.0;
+        : double.tryParse(rawFee?.toString().trim() ?? '');
+
+    if (fee == null || !fee.isFinite || fee < 0) {
+      throw const FormatException(
+        'Shipping response does not contain a valid shipping fee.',
+      );
+    }
 
     return ShippingRateModel(
       city: (payload['city'] ?? '').toString(),

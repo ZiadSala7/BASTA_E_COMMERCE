@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../features/cart/domain/services/cart_badge_controller.dart';
 import '../../features/home/presentation/widgets/home_bottom_nav_bar.dart';
+import '../utils/app_route_observer.dart';
 import '../utils/app_router.dart';
 
 class AppBottomNavigationShell extends StatelessWidget {
@@ -10,19 +11,25 @@ class AppBottomNavigationShell extends StatelessWidget {
     required this.router,
     required this.cartBadgeController,
     required this.child,
+    this.routeObserver,
     super.key,
   });
 
   final GoRouter router;
   final CartBadgeController cartBadgeController;
   final Widget child;
+  final AppRouteObserver? routeObserver;
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<RouteInformation>(
-      valueListenable: router.routeInformationProvider,
-      builder: (context, routeInformation, _) {
-        final location = routeInformation.uri.path;
+    final listenable = routeObserver != null
+        ? Listenable.merge([router.routeInformationProvider, routeObserver!.currentRoute])
+        : router.routeInformationProvider;
+
+    return ListenableBuilder(
+      listenable: listenable,
+      builder: (context, _) {
+        final location = _resolveLocation();
         final showNavigationBar = _shouldShowNavigationBar(location);
 
         return ColoredBox(
@@ -49,12 +56,24 @@ class AppBottomNavigationShell extends StatelessWidget {
     );
   }
 
+  String _resolveLocation() {
+    if (routeObserver != null && routeObserver!.currentRoute.value.isNotEmpty) {
+      return routeObserver!.currentRoute.value;
+    }
+    return router.routeInformationProvider.value.uri.path;
+  }
+
   bool _shouldShowNavigationBar(String location) {
-    if (location == AppRoutes.mainNavigation ||
-        location == AppRoutes.splash ||
-        location == AppRoutes.onboarding ||
-        location == AppRoutes.products ||
-        location.startsWith('/auth/')) {
+    final normalized = Uri.tryParse(location)?.path ?? location;
+    if (normalized == AppRoutes.mainNavigation ||
+        normalized == AppRoutes.splash ||
+        normalized == AppRoutes.onboarding ||
+        normalized == AppRoutes.products ||
+        normalized == AppRoutes.productDetail ||
+        normalized == AppRoutes.orderDetails ||
+        normalized == AppRoutes.notificationDetails ||
+        normalized == AppRoutes.checkout ||
+        normalized.startsWith('/auth/')) {
       return false;
     }
 
@@ -62,20 +81,21 @@ class AppBottomNavigationShell extends StatelessWidget {
   }
 
   int _selectedIndex(String location) {
-    if (location == AppRoutes.coupons) return 1;
-    if (location == AppRoutes.orders || location == AppRoutes.orderDetails) {
+    final normalized = Uri.tryParse(location)?.path ?? location;
+    if (normalized == AppRoutes.coupons) return 1;
+    if (normalized == AppRoutes.orders || normalized == AppRoutes.orderDetails) {
       return 2;
     }
-    if (location == AppRoutes.cart || location == AppRoutes.checkout) {
+    if (normalized == AppRoutes.cart || normalized == AppRoutes.checkout) {
       return 3;
     }
-    if (location == AppRoutes.account ||
-        location == AppRoutes.addresses ||
-        location == AppRoutes.inviteFriends ||
-        location == AppRoutes.privacyPolicy ||
-        location == AppRoutes.aboutUs ||
-        location == AppRoutes.faq ||
-        location == AppRoutes.contactUs) {
+    if (normalized == AppRoutes.account ||
+        normalized == AppRoutes.addresses ||
+        normalized == AppRoutes.inviteFriends ||
+        normalized == AppRoutes.privacyPolicy ||
+        normalized == AppRoutes.aboutUs ||
+        normalized == AppRoutes.faq ||
+        normalized == AppRoutes.contactUs) {
       return 4;
     }
     return 0;

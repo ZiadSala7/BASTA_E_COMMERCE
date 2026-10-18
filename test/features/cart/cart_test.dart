@@ -126,5 +126,25 @@ void main() {
       expect(rate.shippingFee, 3.50);
       expect(rate.estimatedDeliveryDays, '1-2 days');
     });
+
+    test('ShippingRateModel rejects responses without a fee', () {
+      expect(
+        () => ShippingRateModel.fromJson({
+          "status": "success",
+          "data": {"city": "Amman"}
+        }),
+        throwsFormatException,
+      );
+    });
+
+    test('ShippingRateModel rejects invalid fees', () {
+      expect(
+        () => ShippingRateModel.fromJson({
+          "status": "success",
+          "data": {"city": "Amman", "shippingFee": "invalid"}
+        }),
+        throwsFormatException,
+      );
+    });
   });
 }

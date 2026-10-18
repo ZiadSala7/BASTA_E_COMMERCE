@@ -19,6 +19,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
   LatLng? _selectedDeliveryLocation;
   String? _selectedAddressId;
   double _liveShippingFee = 5.0;
+  int _shippingRequestGeneration = 0;
 
   @override
   void initState() {
@@ -116,16 +117,19 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
           _SavedAddressesPanel(
             addresses: _savedAddresses,
             selectedAddressId: _selectedAddressId,
-            onSelected: (address) => setState(() {
-              _selectedAddressId = address.id;
-              _selectedDeliveryLocation = LatLng(
-                address.latitude,
-                address.longitude,
-              );
-              if (address.phone.trim().isNotEmpty) {
-                _phoneController.text = address.phone.trim();
-              }
-            }),
+            onSelected: (address) {
+              setState(() {
+                _selectedAddressId = address.id;
+                _selectedDeliveryLocation = LatLng(
+                  address.latitude,
+                  address.longitude,
+                );
+                if (address.phone.trim().isNotEmpty) {
+                  _phoneController.text = address.phone.trim();
+                }
+              });
+              _updateShippingFee();
+            },
             onManageAddresses: _openAddressesManager,
           ),
           const SizedBox(height: 12),
@@ -133,10 +137,13 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
             selectedLocation: _selectedDeliveryLocation,
             initialLocation:
                 _selectedDeliveryLocation ?? _initialDeliveryLocation,
-            onLocationSelected: (location) => setState(() {
-              _selectedAddressId = null;
-              _selectedDeliveryLocation = location;
-            }),
+            onLocationSelected: (location) {
+              setState(() {
+                _selectedAddressId = null;
+                _selectedDeliveryLocation = location;
+              });
+              _updateShippingFee();
+            },
           ),
           const SizedBox(height: 12),
           _PhoneInputPanel(controller: _phoneController),
@@ -205,18 +212,21 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
   }
 
   Future<void> _updateShippingFee() async {
+    final requestGeneration = ++_shippingRequestGeneration;
     final address = _selectedSavedAddress;
+    final deliveryLocation = _selectedDeliveryLocation;
     String city = (address != null && address.city.isNotEmpty)
         ? address.city
         : '';
     String? street = address?.street;
 
-    if (city.isEmpty && _selectedDeliveryLocation != null) {
+    if (city.isEmpty && deliveryLocation != null) {
       try {
         final placemarks = await placemarkFromCoordinates(
-          _selectedDeliveryLocation!.latitude,
-          _selectedDeliveryLocation!.longitude,
+          deliveryLocation.latitude,
+          deliveryLocation.longitude,
         );
+        if (requestGeneration != _shippingRequestGeneration) return;
         if (placemarks.isNotEmpty) {
           final p = placemarks.first;
           city =
@@ -233,11 +243,14 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
 
     try {
       final rate = await _calculateShipping(city: city, streetAddress: street);
-      if (!mounted) return;
+      if (!mounted || requestGeneration != _shippingRequestGeneration) return;
       setState(() {
         _liveShippingFee = rate.shippingFee;
       });
-    } catch (_) {}
+    } catch (error) {
+      if (!mounted || requestGeneration != _shippingRequestGeneration) return;
+      _showSnackBar(_cleanError(error));
+    }
   }
 
   Future<void> _continuePayment() async {

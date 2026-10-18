@@ -30,6 +30,7 @@ import '../../features/products/presentation/pages/product_detail_page.dart';
 import '../../features/products/presentation/pages/products_listing_page.dart';
 import '../../features/splash/presentation/pages/splash_page.dart';
 import '../di/service_locator.dart';
+import 'app_route_observer.dart';
 
 abstract class AppRoutes {
   static const String splash = '/';
@@ -68,8 +69,11 @@ class AppRouter {
 
   static AppRouter get instance => _instance ??= AppRouter._();
 
-  final GoRouter router = GoRouter(
+  final AppRouteObserver routeObserver = AppRouteObserver();
+
+  late final GoRouter router = GoRouter(
     initialLocation: AppRoutes.splash,
+    observers: [routeObserver],
     routes: <RouteBase>[
       GoRoute(
         path: AppRoutes.splash,

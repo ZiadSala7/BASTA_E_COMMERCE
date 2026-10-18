@@ -244,14 +244,9 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
                 isAddingToCart: _addingProductIds.contains(product.id),
                 onTap: () {
                   final detail = _detailArgs(product);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) => ProductDetailPage(
-                        productId: detail.id,
-                        product: detail,
-                      ),
-                    ),
+                  context.push(
+                    AppRoutes.productDetail,
+                    extra: detail,
                   );
                 },
                 onFavoriteTap: () => _toggleFavorite(product),

@@ -102,14 +102,9 @@ class _RelatedProductsSectionState extends State<RelatedProductsSection> {
                           product.id,
                         ),
                         onTap: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ProductDetailPage(
-                                productId: product.id,
-                                product: detail,
-                              ),
-                            ),
+                          context.pushReplacement(
+                            AppRoutes.productDetail,
+                            extra: detail,
                           );
                         },
                         onFavoriteTap: () => _toggleFavorite(product.id),

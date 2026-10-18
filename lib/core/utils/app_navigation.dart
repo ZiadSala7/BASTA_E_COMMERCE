@@ -10,6 +10,8 @@ abstract class AppNavigation {
   }) {
     if (context.canPop()) {
       context.pop();
+    } else if (Navigator.of(context).canPop()) {
+      Navigator.of(context).pop();
     } else {
       context.go(fallbackLocation);
     }
