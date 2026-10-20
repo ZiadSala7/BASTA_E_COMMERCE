@@ -8,6 +8,7 @@ class _InfoHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final primary = AppColors.primaryFor(context);
 
     return Container(
       padding: const EdgeInsets.all(18),
@@ -29,10 +30,10 @@ class _InfoHero extends StatelessWidget {
             width: 58,
             height: 58,
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.12),
+              color: primary.withValues(alpha: 0.14),
               borderRadius: BorderRadius.circular(16),
             ),
-            child: Icon(content.icon, color: AppColors.primary, size: 30),
+            child: Icon(content.icon, color: primary, size: 30),
           ),
           const SizedBox(height: 14),
           Text(

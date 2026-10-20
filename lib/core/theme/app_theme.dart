@@ -90,19 +90,35 @@ class AppTheme {
 
   static ThemeData dark(Locale locale) {
     final textTheme = AppTextStyles.textTheme(locale);
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: AppColors.primary,
-      brightness: Brightness.dark,
-    ).copyWith(onSurface: Colors.white, onSurfaceVariant: Colors.white);
+    final colorScheme =
+        ColorScheme.fromSeed(
+          seedColor: AppColors.primary,
+          brightness: Brightness.dark,
+        ).copyWith(
+          primary: AppColors.darkPrimary,
+          onPrimary: const Color(0xFF17113A),
+          primaryContainer: const Color(0xFF332B6B),
+          onPrimaryContainer: const Color(0xFFE8E2FF),
+          surface: AppColors.darkSurface,
+          onSurface: AppColors.darkTextPrimary,
+          onSurfaceVariant: AppColors.darkTextSecondary,
+          surfaceContainerLowest: AppColors.darkBackground,
+          surfaceContainerLow: AppColors.darkSurface,
+          surfaceContainer: AppColors.darkCard,
+          surfaceContainerHigh: AppColors.darkCard,
+          surfaceContainerHighest: AppColors.darkElevatedSurface,
+          outline: AppColors.darkOutline,
+          outlineVariant: AppColors.darkOutline,
+        );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: const Color(0xFF101116),
-      canvasColor: const Color(0xFF171922),
-      cardColor: const Color(0xFF1B1D27),
-      dividerColor: const Color(0xFF2A2D3A),
+      scaffoldBackgroundColor: AppColors.darkBackground,
+      canvasColor: AppColors.darkSurface,
+      cardColor: AppColors.darkCard,
+      dividerColor: AppColors.darkOutline,
       fontFamily: AppTextStyles.fontFamilyFor(locale),
       textTheme: textTheme.apply(
         bodyColor: Colors.white,
@@ -118,24 +134,29 @@ class AppTheme {
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFF1B1D27),
+        fillColor: AppColors.darkCard,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 18,
         ),
-        hintStyle: textTheme.bodySmall?.copyWith(color: Colors.white),
-        errorStyle: textTheme.bodySmall?.copyWith(color: Colors.white),
+        hintStyle: textTheme.bodySmall?.copyWith(color: AppColors.darkTextHint),
+        errorStyle: textTheme.bodySmall?.copyWith(
+          color: const Color(0xFFFF8A8A),
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFF2A2D3A)),
+          borderSide: const BorderSide(color: AppColors.darkOutline),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: Color(0xFF2A2D3A)),
+          borderSide: const BorderSide(color: AppColors.darkOutline),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.2),
+          borderSide: const BorderSide(
+            color: AppColors.darkPrimary,
+            width: 1.2,
+          ),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -148,22 +169,24 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: Colors.white,
+          foregroundColor: AppColors.darkPrimary,
           textStyle: textTheme.labelMedium,
         ),
       ),
       cardTheme: CardThemeData(
-        color: const Color(0xFF1B1D27),
+        color: AppColors.darkCard,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       ),
       bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: Color(0xFF1B1D27),
+        backgroundColor: AppColors.darkCard,
         surfaceTintColor: Colors.transparent,
       ),
       snackBarTheme: SnackBarThemeData(
         backgroundColor: const Color(0xFF21213A),
-        contentTextStyle: textTheme.bodyMedium?.copyWith(color: Colors.white),
+        contentTextStyle: textTheme.bodyMedium?.copyWith(
+          color: AppColors.darkTextPrimary,
+        ),
       ),
     );
   }

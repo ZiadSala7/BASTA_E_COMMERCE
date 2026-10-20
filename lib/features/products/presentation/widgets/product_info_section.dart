@@ -8,6 +8,7 @@ import '../../../../core/extensions/app_localizations_x.dart';
 import '../../../../core/utils/app_colors.dart';
 import '../../../../core/utils/app_router.dart';
 import '../../../../l10n/app_localizations.dart';
+import '../pages/products_listing_page.dart';
 import '../models/product_detail_args.dart';
 
 part 'product_info_section_parts/product_info_section.dart';

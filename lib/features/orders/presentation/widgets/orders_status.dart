@@ -33,12 +33,17 @@ String orderStatusLabel(AppLocalizations l10n, String status) {
   };
 }
 
-Color orderStatusColor(String status) {
+Color orderStatusColor(BuildContext context, String status) {
+  final isDark = Theme.of(context).brightness == Brightness.dark;
+
   return switch (orderStatusFilter(status)) {
-    OrdersStatusFilter.delivered => AppColors.primary,
-    OrdersStatusFilter.delivering => Colors.orange,
-    OrdersStatusFilter.pending => Colors.blue,
-    OrdersStatusFilter.all => Colors.blueGrey,
+    OrdersStatusFilter.delivered => AppColors.primaryFor(context),
+    OrdersStatusFilter.delivering =>
+      isDark ? const Color(0xFFFFB74D) : Colors.orange,
+    OrdersStatusFilter.pending =>
+      isDark ? const Color(0xFF8AB4F8) : Colors.blue,
+    OrdersStatusFilter.all =>
+      isDark ? AppColors.darkTextSecondary : Colors.blueGrey,
   };
 }
 

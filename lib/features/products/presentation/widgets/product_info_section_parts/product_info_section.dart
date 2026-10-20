@@ -21,11 +21,13 @@ class ProductInfoSection extends StatelessWidget {
         : product.price;
 
     final resolvedCompare = product.effectiveCompareAtPrice;
-    final displayOldPrice = (resolvedCompare != null && resolvedCompare > resolvedUnit)
+    final displayOldPrice =
+        (resolvedCompare != null && resolvedCompare > resolvedUnit)
         ? l10n.formatPrice(resolvedCompare)
         : (product.oldPrice?.isNotEmpty == true ? product.oldPrice : null);
 
-    final double? savingAmount = (resolvedCompare != null && resolvedCompare > resolvedUnit)
+    final double? savingAmount =
+        (resolvedCompare != null && resolvedCompare > resolvedUnit)
         ? (resolvedCompare - resolvedUnit)
         : null;
 
@@ -35,73 +37,124 @@ class ProductInfoSection extends StatelessWidget {
         // Store Header Banner if available
         if (product.storeName != null && product.storeName!.isNotEmpty) ...[
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+            padding: const EdgeInsetsDirectional.only(
+              start: 10,
+              end: 12,
+              top: 8,
+              bottom: 8,
+            ),
             decoration: BoxDecoration(
-              color: AppColors.primary.withValues(alpha: 0.06),
+              color: colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.circular(14),
-              border: Border.all(color: AppColors.primary.withValues(alpha: 0.16)),
+              border: Border.all(color: colorScheme.outlineVariant),
             ),
             child: Row(
               children: [
-                Container(
-                  width: 34,
-                  height: 34,
-                  decoration: BoxDecoration(
-                    color: AppColors.primary,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Icon(Icons.storefront_rounded, color: Colors.white, size: 18),
-                ),
-                const SizedBox(width: 10),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
+                  child: InkWell(
+                    onTap: () {
+                      final storeSlug = product.storeSlug?.trim();
+                      if (storeSlug == null || storeSlug.isEmpty) {
+                        context.push(AppRoutes.stores);
+                        return;
+                      }
+                      context.push(
+                        AppRoutes.products,
+                        extra: ProductsListingArgs(
+                          storeSlug: storeSlug,
+                          title: product.storeName!,
+                        ),
+                      );
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.only(
+                        start: 4,
+                        end: 8,
+                        top: 4,
+                        bottom: 4,
+                      ),
+                      child: Row(
                         children: [
-                          Flexible(
-                            child: Text(
-                              product.storeName!,
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: GoogleFonts.cairo(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w800,
-                                color: colorScheme.onSurface,
-                              ),
+                          Container(
+                            width: 36,
+                            height: 36,
+                            decoration: BoxDecoration(
+                              color: colorScheme.primary,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Icon(
+                              Icons.storefront_rounded,
+                              color: colorScheme.onPrimary,
+                              size: 18,
                             ),
                           ),
-                          const SizedBox(width: 4),
-                          const Icon(Icons.verified_rounded, size: 14, color: AppColors.primary),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        product.storeName!,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: GoogleFonts.cairo(
+                                          fontSize: 13,
+                                          fontWeight: FontWeight.w800,
+                                          color: colorScheme.onSurface,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Icon(
+                                      Icons.verified_rounded,
+                                      size: 14,
+                                      color: colorScheme.primary,
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  l10n.pick(
+                                    ar: 'متجر رسمي موثوق',
+                                    en: 'Verified Official Store',
+                                  ),
+                                  style: GoogleFonts.cairo(
+                                    fontSize: 10.5,
+                                    fontWeight: FontWeight.w600,
+                                    color: colorScheme.onSurfaceVariant,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
-                      Text(
-                        l10n.pick(ar: 'متجر رسمي موثوق', en: 'Verified Official Store'),
-                        style: GoogleFonts.cairo(
-                          fontSize: 10.5,
-                          fontWeight: FontWeight.w600,
-                          color: colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
+                const SizedBox(width: 8),
                 InkWell(
                   onTap: () => context.push(AppRoutes.stores),
                   borderRadius: BorderRadius.circular(8),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 4,
+                    ),
                     decoration: BoxDecoration(
-                      color: Colors.white,
+                      color: colorScheme.surface,
                       borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: AppColors.primary.withValues(alpha: 0.3)),
+                      border: Border.all(color: colorScheme.outlineVariant),
                     ),
                     child: Text(
                       l10n.pick(ar: 'المتاجر', en: 'Stores'),
                       style: GoogleFonts.cairo(
                         fontSize: 11,
                         fontWeight: FontWeight.w800,
-                        color: AppColors.primary,
+                        color: colorScheme.primary,
                       ),
                     ),
                   ),
@@ -121,7 +174,7 @@ class ProductInfoSection extends StatelessWidget {
               _InfoChip(
                 icon: Icons.category_outlined,
                 label: product.category!,
-                color: AppColors.primary,
+                color: AppColors.primaryFor(context),
               ),
             if (product.brand?.isNotEmpty == true)
               _InfoChip(
@@ -151,7 +204,9 @@ class ProductInfoSection extends StatelessWidget {
           decoration: BoxDecoration(
             color: colorScheme.surface,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.6)),
+            border: Border.all(
+              color: colorScheme.outlineVariant.withValues(alpha: 0.6),
+            ),
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withValues(alpha: 0.03),
@@ -173,7 +228,7 @@ class ProductInfoSection extends StatelessWidget {
                         fontSize: 26,
                         height: 1.1,
                         fontWeight: FontWeight.w900,
-                        color: AppColors.primary,
+                        color: AppColors.primaryFor(context),
                       ),
                     ),
                   const SizedBox(width: 10),
@@ -186,9 +241,13 @@ class ProductInfoSection extends StatelessWidget {
                           fontSize: 15,
                           height: 1.1,
                           fontWeight: FontWeight.w700,
-                          color: colorScheme.onSurfaceVariant.withValues(alpha: 0.7),
+                          color: colorScheme.onSurfaceVariant.withValues(
+                            alpha: 0.7,
+                          ),
                           decoration: TextDecoration.lineThrough,
-                          decorationColor: const Color(0xFFE53935).withValues(alpha: 0.8),
+                          decorationColor: const Color(
+                            0xFFE53935,
+                          ).withValues(alpha: 0.8),
                           decorationThickness: 1.8,
                         ),
                       ),
@@ -196,7 +255,10 @@ class ProductInfoSection extends StatelessWidget {
                   const Spacer(),
                   if (product.discountBadge?.isNotEmpty == true)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 9,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         gradient: const LinearGradient(
                           colors: [Color(0xFFE53935), Color(0xFFD32F2F)],
@@ -204,7 +266,9 @@ class ProductInfoSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(8),
                         boxShadow: [
                           BoxShadow(
-                            color: const Color(0xFFE53935).withValues(alpha: 0.25),
+                            color: const Color(
+                              0xFFE53935,
+                            ).withValues(alpha: 0.25),
                             blurRadius: 6,
                             offset: const Offset(0, 2),
                           ),
@@ -255,7 +319,8 @@ class ProductInfoSection extends StatelessWidget {
               decoration: BoxDecoration(
                 color: product.isOutOfStock
                     ? const Color(0xFFE53935).withValues(alpha: 0.1)
-                    : (product.stockQuantity != null && product.stockQuantity! <= 5)
+                    : (product.stockQuantity != null &&
+                          product.stockQuantity! <= 5)
                     ? const Color(0xFFF59E0B).withValues(alpha: 0.1)
                     : const Color(0xFF10B981).withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
@@ -270,7 +335,8 @@ class ProductInfoSection extends StatelessWidget {
                     size: 14,
                     color: product.isOutOfStock
                         ? const Color(0xFFE53935)
-                        : (product.stockQuantity != null && product.stockQuantity! <= 5)
+                        : (product.stockQuantity != null &&
+                              product.stockQuantity! <= 5)
                         ? const Color(0xFFF59E0B)
                         : const Color(0xFF10B981),
                   ),
@@ -278,7 +344,8 @@ class ProductInfoSection extends StatelessWidget {
                   Text(
                     product.isOutOfStock
                         ? l10n.pick(ar: 'نفذت الكمية', en: 'Out of Stock')
-                        : (product.stockQuantity != null && product.stockQuantity! <= 5)
+                        : (product.stockQuantity != null &&
+                              product.stockQuantity! <= 5)
                         ? l10n.pick(
                             ar: 'بقي ${product.stockQuantity} فقط!',
                             en: 'Only ${product.stockQuantity} left!',
@@ -289,7 +356,8 @@ class ProductInfoSection extends StatelessWidget {
                       fontWeight: FontWeight.w800,
                       color: product.isOutOfStock
                           ? const Color(0xFFE53935)
-                          : (product.stockQuantity != null && product.stockQuantity! <= 5)
+                          : (product.stockQuantity != null &&
+                                product.stockQuantity! <= 5)
                           ? const Color(0xFFF59E0B)
                           : const Color(0xFF10B981),
                     ),
@@ -311,10 +379,22 @@ class ProductInfoSection extends StatelessWidget {
     final colorScheme = Theme.of(context).colorScheme;
 
     final badges = [
-      {'icon': Icons.local_shipping_outlined, 'title': l10n.pick(ar: 'شحن سريع', en: 'Fast Delivery')},
-      {'icon': Icons.verified_user_outlined, 'title': l10n.pick(ar: 'أصلي ومضمون', en: '100% Authentic')},
-      {'icon': Icons.change_circle_outlined, 'title': l10n.pick(ar: 'إرجاع واستبدال', en: 'Easy Returns')},
-      {'icon': Icons.lock_outline_rounded, 'title': l10n.pick(ar: 'دفع آمن 100%', en: 'Secure Pay')},
+      {
+        'icon': Icons.local_shipping_outlined,
+        'title': l10n.pick(ar: 'شحن سريع', en: 'Fast Delivery'),
+      },
+      {
+        'icon': Icons.verified_user_outlined,
+        'title': l10n.pick(ar: 'أصلي ومضمون', en: '100% Authentic'),
+      },
+      {
+        'icon': Icons.change_circle_outlined,
+        'title': l10n.pick(ar: 'إرجاع واستبدال', en: 'Easy Returns'),
+      },
+      {
+        'icon': Icons.lock_outline_rounded,
+        'title': l10n.pick(ar: 'دفع آمن 100%', en: 'Secure Pay'),
+      },
     ];
 
     return Container(
@@ -322,7 +402,9 @@ class ProductInfoSection extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
+        border: Border.all(
+          color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -330,7 +412,11 @@ class ProductInfoSection extends StatelessWidget {
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(b['icon'] as IconData, size: 20, color: AppColors.primary),
+              Icon(
+                b['icon'] as IconData,
+                size: 20,
+                color: AppColors.primaryFor(context),
+              ),
               const SizedBox(height: 4),
               Text(
                 b['title'] as String,

@@ -23,11 +23,13 @@ class _SavedAddressTile extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: selected
-              ? AppColors.primary.withOpacity(0.08)
+              ? AppColors.primaryFor(context).withOpacity(0.12)
               : colorScheme.surfaceContainerHighest.withOpacity(0.38),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selected ? AppColors.primary : colorScheme.outlineVariant,
+            color: selected
+                ? AppColors.primaryFor(context)
+                : colorScheme.outlineVariant,
           ),
         ),
         child: Row(
@@ -35,7 +37,9 @@ class _SavedAddressTile extends StatelessWidget {
           children: [
             Icon(
               selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: selected ? AppColors.primary : colorScheme.outline,
+              color: selected
+                  ? AppColors.primaryFor(context)
+                  : colorScheme.outline,
             ),
             const SizedBox(width: 10),
             Expanded(
@@ -59,7 +63,7 @@ class _SavedAddressTile extends StatelessWidget {
                         Text(
                           l10n.pick(ar: 'افتراضي', en: 'Default'),
                           style: GoogleFonts.cairo(
-                            color: AppColors.primary,
+                            color: AppColors.primaryFor(context),
                             fontSize: 11,
                             fontWeight: FontWeight.w900,
                           ),

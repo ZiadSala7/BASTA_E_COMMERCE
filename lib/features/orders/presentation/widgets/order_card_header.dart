@@ -18,7 +18,8 @@ class OrderCardHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
-    final statusColor = orderStatusColor(order.status);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final statusColor = orderStatusColor(context, order.status);
     final shortId = order.id.isNotEmpty
         ? order.id.substring(0, min(8, order.id.length)).toUpperCase()
         : '';
@@ -35,9 +36,13 @@ class OrderCardHeader extends StatelessWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.6),
+                color: colorScheme.surfaceContainerHighest.withValues(
+                  alpha: 0.6,
+                ),
                 borderRadius: BorderRadius.circular(6),
-                border: Border.all(color: colorScheme.outlineVariant.withValues(alpha: 0.5)),
+                border: Border.all(
+                  color: colorScheme.outlineVariant.withValues(alpha: 0.5),
+                ),
               ),
               child: Text(
                 '#$shortId',
@@ -54,8 +59,8 @@ class OrderCardHeader extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isCard
                     ? (isPaid
-                        ? AppColors.accentGreen.withValues(alpha: 0.1)
-                        : const Color(0xFFF59E0B).withValues(alpha: 0.1))
+                          ? AppColors.accentGreen.withValues(alpha: 0.1)
+                          : const Color(0xFFF59E0B).withValues(alpha: 0.1))
                     : Colors.amber.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(6),
               ),
@@ -63,24 +68,34 @@ class OrderCardHeader extends StatelessWidget {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(
-                    isCard ? Icons.credit_card_rounded : Icons.local_atm_rounded,
+                    isCard
+                        ? Icons.credit_card_rounded
+                        : Icons.local_atm_rounded,
                     size: 13,
                     color: isCard
-                        ? (isPaid ? AppColors.accentGreen : const Color(0xFFD97706))
+                        ? (isPaid
+                              ? AppColors.accentGreen
+                              : isDark
+                              ? const Color(0xFFFFB74D)
+                              : const Color(0xFFD97706))
                         : Colors.amber.shade800,
                   ),
                   const SizedBox(width: 4),
                   Text(
                     isCard
                         ? (isPaid
-                            ? l10n.pick(ar: 'مدفوع', en: 'Paid')
-                            : l10n.pick(ar: 'بطاقة', en: 'Card'))
+                              ? l10n.pick(ar: 'مدفوع', en: 'Paid')
+                              : l10n.pick(ar: 'بطاقة', en: 'Card'))
                         : l10n.pick(ar: 'عند الاستلام', en: 'COD'),
                     style: GoogleFonts.cairo(
                       fontSize: 11,
                       fontWeight: FontWeight.w800,
                       color: isCard
-                          ? (isPaid ? AppColors.accentGreen : const Color(0xFFD97706))
+                          ? (isPaid
+                                ? AppColors.accentGreen
+                                : isDark
+                                ? const Color(0xFFFFB74D)
+                                : const Color(0xFFD97706))
                           : Colors.amber.shade800,
                     ),
                   ),

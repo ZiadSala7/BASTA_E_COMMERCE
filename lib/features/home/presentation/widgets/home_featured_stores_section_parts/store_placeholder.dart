@@ -5,10 +5,10 @@ class _StorePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
+    return Center(
       child: Icon(
         Icons.storefront_outlined,
-        color: AppColors.primary,
+        color: AppColors.primaryFor(context),
         size: 28,
       ),
     );

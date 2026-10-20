@@ -7,14 +7,16 @@ class _SmallIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = AppColors.primaryFor(context);
+
     return Container(
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: AppColors.primary.withValues(alpha: 0.10),
+        color: primary.withValues(alpha: 0.14),
         borderRadius: BorderRadius.circular(12),
       ),
-      child: Icon(icon, color: AppColors.primary, size: 21),
+      child: Icon(icon, color: primary, size: 21),
     );
   }
 }

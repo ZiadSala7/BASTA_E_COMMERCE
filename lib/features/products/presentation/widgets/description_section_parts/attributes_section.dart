@@ -26,7 +26,11 @@ class _AttributesSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(Icons.tune_rounded, size: 18, color: AppColors.primary),
+            Icon(
+              Icons.tune_rounded,
+              size: 18,
+              color: AppColors.primaryFor(context),
+            ),
             const SizedBox(width: 6),
             Text(
               l10n.pick(

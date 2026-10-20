@@ -20,6 +20,7 @@ class _VendorCartSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final primary = AppColors.primaryFor(context);
     final l10n = AppLocalizations.of(context)!;
 
     return Column(
@@ -34,12 +35,12 @@ class _VendorCartSection extends StatelessWidget {
                   width: 34,
                   height: 34,
                   decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
+                    color: primary.withOpacity(0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Icon(
+                  child: Icon(
                     Icons.storefront_rounded,
-                    color: AppColors.primary,
+                    color: primary,
                     size: 19,
                   ),
                 ),
@@ -60,7 +61,7 @@ class _VendorCartSection extends StatelessWidget {
                 Text(
                   _money(group.subtotal, context),
                   style: GoogleFonts.cairo(
-                    color: AppColors.primary,
+                    color: primary,
                     fontSize: 13,
                     fontWeight: FontWeight.w900,
                   ),

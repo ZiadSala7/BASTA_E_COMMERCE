@@ -61,7 +61,7 @@ class _CheckoutItemTile extends StatelessWidget {
               style: GoogleFonts.cairo(
                 color: hasStockIssue
                     ? const Color(0xFFE53935)
-                    : AppColors.primary,
+                    : AppColors.primaryFor(context),
                 fontSize: 13.5,
                 fontWeight: FontWeight.w900,
               ),

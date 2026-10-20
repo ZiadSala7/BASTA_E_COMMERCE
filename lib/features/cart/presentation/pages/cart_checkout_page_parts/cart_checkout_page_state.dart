@@ -516,7 +516,7 @@ class _CartCheckoutPageState extends State<CartCheckoutPage> {
   }) async {
     final l10n = AppLocalizations.of(context)!;
     final color = success
-        ? AppColors.primary
+        ? AppColors.primaryFor(context)
         : verificationPending
         ? const Color(0xFFF59E0B)
         : const Color(0xFFE53935);

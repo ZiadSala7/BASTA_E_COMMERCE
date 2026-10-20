@@ -158,7 +158,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     AppLocalizations l10n,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
-    final statusColor = orderStatusColor(order.status);
+    final statusColor = orderStatusColor(context, order.status);
 
     return Container(
       padding: const EdgeInsets.all(18),
@@ -226,12 +226,12 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             );
                           },
                           borderRadius: BorderRadius.circular(8),
-                          child: const Padding(
-                            padding: EdgeInsets.all(4),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4),
                             child: Icon(
                               Icons.copy_rounded,
                               size: 16,
-                              color: AppColors.primary,
+                              color: AppColors.primaryFor(context),
                             ),
                           ),
                         ),
@@ -297,6 +297,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     AppLocalizations l10n,
   ) {
     final colorScheme = Theme.of(context).colorScheme;
+    final primary = AppColors.primaryFor(context);
     final status = order.status.toUpperCase();
     final isCancelled = status == 'CANCELLED' || status == 'FAILED';
 
@@ -333,6 +334,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
     }
 
     if (isCancelled) {
+      final cancelledColor = Theme.of(context).brightness == Brightness.dark
+          ? Colors.red.shade300
+          : Colors.red.shade700;
+
       return Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -342,7 +347,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         ),
         child: Row(
           children: [
-            const Icon(Icons.cancel_outlined, color: Colors.red, size: 28),
+            Icon(Icons.cancel_outlined, color: cancelledColor, size: 28),
             const SizedBox(width: 12),
             Expanded(
               child: Column(
@@ -356,7 +361,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     style: GoogleFonts.cairo(
                       fontSize: 14,
                       fontWeight: FontWeight.w800,
-                      color: Colors.red.shade700,
+                      color: cancelledColor,
                     ),
                   ),
                   Text(
@@ -366,7 +371,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                     ),
                     style: GoogleFonts.cairo(
                       fontSize: 11.5,
-                      color: Colors.red.shade600,
+                      color: cancelledColor.withValues(alpha: 0.9),
                     ),
                   ),
                 ],
@@ -404,9 +409,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
               final step = steps[index];
               final isDone = index <= currentStepIndex;
               final isCurrent = index == currentStepIndex;
-              final stepColor = isDone
-                  ? AppColors.primary
-                  : colorScheme.outlineVariant;
+              final stepColor = isDone ? primary : colorScheme.outlineVariant;
 
               return Expanded(
                 child: Column(
@@ -421,7 +424,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             child: Container(
                               height: 3,
                               color: index < currentStepIndex
-                                  ? AppColors.primary
+                                  ? primary
                                   : colorScheme.outlineVariant.withValues(
                                       alpha: 0.5,
                                     ),
@@ -431,20 +434,16 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           width: 38,
                           height: 38,
                           decoration: BoxDecoration(
-                            color: isDone
-                                ? AppColors.primary
-                                : colorScheme.surface,
+                            color: isDone ? primary : colorScheme.surface,
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: isCurrent ? AppColors.primary : stepColor,
+                              color: isCurrent ? primary : stepColor,
                               width: isCurrent ? 2.5 : 1.5,
                             ),
                             boxShadow: isCurrent
                                 ? [
                                     BoxShadow(
-                                      color: AppColors.primary.withValues(
-                                        alpha: 0.3,
-                                      ),
+                                      color: primary.withValues(alpha: 0.3),
                                       blurRadius: 8,
                                       offset: const Offset(0, 3),
                                     ),
@@ -455,7 +454,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             step['icon'] as IconData,
                             size: 18,
                             color: isDone
-                                ? Colors.white
+                                ? colorScheme.onPrimary
                                 : colorScheme.onSurfaceVariant,
                           ),
                         ),
@@ -471,7 +470,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                             ? FontWeight.w800
                             : FontWeight.w600,
                         color: isCurrent
-                            ? AppColors.primary
+                            ? primary
                             : colorScheme.onSurfaceVariant,
                         height: 1.1,
                       ),
@@ -508,10 +507,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.shopping_bag_outlined,
                 size: 18,
-                color: AppColors.primary,
+                color: AppColors.primaryFor(context),
               ),
               const SizedBox(width: 8),
               Text(
@@ -595,14 +594,14 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                     ? item.imageUrl!
                                     : 'https://api.bs6a.com${item.imageUrl}',
                                 fit: BoxFit.cover,
-                                errorBuilder: (_, _, _) => const Icon(
+                                errorBuilder: (_, _, _) => Icon(
                                   Icons.inventory_2_outlined,
-                                  color: Colors.grey,
+                                  color: colorScheme.onSurfaceVariant,
                                 ),
                               )
-                            : const Icon(
+                            : Icon(
                                 Icons.shopping_bag_outlined,
-                                color: Colors.grey,
+                                color: colorScheme.onSurfaceVariant,
                               ),
                       ),
                     ),
@@ -631,9 +630,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                 vertical: 2,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.primary.withValues(
-                                  alpha: 0.08,
-                                ),
+                                color: AppColors.primaryFor(
+                                  context,
+                                ).withValues(alpha: 0.08),
                                 borderRadius: BorderRadius.circular(6),
                               ),
                               child: Text(
@@ -641,7 +640,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                                 style: GoogleFonts.cairo(
                                   fontSize: 10.5,
                                   fontWeight: FontWeight.w700,
-                                  color: AppColors.primary,
+                                  color: AppColors.primaryFor(context),
                                 ),
                               ),
                             ),
@@ -671,7 +670,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                           style: GoogleFonts.cairo(
                             fontSize: 14,
                             fontWeight: FontWeight.w900,
-                            color: AppColors.primary,
+                            color: AppColors.primaryFor(context),
                           ),
                         ),
                         Text(
@@ -715,10 +714,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on_outlined,
                 size: 18,
-                color: AppColors.primary,
+                color: AppColors.primaryFor(context),
               ),
               const SizedBox(width: 8),
               Text(
@@ -798,10 +797,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.payment_rounded,
                 size: 18,
-                color: AppColors.primary,
+                color: AppColors.primaryFor(context),
               ),
               const SizedBox(width: 8),
               Text(
@@ -872,10 +871,10 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.receipt_outlined,
                 size: 18,
-                color: AppColors.primary,
+                color: AppColors.primaryFor(context),
               ),
               const SizedBox(width: 8),
               Text(
@@ -927,7 +926,7 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
                 style: GoogleFonts.cairo(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
-                  color: AppColors.primary,
+                  color: AppColors.primaryFor(context),
                 ),
               ),
             ],
@@ -1023,9 +1022,9 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
             l10n.pick(ar: 'تصفح المزيد من المنتجات', en: 'Continue Shopping'),
           ),
           style: OutlinedButton.styleFrom(
-            foregroundColor: AppColors.primary,
+            foregroundColor: AppColors.primaryFor(context),
             minimumSize: const Size.fromHeight(50),
-            side: const BorderSide(color: AppColors.primary),
+            side: BorderSide(color: AppColors.primaryFor(context)),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(16),
             ),

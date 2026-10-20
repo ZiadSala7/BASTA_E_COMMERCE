@@ -18,6 +18,10 @@ void main() {
       routes: [
         for (final path in [
           '/detail',
+          '/products',
+          '/product-detail',
+          '/order-details',
+          '/notification-details',
           '/mainNavigation',
           '/coupons',
           '/orders',
@@ -72,6 +76,19 @@ void main() {
 
     expect(find.text('/cart'), findsOneWidget);
     expect(find.text('Cart'), findsOneWidget);
+
+    for (final path in [
+      '/products',
+      '/product-detail',
+      '/order-details',
+      '/notification-details',
+    ]) {
+      router.go(path);
+      await tester.pumpAndSettle();
+
+      expect(find.text(path), findsOneWidget);
+      expect(find.text('Coupons'), findsOneWidget, reason: 'Route: $path');
+    }
   });
 
   testWidgets('does not duplicate the main screen bottom navigation', (
@@ -106,186 +123,189 @@ void main() {
     expect(find.text('Coupons'), findsNothing);
   });
 
-  testWidgets('does not duplicate bottom navigation after opening product detail and popping it via Navigator', (tester) async {
-    final routeObserver = AppRouteObserver(initialRoute: '/mainNavigation');
-    final router = GoRouter(
-      initialLocation: '/mainNavigation',
-      observers: [routeObserver],
-      routes: [
-        GoRoute(
-          path: '/mainNavigation',
-          builder: (context, state) => Scaffold(
-            bottomNavigationBar: HomeBottomNavBar(
-              currentIndex: 0,
-              cartItemCount: 0,
-              onTap: (_) {},
-            ),
-            body: ElevatedButton(
-              onPressed: () => context.push('/product-detail'),
-              child: const Text('Go Detail'),
-            ),
-          ),
-        ),
-        GoRoute(
-          path: '/product-detail',
-          builder: (context, state) => Scaffold(
-            body: ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Pop via Navigator'),
-            ),
-          ),
-        ),
-      ],
-    );
-    final cartBadgeController = CartBadgeController(_CartRepositoryStub());
-
-    await tester.pumpWidget(
-      MaterialApp.router(
-        routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('en'),
-        builder: (context, child) => AppBottomNavigationShell(
-          router: router,
-          cartBadgeController: cartBadgeController,
-          routeObserver: routeObserver,
-          child: child!,
-        ),
-      ),
-    );
-
-    // Initially on /mainNavigation: exactly 1 HomeBottomNavBar (from Scaffold)
-    expect(find.byType(HomeBottomNavBar), findsOneWidget);
-
-    // Open product detail: product detail hides bottom navigation shell
-    await tester.tap(find.text('Go Detail'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(HomeBottomNavBar), findsNothing);
-
-    // Pop product detail via Navigator (like Android system back or iOS swipe)
-    await tester.tap(find.text('Pop via Navigator'));
-    await tester.pumpAndSettle();
-
-    // After pop: back on /mainNavigation, exactly 1 HomeBottomNavBar (not duplicated!)
-    expect(find.byType(HomeBottomNavBar), findsOneWidget);
-  });
-
-  testWidgets('does not duplicate bottom navigation after opening product detail and popping it via AppNavigation', (tester) async {
-    final routeObserver = AppRouteObserver(initialRoute: '/mainNavigation');
-    final router = GoRouter(
-      initialLocation: '/mainNavigation',
-      observers: [routeObserver],
-      routes: [
-        GoRoute(
-          path: '/mainNavigation',
-          builder: (context, state) => Scaffold(
-            bottomNavigationBar: HomeBottomNavBar(
-              currentIndex: 0,
-              cartItemCount: 0,
-              onTap: (_) {},
-            ),
-            body: ElevatedButton(
-              onPressed: () => context.push('/product-detail'),
-              child: const Text('Go Detail'),
-            ),
-          ),
-        ),
-        GoRoute(
-          path: '/product-detail',
-          builder: (context, state) => Scaffold(
-            body: ElevatedButton(
-              onPressed: () => AppNavigation.popOrGo(context),
-              child: const Text('Pop via AppNavigation'),
-            ),
-          ),
-        ),
-      ],
-    );
-    final cartBadgeController = CartBadgeController(_CartRepositoryStub());
-
-    await tester.pumpWidget(
-      MaterialApp.router(
-        routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('en'),
-        builder: (context, child) => AppBottomNavigationShell(
-          router: router,
-          cartBadgeController: cartBadgeController,
-          routeObserver: routeObserver,
-          child: child!,
-        ),
-      ),
-    );
-
-    expect(find.byType(HomeBottomNavBar), findsOneWidget);
-
-    await tester.tap(find.text('Go Detail'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(HomeBottomNavBar), findsNothing);
-
-    await tester.tap(find.text('Pop via AppNavigation'));
-    await tester.pumpAndSettle();
-
-    expect(find.byType(HomeBottomNavBar), findsOneWidget);
-  });
-
-  testWidgets('hides bottom navigation during splash, onboarding, auth, product-detail, and checkout', (
-    tester,
-  ) async {
-    const hiddenLocations = [
-      '/',
-      '/onboarding',
-      '/products',
-      '/product-detail',
-      '/checkout',
-      '/order-details',
-      '/notification-details',
-      '/auth/login',
-      '/auth/register',
-      '/auth/forgot-password',
-      '/auth/reset-password',
-      '/auth/verification',
-    ];
-    final routeObserver = AppRouteObserver(initialRoute: '/');
-    final router = GoRouter(
-      initialLocation: '/',
-      observers: [routeObserver],
-      routes: [
-        for (final path in hiddenLocations)
+  testWidgets(
+    'shows one bottom navigation after opening product detail and popping it via Navigator',
+    (tester) async {
+      final routeObserver = AppRouteObserver(initialRoute: '/mainNavigation');
+      final router = GoRouter(
+        initialLocation: '/mainNavigation',
+        observers: [routeObserver],
+        routes: [
           GoRoute(
-            path: path,
-            builder: (context, state) => Scaffold(body: Text(path)),
+            path: '/mainNavigation',
+            builder: (context, state) => Scaffold(
+              bottomNavigationBar: HomeBottomNavBar(
+                currentIndex: 0,
+                cartItemCount: 0,
+                onTap: (_) {},
+              ),
+              body: ElevatedButton(
+                onPressed: () => context.push('/product-detail'),
+                child: const Text('Go Detail'),
+              ),
+            ),
           ),
-      ],
-    );
-    final cartBadgeController = CartBadgeController(_CartRepositoryStub());
+          GoRoute(
+            path: '/product-detail',
+            builder: (context, state) => Scaffold(
+              body: ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Pop via Navigator'),
+              ),
+            ),
+          ),
+        ],
+      );
+      final cartBadgeController = CartBadgeController(_CartRepositoryStub());
 
-    await tester.pumpWidget(
-      MaterialApp.router(
-        routerConfig: router,
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        builder: (context, child) => AppBottomNavigationShell(
-          router: router,
-          cartBadgeController: cartBadgeController,
-          routeObserver: routeObserver,
-          child: child!,
+      await tester.pumpWidget(
+        MaterialApp.router(
+          routerConfig: router,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          builder: (context, child) => AppBottomNavigationShell(
+            router: router,
+            cartBadgeController: cartBadgeController,
+            routeObserver: routeObserver,
+            child: child!,
+          ),
         ),
-      ),
-    );
+      );
 
-    for (final path in hiddenLocations) {
-      router.go(path);
+      // Initially on /mainNavigation: exactly 1 HomeBottomNavBar (from Scaffold)
+      expect(find.byType(HomeBottomNavBar), findsOneWidget);
+
+      // Product detail shows the shell navigation.
+      await tester.tap(find.text('Go Detail'));
       await tester.pumpAndSettle();
 
-      expect(find.text(path), findsOneWidget);
-      expect(find.text('Coupons'), findsNothing, reason: 'Route: $path');
-      expect(find.text('Cart'), findsNothing, reason: 'Route: $path');
-    }
-  });
+      expect(find.byType(HomeBottomNavBar), findsOneWidget);
+
+      // Pop product detail via Navigator (like Android system back or iOS swipe)
+      await tester.tap(find.text('Pop via Navigator'));
+      await tester.pumpAndSettle();
+
+      // After pop, the main screen still has exactly one navigation bar.
+      expect(find.byType(HomeBottomNavBar), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'shows one bottom navigation after opening product detail and popping it via AppNavigation',
+    (tester) async {
+      final routeObserver = AppRouteObserver(initialRoute: '/mainNavigation');
+      final router = GoRouter(
+        initialLocation: '/mainNavigation',
+        observers: [routeObserver],
+        routes: [
+          GoRoute(
+            path: '/mainNavigation',
+            builder: (context, state) => Scaffold(
+              bottomNavigationBar: HomeBottomNavBar(
+                currentIndex: 0,
+                cartItemCount: 0,
+                onTap: (_) {},
+              ),
+              body: ElevatedButton(
+                onPressed: () => context.push('/product-detail'),
+                child: const Text('Go Detail'),
+              ),
+            ),
+          ),
+          GoRoute(
+            path: '/product-detail',
+            builder: (context, state) => Scaffold(
+              body: ElevatedButton(
+                onPressed: () => AppNavigation.popOrGo(context),
+                child: const Text('Pop via AppNavigation'),
+              ),
+            ),
+          ),
+        ],
+      );
+      final cartBadgeController = CartBadgeController(_CartRepositoryStub());
+
+      await tester.pumpWidget(
+        MaterialApp.router(
+          routerConfig: router,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('en'),
+          builder: (context, child) => AppBottomNavigationShell(
+            router: router,
+            cartBadgeController: cartBadgeController,
+            routeObserver: routeObserver,
+            child: child!,
+          ),
+        ),
+      );
+
+      expect(find.byType(HomeBottomNavBar), findsOneWidget);
+
+      await tester.tap(find.text('Go Detail'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(HomeBottomNavBar), findsOneWidget);
+
+      await tester.tap(find.text('Pop via AppNavigation'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(HomeBottomNavBar), findsOneWidget);
+    },
+  );
+
+  testWidgets(
+    'hides bottom navigation during splash, onboarding, auth, and checkout',
+    (tester) async {
+      const hiddenLocations = [
+        '/',
+        '/onboarding',
+        '/checkout',
+        '/auth/login',
+        '/auth/register',
+        '/auth/forgot-password',
+        '/auth/reset-password',
+        '/auth/verification',
+      ];
+      final routeObserver = AppRouteObserver(initialRoute: '/');
+      final router = GoRouter(
+        initialLocation: '/',
+        observers: [routeObserver],
+        routes: [
+          for (final path in hiddenLocations)
+            GoRoute(
+              path: path,
+              builder: (context, state) => Scaffold(body: Text(path)),
+            ),
+        ],
+      );
+      final cartBadgeController = CartBadgeController(_CartRepositoryStub());
+
+      await tester.pumpWidget(
+        MaterialApp.router(
+          routerConfig: router,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          builder: (context, child) => AppBottomNavigationShell(
+            router: router,
+            cartBadgeController: cartBadgeController,
+            routeObserver: routeObserver,
+            child: child!,
+          ),
+        ),
+      );
+
+      for (final path in hiddenLocations) {
+        router.go(path);
+        await tester.pumpAndSettle();
+
+        expect(find.text(path), findsOneWidget);
+        expect(find.text('Coupons'), findsNothing, reason: 'Route: $path');
+        expect(find.text('Cart'), findsNothing, reason: 'Route: $path');
+      }
+    },
+  );
 }
 
 class _CartRepositoryStub implements CartRepository {

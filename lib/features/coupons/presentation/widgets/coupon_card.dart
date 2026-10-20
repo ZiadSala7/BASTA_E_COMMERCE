@@ -117,7 +117,9 @@ class CouponCard extends StatelessWidget {
       badgeIcon = Icons.cancel_outlined;
     }
 
-    final accentColor = isValid ? AppColors.primary : Colors.grey.shade500;
+    final accentColor = isValid
+        ? AppColors.primaryFor(context)
+        : Colors.grey.shade500;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -274,10 +276,10 @@ class CouponCard extends StatelessWidget {
                         ),
                         child: Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.confirmation_number_outlined,
                               size: 20,
-                              color: AppColors.primary,
+                              color: AppColors.primaryFor(context),
                             ),
                             const SizedBox(width: 12),
                             Expanded(
@@ -297,7 +299,7 @@ class CouponCard extends StatelessWidget {
                                 vertical: 6,
                               ),
                               decoration: BoxDecoration(
-                                color: AppColors.primary,
+                                color: AppColors.primaryFor(context),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Row(

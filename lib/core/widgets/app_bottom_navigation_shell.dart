@@ -23,7 +23,10 @@ class AppBottomNavigationShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final listenable = routeObserver != null
-        ? Listenable.merge([router.routeInformationProvider, routeObserver!.currentRoute])
+        ? Listenable.merge([
+            router.routeInformationProvider,
+            routeObserver!.currentRoute,
+          ])
         : router.routeInformationProvider;
 
     return ListenableBuilder(
@@ -68,10 +71,6 @@ class AppBottomNavigationShell extends StatelessWidget {
     if (normalized == AppRoutes.mainNavigation ||
         normalized == AppRoutes.splash ||
         normalized == AppRoutes.onboarding ||
-        normalized == AppRoutes.products ||
-        normalized == AppRoutes.productDetail ||
-        normalized == AppRoutes.orderDetails ||
-        normalized == AppRoutes.notificationDetails ||
         normalized == AppRoutes.checkout ||
         normalized.startsWith('/auth/')) {
       return false;
@@ -83,7 +82,8 @@ class AppBottomNavigationShell extends StatelessWidget {
   int _selectedIndex(String location) {
     final normalized = Uri.tryParse(location)?.path ?? location;
     if (normalized == AppRoutes.coupons) return 1;
-    if (normalized == AppRoutes.orders || normalized == AppRoutes.orderDetails) {
+    if (normalized == AppRoutes.orders ||
+        normalized == AppRoutes.orderDetails) {
       return 2;
     }
     if (normalized == AppRoutes.cart || normalized == AppRoutes.checkout) {

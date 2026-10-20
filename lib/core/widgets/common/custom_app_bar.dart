@@ -102,7 +102,9 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                                           style: GoogleFonts.cairo(
                                             fontSize: 20,
                                             fontWeight: FontWeight.w900,
-                                            color: colorScheme.onPrimary,
+                                            color: isDark
+                                                ? Colors.white
+                                                : colorScheme.onPrimary,
                                             height: 1.1,
                                           ),
                                         )
@@ -177,13 +179,21 @@ class _SearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final textDirection = Directionality.of(context);
+    final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       height: 46,
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.96),
+        color: isDark
+            ? colorScheme.surfaceContainerHighest
+            : Colors.white.withValues(alpha: 0.96),
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withValues(alpha: 0.2)),
+        border: Border.all(
+          color: isDark
+              ? colorScheme.outlineVariant
+              : Colors.white.withValues(alpha: 0.2),
+        ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.08),
@@ -201,14 +211,13 @@ class _SearchField extends StatelessWidget {
           hintText: hint,
           hintTextDirection: textDirection,
           hintStyle: GoogleFonts.cairo(
-            color: const Color(0xFF9E9AA8),
+            color: isDark
+                ? colorScheme.onSurfaceVariant
+                : const Color(0xFF9E9AA8),
             fontSize: 14,
             fontWeight: FontWeight.w600,
           ),
-          prefixIcon: const Icon(
-            Icons.search_rounded,
-            color: AppColors.primary,
-          ),
+          prefixIcon: Icon(Icons.search_rounded, color: colorScheme.primary),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(14),
             borderSide: BorderSide.none,

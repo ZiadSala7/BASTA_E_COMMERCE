@@ -21,6 +21,7 @@ class OrderCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final l10n = AppLocalizations.of(context)!;
+    final primary = AppColors.primaryFor(context);
 
     return Container(
       margin: const EdgeInsets.only(bottom: 14),
@@ -77,14 +78,14 @@ class OrderCard extends StatelessWidget {
                         style: GoogleFonts.cairo(
                           fontSize: 12,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.primary,
+                          color: primary,
                         ),
                       ),
                       const SizedBox(width: 4),
-                      const Icon(
+                      Icon(
                         Icons.arrow_forward_ios_rounded,
                         size: 12,
-                        color: AppColors.primary,
+                        color: primary,
                       ),
                     ],
                   ),

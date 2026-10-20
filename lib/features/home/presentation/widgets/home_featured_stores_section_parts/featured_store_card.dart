@@ -20,9 +20,9 @@ class _FeaturedStoreCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(12),
           child: Ink(
             decoration: BoxDecoration(
-              color: colorScheme.surface,
+              color: colorScheme.surfaceContainerLow,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: theme.dividerColor),
+              border: Border.all(color: colorScheme.outlineVariant),
             ),
             child: Padding(
               padding: const EdgeInsets.fromLTRB(10, 10, 10, 12),

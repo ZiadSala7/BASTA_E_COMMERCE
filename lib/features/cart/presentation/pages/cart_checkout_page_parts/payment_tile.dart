@@ -22,11 +22,13 @@ class _PaymentTile extends StatelessWidget {
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: selected
-              ? AppColors.primary.withOpacity(0.08)
+              ? AppColors.primaryFor(context).withOpacity(0.12)
               : colorScheme.surfaceContainerHighest.withOpacity(0.38),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
-            color: selected ? AppColors.primary : colorScheme.outlineVariant,
+            color: selected
+                ? AppColors.primaryFor(context)
+                : colorScheme.outlineVariant,
           ),
         ),
         child: Row(
@@ -34,7 +36,7 @@ class _PaymentTile extends StatelessWidget {
             Icon(
               method.icon,
               color: selected
-                  ? AppColors.primary
+                  ? AppColors.primaryFor(context)
                   : colorScheme.onSurfaceVariant,
             ),
             const SizedBox(width: 10),
@@ -72,7 +74,9 @@ class _PaymentTile extends StatelessWidget {
             ),
             Icon(
               selected ? Icons.radio_button_checked : Icons.radio_button_off,
-              color: selected ? AppColors.primary : colorScheme.outline,
+              color: selected
+                  ? AppColors.primaryFor(context)
+                  : colorScheme.outline,
             ),
           ],
         ),

@@ -31,7 +31,9 @@ class _TotalLine extends StatelessWidget {
         Text(
           value,
           style: GoogleFonts.cairo(
-            color: isBold ? AppColors.primary : colorScheme.onSurface,
+            color: isBold
+                ? AppColors.primaryFor(context)
+                : colorScheme.onSurface,
             fontSize: isBold ? 16 : 13,
             fontWeight: isBold ? FontWeight.w900 : FontWeight.w800,
           ),

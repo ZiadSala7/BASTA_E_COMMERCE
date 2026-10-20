@@ -24,6 +24,7 @@ class AccountMenuItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
+    final primary = AppColors.primaryFor(context);
 
     return Material(
       color: Colors.transparent,
@@ -37,12 +38,12 @@ class AccountMenuItem extends StatelessWidget {
                 width: 44,
                 height: 44,
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(
+                  color: primary.withOpacity(
                     theme.brightness == Brightness.dark ? 0.18 : 0.10,
                   ),
                   borderRadius: BorderRadius.circular(10),
                 ),
-                child: Icon(icon, color: AppColors.primary, size: 22),
+                child: Icon(icon, color: primary, size: 22),
               ),
               const SizedBox(width: 16),
               Expanded(
@@ -74,7 +75,7 @@ class AccountMenuItem extends StatelessWidget {
                 Switch(
                   value: switchValue,
                   onChanged: onSwitchChanged,
-                  activeThumbColor: AppColors.primary,
+                  activeThumbColor: primary,
                 )
               else
                 Icon(

@@ -48,7 +48,7 @@ class _CheckoutActionBar extends StatelessWidget {
                   Text(
                     _money(total, context),
                     style: GoogleFonts.cairo(
-                      color: AppColors.primary,
+                      color: AppColors.primaryFor(context),
                       fontSize: 22,
                       fontWeight: FontWeight.w900,
                       height: 1.1,

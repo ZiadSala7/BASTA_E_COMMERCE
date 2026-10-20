@@ -59,7 +59,7 @@ class _StoreSearchField extends StatelessWidget {
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: const BorderSide(color: AppColors.primary, width: 1.4),
+            borderSide: BorderSide(color: colorScheme.primary, width: 1.4),
           ),
         ),
       ),

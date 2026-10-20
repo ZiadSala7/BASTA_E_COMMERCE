@@ -41,10 +41,10 @@ class _DescriptionSectionState extends State<DescriptionSection> {
         children: [
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.notes_rounded,
                 size: 20,
-                color: AppColors.primary,
+                color: AppColors.primaryFor(context),
               ),
               const SizedBox(width: 8),
               Text(
@@ -92,7 +92,7 @@ class _DescriptionSectionState extends State<DescriptionSection> {
                         style: GoogleFonts.cairo(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w800,
-                          color: AppColors.primary,
+                          color: AppColors.primaryFor(context),
                         ),
                       ),
                       const SizedBox(width: 4),
@@ -101,7 +101,7 @@ class _DescriptionSectionState extends State<DescriptionSection> {
                             ? Icons.keyboard_arrow_up_rounded
                             : Icons.keyboard_arrow_down_rounded,
                         size: 16,
-                        color: AppColors.primary,
+                        color: AppColors.primaryFor(context),
                       ),
                     ],
                   ),

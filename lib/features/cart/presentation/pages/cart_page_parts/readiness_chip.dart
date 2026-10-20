@@ -26,7 +26,7 @@ class _ReadinessChip extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 17, color: AppColors.primary),
+            Icon(icon, size: 17, color: AppColors.primaryFor(context)),
             const SizedBox(height: 5),
             Text(
               label,

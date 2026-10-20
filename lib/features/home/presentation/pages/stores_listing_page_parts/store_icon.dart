@@ -14,9 +14,9 @@ class _StoreIcon extends StatelessWidget {
         color: colorScheme.primary.withValues(alpha: 0.1),
         shape: BoxShape.circle,
       ),
-      child: const Icon(
+      child: Icon(
         Icons.storefront_outlined,
-        color: AppColors.primary,
+        color: colorScheme.primary,
         size: 26,
       ),
     );

@@ -36,30 +36,31 @@ class _PhoneInputPanel extends StatelessWidget {
                 fontSize: 13,
                 color: colorScheme.onSurfaceVariant.withValues(alpha: 0.6),
               ),
-              prefixIcon: const Icon(
+              prefixIcon: Icon(
                 Icons.phone_outlined,
-                color: AppColors.primary,
+                color: AppColors.primaryFor(context),
                 size: 20,
               ),
               filled: true,
-              fillColor: colorScheme.surfaceContainerHighest.withValues(alpha: 0.35),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              fillColor: colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.35,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 12,
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: colorScheme.outlineVariant,
-                ),
+                borderSide: BorderSide(color: colorScheme.outlineVariant),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: BorderSide(
-                  color: colorScheme.outlineVariant,
-                ),
+                borderSide: BorderSide(color: colorScheme.outlineVariant),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(12),
-                borderSide: const BorderSide(
-                  color: AppColors.primary,
+                borderSide: BorderSide(
+                  color: AppColors.primaryFor(context),
                   width: 1.5,
                 ),
               ),

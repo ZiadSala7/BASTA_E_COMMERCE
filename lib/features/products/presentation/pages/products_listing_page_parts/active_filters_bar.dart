@@ -77,7 +77,10 @@ class _ActiveFiltersBar extends StatelessWidget {
             onPressed: onClearFilters,
             child: Text(
               l10n.pick(ar: 'مسح الفلاتر', en: 'Clear Filters'),
-              style: GoogleFonts.cairo(fontSize: 13, color: AppColors.primary),
+              style: GoogleFonts.cairo(
+                fontSize: 13,
+                color: colorScheme.primary,
+              ),
             ),
           ),
         ],

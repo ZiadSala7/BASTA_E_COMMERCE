@@ -28,9 +28,9 @@ class _StoreOrderSection extends StatelessWidget {
           if (storeName.trim().isNotEmpty) ...[
             Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.storefront_rounded,
-                  color: AppColors.primary,
+                  color: AppColors.primaryFor(context),
                   size: 19,
                 ),
                 const SizedBox(width: 7),
@@ -49,7 +49,7 @@ class _StoreOrderSection extends StatelessWidget {
                 Text(
                   _money(_storeTotal, context),
                   style: GoogleFonts.cairo(
-                    color: AppColors.primary,
+                    color: AppColors.primaryFor(context),
                     fontSize: 13,
                     fontWeight: FontWeight.w900,
                   ),

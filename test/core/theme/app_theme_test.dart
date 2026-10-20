@@ -1,5 +1,6 @@
 import 'package:busta/core/theme/app_theme.dart';
 import 'package:busta/core/theme/app_text_styles.dart';
+import 'package:busta/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -32,12 +33,24 @@ void main() {
       );
     });
 
-    test('uses pure white for inherited secondary and button text', () {
-      expect(theme.colorScheme.onSurface, Colors.white);
-      expect(theme.colorScheme.onSurfaceVariant, Colors.white);
+    test('uses contrasting surface and accent colors in dark mode', () {
+      expect(theme.colorScheme.onSurface, AppColors.darkTextPrimary);
+      expect(theme.colorScheme.onSurfaceVariant, AppColors.darkTextSecondary);
+      expect(theme.scaffoldBackgroundColor, AppColors.darkBackground);
+      expect(theme.colorScheme.surface, AppColors.darkSurface);
+      expect(
+        theme.colorScheme.surfaceContainerHighest,
+        AppColors.darkElevatedSurface,
+      );
+      expect(theme.cardTheme.color, AppColors.darkCard);
+      expect(theme.inputDecorationTheme.fillColor, AppColors.darkCard);
+      expect(
+        theme.inputDecorationTheme.hintStyle?.color,
+        AppColors.darkTextHint,
+      );
       expect(
         theme.textButtonTheme.style!.foregroundColor!.resolve({}),
-        Colors.white,
+        AppColors.darkPrimary,
       );
     });
 
@@ -59,6 +72,24 @@ void main() {
         ),
       );
       expect(darkAuthLink.color, Colors.white);
+    });
+
+    testWidgets('keeps primary color unchanged in light mode', (tester) async {
+      late Color primary;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: AppTheme.light(const Locale('en')),
+          home: Builder(
+            builder: (context) {
+              primary = AppColors.primaryFor(context);
+              return const SizedBox.shrink();
+            },
+          ),
+        ),
+      );
+
+      expect(primary, AppColors.primary);
     });
   });
 }

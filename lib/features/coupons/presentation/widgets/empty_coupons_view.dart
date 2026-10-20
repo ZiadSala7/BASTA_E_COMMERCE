@@ -15,6 +15,7 @@ class EmptyCouponsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colorScheme = Theme.of(context).colorScheme;
+    final primary = AppColors.primaryFor(context);
 
     return Center(
       child: SingleChildScrollView(
@@ -27,13 +28,13 @@ class EmptyCouponsView extends StatelessWidget {
               width: 100,
               height: 100,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.10),
+                color: primary.withValues(alpha: 0.14),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.card_giftcard_rounded,
                 size: 52,
-                color: AppColors.primary,
+                color: primary,
               ),
             ),
             const SizedBox(height: 24),
@@ -99,7 +100,7 @@ class EmptyCouponsView extends StatelessWidget {
                   style: GoogleFonts.cairo(
                     fontSize: 13,
                     fontWeight: FontWeight.w700,
-                    color: AppColors.primary,
+                    color: primary,
                   ),
                 ),
               ),

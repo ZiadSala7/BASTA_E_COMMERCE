@@ -62,7 +62,9 @@ class BottomActionBar extends StatelessWidget {
                 Container(
                   height: 48,
                   decoration: BoxDecoration(
-                    color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+                    color: colorScheme.surfaceContainerHighest.withValues(
+                      alpha: 0.4,
+                    ),
                     borderRadius: BorderRadius.circular(14),
                     border: Border.all(
                       color: colorScheme.outlineVariant.withValues(alpha: 0.8),
@@ -71,20 +73,31 @@ class BottomActionBar extends StatelessWidget {
                   child: Row(
                     children: [
                       InkWell(
-                        onTap: (quantity > 1 && !isOutOfStock && onQuantityChanged != null)
+                        onTap:
+                            (quantity > 1 &&
+                                !isOutOfStock &&
+                                onQuantityChanged != null)
                             ? () => onQuantityChanged!(quantity - 1)
                             : null,
                         borderRadius: const BorderRadius.horizontal(
                           left: Radius.circular(14),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 10,
+                          ),
                           child: Icon(
                             Icons.remove_rounded,
                             size: 18,
-                            color: quantity > 1 && !isOutOfStock && onQuantityChanged != null
+                            color:
+                                quantity > 1 &&
+                                    !isOutOfStock &&
+                                    onQuantityChanged != null
                                 ? colorScheme.onSurface
-                                : colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                                : colorScheme.onSurfaceVariant.withValues(
+                                    alpha: 0.3,
+                                  ),
                           ),
                         ),
                       ),
@@ -100,20 +113,31 @@ class BottomActionBar extends StatelessWidget {
                         ),
                       ),
                       InkWell(
-                        onTap: (quantity < maxQuantity && !isOutOfStock && onQuantityChanged != null)
+                        onTap:
+                            (quantity < maxQuantity &&
+                                !isOutOfStock &&
+                                onQuantityChanged != null)
                             ? () => onQuantityChanged!(quantity + 1)
                             : null,
                         borderRadius: const BorderRadius.horizontal(
                           right: Radius.circular(14),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 10,
+                          ),
                           child: Icon(
                             Icons.add_rounded,
                             size: 18,
-                            color: quantity < maxQuantity && !isOutOfStock && onQuantityChanged != null
+                            color:
+                                quantity < maxQuantity &&
+                                    !isOutOfStock &&
+                                    onQuantityChanged != null
                                 ? colorScheme.onSurface
-                                : colorScheme.onSurfaceVariant.withValues(alpha: 0.3),
+                                : colorScheme.onSurfaceVariant.withValues(
+                                    alpha: 0.3,
+                                  ),
                           ),
                         ),
                       ),
@@ -147,7 +171,7 @@ class BottomActionBar extends StatelessWidget {
                           style: GoogleFonts.cairo(
                             fontSize: 17,
                             fontWeight: FontWeight.w900,
-                            color: AppColors.primary,
+                            color: AppColors.primaryFor(context),
                             height: 1.1,
                           ),
                         ),
@@ -164,7 +188,10 @@ class BottomActionBar extends StatelessWidget {
                         child: SizedBox(
                           height: 48,
                           child: ElevatedButton.icon(
-                            onPressed: (isAddingToCart || isOutOfStock || onAddToCart == null)
+                            onPressed:
+                                (isAddingToCart ||
+                                    isOutOfStock ||
+                                    onAddToCart == null)
                                 ? null
                                 : onAddToCart,
                             icon: isAddingToCart
@@ -183,7 +210,10 @@ class BottomActionBar extends StatelessWidget {
                             label: Text(
                               isOutOfStock
                                   ? l10n.pick(ar: 'نفذ', en: 'Sold Out')
-                                  : l10n.pick(ar: 'أضف للسلة', en: 'Add to Cart'),
+                                  : l10n.pick(
+                                      ar: 'أضف للسلة',
+                                      en: 'Add to Cart',
+                                    ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
                               style: GoogleFonts.cairo(
@@ -195,7 +225,9 @@ class BottomActionBar extends StatelessWidget {
                               backgroundColor: AppColors.primary,
                               foregroundColor: Colors.white,
                               elevation: 0,
-                              padding: const EdgeInsets.symmetric(horizontal: 8),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
                               ),
@@ -207,7 +239,10 @@ class BottomActionBar extends StatelessWidget {
                       SizedBox(
                         height: 48,
                         child: ElevatedButton(
-                          onPressed: (isAddingToCart || isOutOfStock || onBuyNow == null)
+                          onPressed:
+                              (isAddingToCart ||
+                                  isOutOfStock ||
+                                  onBuyNow == null)
                               ? null
                               : onBuyNow,
                           style: ElevatedButton.styleFrom(

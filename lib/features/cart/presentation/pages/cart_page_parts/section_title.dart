@@ -43,12 +43,12 @@ class _SectionTitle extends StatelessWidget {
           width: 38,
           height: 38,
           decoration: BoxDecoration(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.primaryFor(context).withOpacity(0.12),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.receipt_long_outlined,
-            color: AppColors.primary,
+            color: AppColors.primaryFor(context),
             size: 20,
           ),
         ),

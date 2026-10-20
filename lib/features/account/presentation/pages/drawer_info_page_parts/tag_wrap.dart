@@ -8,6 +8,7 @@ class _TagWrap extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final primary = AppColors.primaryFor(context);
 
     return Wrap(
       spacing: 8,
@@ -18,9 +19,7 @@ class _TagWrap extends StatelessWidget {
               decoration: BoxDecoration(
                 color: colorScheme.surface,
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: AppColors.primary.withValues(alpha: 0.22),
-                ),
+                border: Border.all(color: primary.withValues(alpha: 0.4)),
               ),
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -32,7 +31,7 @@ class _TagWrap extends StatelessWidget {
                   style: GoogleFonts.cairo(
                     fontSize: 12.5,
                     fontWeight: FontWeight.w800,
-                    color: AppColors.primary,
+                    color: primary,
                   ),
                 ),
               ),

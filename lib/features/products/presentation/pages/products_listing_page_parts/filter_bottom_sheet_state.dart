@@ -97,7 +97,7 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                         value: _showOnlySales,
                         onChanged: (value) =>
                             setState(() => _showOnlySales = value),
-                        activeThumbColor: AppColors.primary,
+                        activeThumbColor: Theme.of(context).colorScheme.primary,
                       ),
                     ],
                   ),
@@ -117,8 +117,8 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
                 _showOnlySales,
               ),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
-                foregroundColor: Colors.white,
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Theme.of(context).colorScheme.onPrimary,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -177,7 +177,9 @@ class _FilterBottomSheetState extends State<_FilterBottomSheet> {
             onTap: () => setState(() => _sortBy = option['value'] as String),
             leading: Icon(
               option['icon'] as IconData,
-              color: isSelected ? AppColors.primary : const Color(0xFF6B7280),
+              color: isSelected
+                  ? Theme.of(context).colorScheme.primary
+                  : Theme.of(context).colorScheme.onSurfaceVariant,
             ),
             title: option['label'] as String,
           ),

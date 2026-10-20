@@ -33,9 +33,9 @@ class _SavedAddressesPanel extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.add_location_alt_outlined,
-                    color: AppColors.primary,
+                    color: AppColors.primaryFor(context),
                   ),
                   const SizedBox(width: 10),
                   Expanded(

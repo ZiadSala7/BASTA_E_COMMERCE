@@ -14,7 +14,7 @@ class _StepperButton extends StatelessWidget {
       child: SizedBox(
         width: 30,
         height: 34,
-        child: Icon(icon, color: AppColors.primary, size: 18),
+        child: Icon(icon, color: AppColors.primaryFor(context), size: 18),
       ),
     );
   }

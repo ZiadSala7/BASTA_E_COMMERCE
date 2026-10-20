@@ -76,7 +76,7 @@ class LegacyCouponCard extends StatelessWidget {
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
-                  borderSide: const BorderSide(color: AppColors.primary),
+                  borderSide: BorderSide(color: AppColors.primaryFor(context)),
                 ),
               ),
             ),

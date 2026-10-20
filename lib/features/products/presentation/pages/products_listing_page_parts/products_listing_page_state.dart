@@ -163,8 +163,8 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _showFilterBottomSheet,
-        backgroundColor: AppColors.primary,
-        foregroundColor: Colors.white,
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Theme.of(context).colorScheme.onPrimary,
         child: const Icon(Icons.filter_list),
       ),
     );
@@ -308,6 +308,8 @@ class _ProductsListingPageState extends State<ProductsListingPage> {
           : _formatPrice(product.compareAtPrice, l10n),
       compareAtPrice: product.compareAtPrice,
       imageUrl: product.imageUrl,
+      storeName: product.storeName,
+      storeSlug: product.storeSlug,
       discountBadge: _discountLabel(product),
     );
   }

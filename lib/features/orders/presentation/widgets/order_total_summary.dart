@@ -41,7 +41,7 @@ class OrderTotalSummary extends StatelessWidget {
                   style: GoogleFonts.cairo(
                     fontSize: 14,
                     fontWeight: FontWeight.w600,
-                    color: AppColors.primary,
+                    color: AppColors.primaryFor(context),
                   ),
                 ),
               ],

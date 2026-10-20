@@ -226,12 +226,12 @@ class ProductCard extends StatelessWidget {
                           child: ElevatedButton.icon(
                             onPressed: isAddingToCart ? null : onAddToCart,
                             icon: isAddingToCart
-                                ? const SizedBox(
+                                ? SizedBox(
                                     width: 15,
                                     height: 15,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: Colors.white,
+                                      color: colorScheme.onPrimary,
                                     ),
                                   )
                                 : const Icon(
@@ -251,10 +251,10 @@ class ProductCard extends StatelessWidget {
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: colorScheme.primary,
-                              foregroundColor: Colors.white,
+                              foregroundColor: colorScheme.onPrimary,
                               disabledBackgroundColor: colorScheme.primary
                                   .withValues(alpha: 0.62),
-                              disabledForegroundColor: Colors.white,
+                              disabledForegroundColor: colorScheme.onPrimary,
                               elevation: 0,
                               padding: const EdgeInsets.symmetric(
                                 horizontal: 10,
@@ -352,7 +352,7 @@ class _ProductImage extends StatelessWidget {
 
     return Image.network(
       imageUrl!,
-      fit: BoxFit.fill,
+      fit: BoxFit.contain,
       alignment: Alignment.center,
       filterQuality: FilterQuality.medium,
       errorBuilder: (_, _, _) => const _ImageFallback(),

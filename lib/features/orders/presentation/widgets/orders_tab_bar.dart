@@ -14,6 +14,7 @@ class OrdersTabBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final colors = Theme.of(context).colorScheme;
+    final primary = AppColors.primaryFor(context);
     return ColoredBox(
       color: colors.surface,
       child: Padding(
@@ -21,9 +22,9 @@ class OrdersTabBar extends StatelessWidget {
         child: TabBar(
           controller: controller,
           isScrollable: true,
-          indicatorColor: AppColors.primary,
+          indicatorColor: primary,
           indicatorWeight: 2,
-          labelColor: AppColors.primary,
+          labelColor: primary,
           unselectedLabelColor: colors.onSurfaceVariant,
           labelStyle: GoogleFonts.cairo(
             fontWeight: FontWeight.w600,

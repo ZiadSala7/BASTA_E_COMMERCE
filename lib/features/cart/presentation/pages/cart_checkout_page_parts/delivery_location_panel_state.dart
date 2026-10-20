@@ -222,12 +222,12 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
             decoration: BoxDecoration(
               color: selectedLocation == null
                   ? colorScheme.surfaceContainerHighest.withOpacity(0.38)
-                  : AppColors.primary.withOpacity(0.08),
+                  : AppColors.primaryFor(context).withOpacity(0.12),
               borderRadius: BorderRadius.circular(10),
               border: Border.all(
                 color: selectedLocation == null
                     ? colorScheme.outlineVariant
-                    : AppColors.primary.withOpacity(0.35),
+                    : AppColors.primaryFor(context).withOpacity(0.4),
               ),
             ),
             child: Row(
@@ -238,7 +238,7 @@ class _DeliveryLocationPanelState extends State<_DeliveryLocationPanel> {
                       : Icons.location_on_rounded,
                   color: selectedLocation == null
                       ? colorScheme.onSurfaceVariant
-                      : AppColors.primary,
+                      : AppColors.primaryFor(context),
                 ),
                 const SizedBox(width: 9),
                 Expanded(

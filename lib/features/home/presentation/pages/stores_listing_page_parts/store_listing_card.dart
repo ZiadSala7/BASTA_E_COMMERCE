@@ -13,7 +13,7 @@ class _StoreListingCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
 
     return Material(
-      color: colorScheme.surface,
+      color: theme.cardColor,
       borderRadius: BorderRadius.circular(12),
       child: InkWell(
         onTap: onTap,
@@ -58,16 +58,16 @@ class _StoreListingCard extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.shopping_bag_outlined,
-                      color: AppColors.primary,
+                      color: colorScheme.primary,
                       size: 18,
                     ),
                     const SizedBox(width: 6),
                     Text(
                       l10n.viewProducts,
                       style: GoogleFonts.cairo(
-                        color: AppColors.primary,
+                        color: colorScheme.primary,
                         fontSize: 12,
                         fontWeight: FontWeight.w700,
                       ),

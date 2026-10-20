@@ -8,6 +8,7 @@ class _FaqList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final primary = AppColors.primaryFor(context);
 
     return Column(
       children: items
@@ -31,7 +32,7 @@ class _FaqList extends StatelessWidget {
                     borderRadius: BorderRadius.circular(16),
                     side: BorderSide(color: colorScheme.outlineVariant),
                   ),
-                  iconColor: AppColors.primary,
+                  iconColor: primary,
                   collapsedIconColor: colorScheme.onSurfaceVariant,
                   title: Text(
                     item.question,

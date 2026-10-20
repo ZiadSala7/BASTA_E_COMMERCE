@@ -61,6 +61,7 @@ class ProfileReferralCard extends StatelessWidget {
     final theme = Theme.of(context);
     final colorScheme = theme.colorScheme;
     final isDark = theme.brightness == Brightness.dark;
+    final primary = AppColors.primaryFor(context);
 
     final code = referralCode?.trim().toUpperCase() ?? '';
 
@@ -69,13 +70,10 @@ class ProfileReferralCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.surface,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: AppColors.primary.withValues(alpha: 0.28),
-          width: 1.5,
-        ),
+        border: Border.all(color: primary.withValues(alpha: 0.4), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withValues(alpha: isDark ? 0.16 : 0.08),
+            color: primary.withValues(alpha: isDark ? 0.22 : 0.08),
             blurRadius: 20,
             offset: const Offset(0, 6),
           ),
@@ -183,7 +181,7 @@ class ProfileReferralCard extends StatelessWidget {
                         ),
                         decoration: BoxDecoration(
                           color: isDark
-                              ? const Color(0xFF1E2430)
+                              ? colorScheme.surfaceContainerHighest
                               : const Color(0xFFF4F6FB),
                           borderRadius: BorderRadius.circular(14),
                           border: Border.all(
@@ -215,7 +213,7 @@ class ProfileReferralCard extends StatelessWidget {
                                     fontSize: 18,
                                     fontWeight: FontWeight.w800,
                                     letterSpacing: 2.5,
-                                    color: AppColors.primary,
+                                    color: primary,
                                   ),
                                 ),
                               ],
@@ -266,11 +264,8 @@ class ProfileReferralCard extends StatelessWidget {
                             ),
                           ),
                           style: OutlinedButton.styleFrom(
-                            foregroundColor: AppColors.primary,
-                            side: const BorderSide(
-                              color: AppColors.primary,
-                              width: 1.2,
-                            ),
+                            foregroundColor: primary,
+                            side: BorderSide(color: primary, width: 1.2),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),

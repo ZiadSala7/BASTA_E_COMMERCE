@@ -56,7 +56,7 @@ class SelectionSection extends StatelessWidget {
                   borderRadius: BorderRadius.circular(isColor ? 20 : 18),
                   border: Border.all(
                     color: isSelected
-                        ? AppColors.primary
+                        ? AppColors.primaryFor(context)
                         : colorScheme.outlineVariant,
                     width: isSelected ? 2 : 1,
                   ),
@@ -69,7 +69,7 @@ class SelectionSection extends StatelessWidget {
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                             color: isSelected
-                                ? AppColors.primary
+                                ? AppColors.primaryFor(context)
                                 : colorScheme.onSurface,
                           ),
                         ),

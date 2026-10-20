@@ -13,12 +13,14 @@ class _QuantityStepper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primary = AppColors.primaryFor(context);
+
     return Container(
       height: 34,
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.09),
+        color: primary.withOpacity(0.12),
         borderRadius: BorderRadius.circular(11),
-        border: Border.all(color: AppColors.primary.withOpacity(0.12)),
+        border: Border.all(color: primary.withOpacity(0.3)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -30,7 +32,7 @@ class _QuantityStepper extends StatelessWidget {
               '$quantity',
               textAlign: TextAlign.center,
               style: GoogleFonts.cairo(
-                color: AppColors.primaryDark,
+                color: primary,
                 fontSize: 13,
                 fontWeight: FontWeight.w900,
               ),

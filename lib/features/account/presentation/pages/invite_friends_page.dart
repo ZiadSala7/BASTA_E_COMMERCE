@@ -116,6 +116,7 @@ class _InviteContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final primary = AppColors.primaryFor(context);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
@@ -127,13 +128,13 @@ class _InviteContent extends StatelessWidget {
             child: Container(
               padding: const EdgeInsets.all(22),
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.08),
+                color: primary.withValues(alpha: 0.12),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(
+              child: Icon(
                 Icons.card_giftcard_rounded,
                 size: 64,
-                color: AppColors.primary,
+                color: primary,
               ),
             ),
           ),
@@ -171,12 +172,12 @@ class _InviteContent extends StatelessWidget {
               color: Theme.of(context).colorScheme.surface,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: AppColors.primary.withValues(alpha: 0.28),
+                color: AppColors.primaryFor(context).withValues(alpha: 0.4),
                 width: 1.5,
               ),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withValues(alpha: 0.08),
+                  color: primary.withValues(alpha: 0.12),
                   blurRadius: 15,
                   offset: const Offset(0, 5),
                 ),
@@ -211,7 +212,7 @@ class _InviteContent extends StatelessWidget {
                           fontSize: 24,
                           fontWeight: FontWeight.w900,
                           letterSpacing: 3,
-                          color: AppColors.primary,
+                          color: AppColors.primaryFor(context),
                         ),
                       ),
                     ],
@@ -324,6 +325,7 @@ class _StepTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final rowDirection = l10n.isArabic ? TextDirection.rtl : TextDirection.ltr;
+    final primary = AppColors.primaryFor(context);
 
     return Row(
       textDirection: rowDirection,
@@ -335,7 +337,7 @@ class _StepTile extends StatelessWidget {
               width: 36,
               height: 36,
               decoration: BoxDecoration(
-                color: AppColors.primary.withValues(alpha: 0.10),
+                color: primary.withValues(alpha: 0.14),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -343,7 +345,7 @@ class _StepTile extends StatelessWidget {
                   stepNumber,
                   style: GoogleFonts.cairo(
                     fontWeight: FontWeight.w900,
-                    color: AppColors.primary,
+                    color: primary,
                   ),
                 ),
               ),
@@ -352,7 +354,7 @@ class _StepTile extends StatelessWidget {
               Container(
                 width: 2,
                 height: 35,
-                color: AppColors.primary.withValues(alpha: 0.18),
+                color: primary.withValues(alpha: 0.25),
                 margin: const EdgeInsets.symmetric(vertical: 4),
               ),
           ],
@@ -377,9 +379,9 @@ class _StepTile extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(width: 6),
-                    Icon(icon, size: 18, color: AppColors.primary),
+                    Icon(icon, size: 18, color: primary),
                   ] else ...[
-                    Icon(icon, size: 18, color: AppColors.primary),
+                    Icon(icon, size: 18, color: primary),
                     const SizedBox(width: 6),
                     Text(
                       title,
@@ -430,7 +432,7 @@ class _MissingCodeView extends StatelessWidget {
             Icon(
               Icons.card_giftcard_rounded,
               size: 64,
-              color: AppColors.primary.withValues(alpha: 0.5),
+              color: AppColors.primaryFor(context),
             ),
             const SizedBox(height: 16),
             Text(

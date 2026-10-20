@@ -36,12 +36,12 @@ class _CheckoutStatusCard extends StatelessWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.1),
+              color: AppColors.primaryFor(context).withOpacity(0.12),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.receipt_long_outlined,
-              color: AppColors.primary,
+              color: AppColors.primaryFor(context),
             ),
           ),
           const SizedBox(width: 12),

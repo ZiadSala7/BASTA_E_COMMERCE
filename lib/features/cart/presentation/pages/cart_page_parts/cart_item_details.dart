@@ -129,7 +129,7 @@ class _CartItemDetails extends StatelessWidget {
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
               style: GoogleFonts.cairo(
-                color: AppColors.primary,
+                color: AppColors.primaryFor(context),
                 fontSize: 16,
                 fontWeight: FontWeight.w900,
                 height: 1,

@@ -221,8 +221,7 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                             ),
                             const SizedBox(width: 8),
                             ElevatedButton(
-                              onPressed: () =>
-                                  InviteFriendsShare.show(context),
+                              onPressed: () => InviteFriendsShare.show(context),
                               style: ElevatedButton.styleFrom(
                                 backgroundColor: Colors.white,
                                 foregroundColor: AppColors.primary,
@@ -358,12 +357,12 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
           padding: const EdgeInsets.symmetric(vertical: 9),
           decoration: BoxDecoration(
             color: isSelected
-                ? AppColors.primary
+                ? AppColors.primaryFor(context)
                 : colorScheme.surfaceContainerHighest.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isSelected
-                  ? AppColors.primary
+                  ? AppColors.primaryFor(context)
                   : colorScheme.outlineVariant.withValues(alpha: 0.5),
             ),
           ),
@@ -375,7 +374,9 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                 style: GoogleFonts.cairo(
                   fontSize: 12.5,
                   fontWeight: FontWeight.w800,
-                  color: isSelected ? Colors.white : colorScheme.onSurface,
+                  color: isSelected
+                      ? colorScheme.onPrimary
+                      : colorScheme.onSurface,
                 ),
               ),
               const SizedBox(width: 5),
@@ -383,7 +384,7 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 1),
                 decoration: BoxDecoration(
                   color: isSelected
-                      ? Colors.white.withValues(alpha: 0.25)
+                      ? colorScheme.onPrimary.withValues(alpha: 0.16)
                       : colorScheme.onSurface.withValues(alpha: 0.08),
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -393,7 +394,7 @@ class _MyCouponsViewState extends State<_MyCouponsView> {
                     fontSize: 11,
                     fontWeight: FontWeight.w800,
                     color: isSelected
-                        ? Colors.white
+                        ? colorScheme.onPrimary
                         : colorScheme.onSurfaceVariant,
                   ),
                 ),

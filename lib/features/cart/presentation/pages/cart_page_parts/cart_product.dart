@@ -97,7 +97,7 @@ class _CartProduct {
       color: item.color,
       size: item.size,
       badge: item.isSaleActive ? 'SALE' : 'NEW',
-      accent: AppColors.primary,
+      accent: AppColors.primaryFor(context),
       imageUrl: item.imageUrl,
     );
   }

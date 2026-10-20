@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 
 abstract class AppColors {
+  static Color primaryFor(BuildContext context) =>
+      Theme.of(context).brightness == Brightness.dark ? darkPrimary : primary;
+
   static const primary = Color(0xFF1800AD);
   static const primaryDark = Color(0xFF1800AD);
+  static const darkPrimary = Color(0xFFA69BFF);
   static const primaryLight = Color(0xFFF9F9F9);
   static const accent = Color(0xFFFF6B35);
   static const accentGreen = Color(0xFF00C853);
@@ -10,6 +14,14 @@ abstract class AppColors {
   static const accentOrange = Color(0xFFFF6B35);
   static const background = Color(0xFFF9F9F9);
   static const surface = Color(0xFFFFFFFF);
+  static const darkBackground = Color(0xFF101116);
+  static const darkSurface = Color(0xFF17181F);
+  static const darkCard = Color(0xFF1D1E26);
+  static const darkElevatedSurface = Color(0xFF252630);
+  static const darkOutline = Color(0xFF343540);
+  static const darkTextPrimary = Color(0xFFFFFFFF);
+  static const darkTextSecondary = Color(0xFFB8BAC4);
+  static const darkTextHint = Color(0xFF8B8D99);
   static const textPrimary = Color(0xFF1A1A2E);
   static const textSecondary = Color(0xFF6B7280);
   static const textHint = Color(0xFFADB5BD);
