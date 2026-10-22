@@ -73,7 +73,8 @@ dependencies:
   url_launcher: ^6.3.3
   flutter_map: ^8.3.2
   latlong2: ^0.10.1
-
+  pdf: 3.11.3
+  file_saver: 0.4.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

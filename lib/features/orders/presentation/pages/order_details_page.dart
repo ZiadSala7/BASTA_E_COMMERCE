@@ -1,10 +1,7 @@
-// ignore_for_file: use_build_context_synchronously
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/extensions/app_localizations_x.dart';
@@ -17,6 +14,7 @@ import '../../../../core/widgets/status/empty_state.dart';
 import '../../../../l10n/app_localizations.dart';
 import '../../domain/entities/order_entity.dart';
 import '../../domain/repositories/orders_repository.dart';
+import 'invoice_preview_page.dart';
 import '../widgets/orders_status.dart';
 
 class OrderDetailsPage extends StatefulWidget {
@@ -33,7 +31,6 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   late final OrdersRepository _ordersRepository;
   OrderEntity? _order;
   bool _isLoading = true;
-  bool _isDownloadingInvoice = false;
   String? _errorMessage;
 
   @override
@@ -974,43 +971,29 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
   ) {
     return Column(
       children: [
-        Builder(
-          builder: (buttonContext) => ElevatedButton.icon(
-            onPressed: _isDownloadingInvoice
-                ? null
-                : () => _downloadInvoice(buttonContext, order, l10n),
-            icon: _isDownloadingInvoice
-                ? const SizedBox(
-                    width: 18,
-                    height: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.white,
-                    ),
-                  )
-                : const Icon(Icons.download_rounded, size: 18),
-            label: Text(
-              _isDownloadingInvoice
-                  ? l10n.pick(
-                      ar: 'جارٍ تجهيز الفاتورة...',
-                      en: 'Preparing invoice...',
-                    )
-                  : l10n.pick(
-                      ar: 'تحميل الفاتورة الإلكترونية',
-                      en: 'Download Invoice',
-                    ),
+        ElevatedButton.icon(
+          onPressed: () => Navigator.of(context).push(
+            MaterialPageRoute<void>(
+              builder: (_) => InvoicePreviewPage(order: order),
             ),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primary,
-              foregroundColor: Colors.white,
-              minimumSize: const Size.fromHeight(50),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16),
-              ),
-              textStyle: GoogleFonts.cairo(
-                fontSize: 14,
-                fontWeight: FontWeight.w800,
-              ),
+          ),
+          icon: const Icon(Icons.receipt_long_rounded, size: 18),
+          label: Text(
+            l10n.pick(
+              ar: 'عرض الفاتورة الإلكترونية',
+              en: 'View electronic invoice',
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: Colors.white,
+            minimumSize: const Size.fromHeight(50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            textStyle: GoogleFonts.cairo(
+              fontSize: 14,
+              fontWeight: FontWeight.w800,
             ),
           ),
         ),
@@ -1036,69 +1019,6 @@ class _OrderDetailsPageState extends State<OrderDetailsPage> {
         ),
       ],
     );
-  }
-
-  Future<void> _downloadInvoice(
-    BuildContext context,
-    OrderEntity order,
-    AppLocalizations l10n,
-  ) async {
-    setState(() => _isDownloadingInvoice = true);
-    try {
-      final bytes = await _ordersRepository.downloadOrderInvoice(order.id);
-      if (!mounted) return;
-
-      if (bytes == null || bytes.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              l10n.pick(
-                ar: 'الفاتورة الإلكترونية قيد المعالجة',
-                en: 'Invoice is processing',
-              ),
-              style: GoogleFonts.cairo(),
-            ),
-            behavior: SnackBarBehavior.floating,
-          ),
-        );
-        return;
-      }
-
-      final renderBox = context.findRenderObject();
-      final sharePositionOrigin = renderBox is RenderBox
-          ? renderBox.localToGlobal(Offset.zero) & renderBox.size
-          : null;
-      await Share.shareXFiles(
-        [
-          XFile.fromData(
-            Uint8List.fromList(bytes),
-            mimeType: 'application/pdf',
-          ),
-        ],
-        fileNameOverrides: ['invoice-${order.id}.pdf'],
-        subject: l10n.pick(
-          ar: 'الفاتورة الإلكترونية',
-          en: 'Electronic invoice',
-        ),
-        sharePositionOrigin: sharePositionOrigin,
-      );
-    } catch (_) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            l10n.pick(
-              ar: 'تعذر تحميل الفاتورة. حاول مرة أخرى.',
-              en: 'Could not download the invoice. Please try again.',
-            ),
-            style: GoogleFonts.cairo(),
-          ),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    } finally {
-      if (mounted) setState(() => _isDownloadingInvoice = false);
-    }
   }
 
   String _formatDate(DateTime date) {
